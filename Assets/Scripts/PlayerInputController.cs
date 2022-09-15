@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,18 +7,29 @@ public class PlayerInputController : MonoBehaviour
 {
     [SerializeField, Range(0.1f, 20f)] private float _moveSpeed = 5f;
     [SerializeField, Range(0.1f, 20f)] private float _jumpHeight = 5f;
+    [SerializeField] GameObject _weaponObject;
+    private Weapon _weapon;
     private CharacterController controller;
     private Vector2 _moveValue;
+    
+    private bool chargingShot = false;
+    private float shotCharge = 0f;
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        _weapon = _weaponObject.GetComponent<Weapon>();
     }
 
     private void FixedUpdate()
     {
         var moveVector = new Vector3(_moveValue.x,  0f, _moveValue.y);
         controller.Move(moveVector * (_moveSpeed * Time.fixedDeltaTime));
+
+        if (chargingShot)
+        {
+            shotCharge += Time.fixedDeltaTime;
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -25,13 +37,22 @@ public class PlayerInputController : MonoBehaviour
         _moveValue = context.ReadValue<Vector2>();
     }
     
-    public void Jump(InputAction.CallbackContext context)
+   
+    public void Shoot(InputAction.CallbackContext context)
     {
-        if (context.performed)
+
+        if(context.started)
         {
-            controller.Move(Vector3.up * _jumpHeight);
+            chargingShot = true;
         }
+        else if(context.canceled)
+        {
+            chargingShot = false;
+            _weapon.Shoot(shotCharge * 5f);
+            shotCharge = 0f;
+        }
+
     }
-    
-    
+
+   
 }
