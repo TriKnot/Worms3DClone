@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerCharacter : MonoBehaviour
 {
     public Team team;
+    public int characterNumber;
     private int _health;
     [SerializeField] private int _maxHealth = 5;
     private UI_HealthBar _healthBar;
@@ -15,13 +16,7 @@ public class PlayerCharacter : MonoBehaviour
         _health = _maxHealth;
         _healthBar.UpdateHealthBar(_maxHealth, _health);
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Damage(1);
-        }
-    }
+
     public void Damage(int damageAmount)
     {
         _health -= damageAmount;
@@ -35,6 +30,8 @@ public class PlayerCharacter : MonoBehaviour
     
     private void Die()
     {
-        Debug.Log("Player died");
+        GameManager.Instance.PlayerDied(this);
+        Destroy(gameObject);
     }
+    
 }

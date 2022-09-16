@@ -1,34 +1,31 @@
+using Cinemachine;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerInputController : MonoBehaviour
 {
-    [SerializeField, Range(0.1f, 20f)] private float _moveSpeed = 5f;
-    [SerializeField] GameObject _weaponObject;
+    [SerializeField, Range(0.1f, 20f)] private float moveSpeed = 5f;
+    [SerializeField] GameObject weaponObject;
     private Weapon _weapon;
-    private CharacterController controller;
+    private CharacterController _controller;
     private Vector2 _moveValue;
     
-    private bool chargingShot = false;
-    private float shotCharge = 0f;
+
+    
 
     private void Awake()
     {
-        controller = GetComponent<CharacterController>();
-        _weapon = _weaponObject.GetComponent<Weapon>();
+        _controller = GetComponent<CharacterController>();
+        _weapon = weaponObject.GetComponent<Weapon>();
     }
 
     private void FixedUpdate()
     {
         var moveVector = new Vector3(_moveValue.x,  0f, _moveValue.y);
-        controller.Move(moveVector * (_moveSpeed * Time.fixedDeltaTime));
-
-        if (chargingShot)
-        {
-            shotCharge += Time.fixedDeltaTime;
-        }
+        _controller.Move(moveVector * (moveSpeed * Time.fixedDeltaTime));
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -42,16 +39,21 @@ public class PlayerInputController : MonoBehaviour
 
         if(context.started)
         {
-            chargingShot = true;
+            _weapon.ChargeShot(true);
         }
         else if(context.canceled)
         {
-            chargingShot = false;
-            _weapon.Shoot(shotCharge * 5f);
-            shotCharge = 0f;
+            _weapon.ChargeShot(false);
+            _weapon.Shoot();
         }
 
     }
+
+    public void Aim(InputAction.CallbackContext context)
+    {
+    }
+    
+    
 
    
 }

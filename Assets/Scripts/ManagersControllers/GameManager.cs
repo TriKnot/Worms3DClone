@@ -1,27 +1,31 @@
+using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     
     private Team[] teams;
-    [SerializeField] public int teamAmount = 2;
-    private int currentTeamIndex;
-    private int currentTurnIndex;
-    public int teamSize = 3;
+    [SerializeField] private int teamAmount = 2;
+    [SerializeField] private int teamSize = 3;
 
     [SerializeField] private GameObject characterPrefab;
-
-    [SerializeField] private GameObject[] spawnPositions;
 
     [SerializeField] private float mapSize;
     [SerializeField] private float spawnDistance;
     
     [SerializeField] private Color[] teamColors;
-    
 
+    private static TurnManager _turnManager;
+    public PlayerCharacter ActivePlayerCharacter { get; private set; }
+    private int activePlayerIndex;
+    
+    [SerializeField] CinemachineVirtualCamera vcam;
+    
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -30,8 +34,9 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         teams = new Team[teamAmount];
+        _turnManager = new TurnManager(teamAmount);
         
-        StartGame();
+        SetupGame();
     }
 
     private void Start()
@@ -42,21 +47,22 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //NextTurn();
+            NextTurn();
+        }
+        if(Input.GetKeyDown(KeyCode.Tab))
+        {
+            NextPlayer();
         }
     }
 
-    private void NextTurn()
-    {
-        currentTeamIndex++;
-        currentTeamIndex %= teams.Length;
-        currentTurnIndex++;
-    }
 
-    private void StartGame()
+
+    private void SetupGame()
     {
         CreateTeams();
         SpawnPlayers();
+        ActivePlayerCharacter = teams[0].PlayerCharacters[0];
+        ChangeActivePlayer(teams[_turnManager.currentTeamIndex].PlayerCharacters[0]);
     }
     
     private void CreateTeams()
@@ -65,8 +71,9 @@ public class GameManager : MonoBehaviour
         {
             var newTeam = new Team
             {
-                teamName = "Player " + ++currentTeamIndex,
-                teamColor = teamColors[i],
+                TeamName = "Player " + (i+1),
+                TeamColor = teamColors[i],
+                TeamNumber = i
             };
             teams[i] = newTeam;
         }
@@ -78,7 +85,6 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < teamSize; j++)
             {
-                // GameObject newCharacter = Instantiate(characterPrefab, spawnPositions[i].transform.position + new Vector3(1*(j+1), 1, 1*(j+1)), Quaternion.identity);
                 var spawnLocation = Vector3.zero;
                 var maxTries = 15;
                 do {
@@ -92,10 +98,12 @@ public class GameManager : MonoBehaviour
                 } while (!VerifySpawnLocation(spawnLocation, spawnDistance));
 
                 GameObject newCharacter = Instantiate(characterPrefab, spawnLocation, Quaternion.identity);
+                newCharacter.GetComponent<PlayerInput>().DeactivateInput();
                 PlayerCharacter playerCharacter = newCharacter.GetComponent<PlayerCharacter>();
                 playerCharacter.team = teams[i];
-                newCharacter.GetComponent<MeshRenderer>().material.color = teams[i].teamColor;
-                teams[i].characters.Add(playerCharacter);
+                playerCharacter.characterNumber = j;
+                newCharacter.GetComponent<MeshRenderer>().material.color = teams[i].TeamColor;
+                teams[i].PlayerCharacters.Add(playerCharacter);
             }
         }
     }
@@ -124,6 +132,40 @@ public class GameManager : MonoBehaviour
             }
         }
         return true;
+    }
+
+    private void NextTurn()
+    {
+        var prevPlayer = ActivePlayerCharacter;
+        _turnManager.NextTurn();
+        ActivePlayerCharacter = teams[_turnManager.currentTeamIndex].PlayerCharacters[0];
+        ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
+        activePlayerIndex = 0;
+        ChangeActivePlayer(prevPlayer);
+    }
+
+    private void NextPlayer()
+    {
+        var prevPlayer = ActivePlayerCharacter;
+        var currentTeam = teams[_turnManager.currentTeamIndex];
+        activePlayerIndex++;
+        activePlayerIndex %= currentTeam.PlayerCharacters.Count;
+        ActivePlayerCharacter = currentTeam.PlayerCharacters[activePlayerIndex];
+        ChangeActivePlayer(prevPlayer);
+    }
+
+    private void ChangeActivePlayer(PlayerCharacter previousPlayer)
+    {
+        previousPlayer.GetComponent<PlayerInput>().DeactivateInput();
+        ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
+        var cameraTarget = ActivePlayerCharacter.transform.Find("CameraFollowTarget").transform;
+        vcam.Follow = cameraTarget;
+        vcam.LookAt = cameraTarget;
+    }
+
+    public void PlayerDied(PlayerCharacter character)
+    {
+        teams[character.team.TeamNumber].PlayerCharacters.Remove(character);
     }
 
 }
