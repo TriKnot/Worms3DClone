@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletPool : MonoBehaviour
+public class BulletPool 
 {
     private Stack<GameObject> _bulletPool;
     private GameObject _bulletPrefab;
@@ -18,7 +18,6 @@ public class BulletPool : MonoBehaviour
     public GameObject GetBullet()
     {
         var bullet = _bulletPool.Count > 0 ? _bulletPool.Pop() : Object.Instantiate<GameObject>(_bulletPrefab.gameObject, _poolParent);
-
         var poolOnImpact = bullet.gameObject.GetComponent<PoolOnImpact>();
         if (poolOnImpact == null)
         {

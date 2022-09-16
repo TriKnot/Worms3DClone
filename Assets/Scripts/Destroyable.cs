@@ -8,7 +8,7 @@ public class Destroyable : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Bullet")) ;
+        if (collision.gameObject.layer != LayerMask.NameToLayer("Bullet")) 
         {
             return;
         }

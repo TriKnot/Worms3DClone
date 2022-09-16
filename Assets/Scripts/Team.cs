@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class Team 
 {
-    public List<Character> characters = new List<Character>();
+    public List<PlayerCharacter> characters = new List<PlayerCharacter>();
     public string teamName;
+    public Color teamColor;
     
     private void Awake()
     {
-        characters = new List<Character>();
+        characters = new List<PlayerCharacter>();
     }
 }
