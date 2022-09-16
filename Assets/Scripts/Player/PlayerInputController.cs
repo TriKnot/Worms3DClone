@@ -9,7 +9,7 @@ public class PlayerInputController : MonoBehaviour
 {
     [SerializeField, Range(0.1f, 20f)] private float moveSpeed = 5f;
     [SerializeField] GameObject weaponObject;
-    private Weapon _weapon;
+    private GrenadeWeapon _grenadeWeapon;
     private CharacterController _controller;
     private Vector2 _moveValue;
     
@@ -19,7 +19,7 @@ public class PlayerInputController : MonoBehaviour
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
-        _weapon = weaponObject.GetComponent<Weapon>();
+        _grenadeWeapon = weaponObject.GetComponent<GrenadeWeapon>();
     }
 
     private void FixedUpdate()
@@ -39,12 +39,13 @@ public class PlayerInputController : MonoBehaviour
 
         if(context.started)
         {
-            _weapon.ChargeShot(true);
+            
+            _grenadeWeapon.ChargeShot(true);
         }
         else if(context.canceled)
         {
-            _weapon.ChargeShot(false);
-            _weapon.Shoot();
+            _grenadeWeapon.ChargeShot(false);
+            _grenadeWeapon.Shoot();
         }
 
     }

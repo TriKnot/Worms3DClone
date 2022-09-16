@@ -2,6 +2,7 @@ using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Android;
 using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
@@ -24,8 +25,8 @@ public class GameManager : MonoBehaviour
     private int activePlayerIndex;
     
     [SerializeField] CinemachineVirtualCamera vcam;
-    
-    
+
+    private bool paused = false;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -53,9 +54,31 @@ public class GameManager : MonoBehaviour
         {
             NextPlayer();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(paused)
+            {
+                Resume();
+            }
+            else
+            {
+                Pause();
+            }
+        }
     }
 
+    private void Pause()
+    {
+        paused = true;
+        Time.timeScale = 0;
+    }
 
+    private void Resume()
+    {
+        paused = false;
+        Time.timeScale = 1;
+    }
 
     private void SetupGame()
     {
