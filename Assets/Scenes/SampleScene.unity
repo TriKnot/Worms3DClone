@@ -196,7 +196,7 @@ MonoBehaviour:
   - {r: 0.033431053, g: 0, b: 1, a: 1}
   - {r: 0.23363125, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.99701774, b: 0, a: 1}
-  vcam: {fileID: 1351649543}
+  vCam: {fileID: 1351649543}
 --- !u!4 &242615522
 Transform:
   m_ObjectHideFlags: 0
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: {x: 0, y: 0, z: 0}
-  ShoulderOffset: {x: 0, y: 5.09, z: -4.17}
+  ShoulderOffset: {x: 0, y: 10.70002, z: -2.55}
   VerticalArmLength: 0
   CameraSide: 1
   CameraDistance: 3.17

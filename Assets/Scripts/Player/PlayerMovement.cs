@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -16,7 +17,8 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody _rb;
     private UI_PlayerBars _playerBars;
     
-    
+    private Cinemachine3rdPersonFollow _cameraFollow;
+    private Vector3 _startCameraOffset;
     
     void Awake()
     {
@@ -24,6 +26,13 @@ public class PlayerMovement : MonoBehaviour
         _groundMask = LayerMask.GetMask("Ground");
         _rb = GetComponent<Rigidbody>();
         _playerBars = GetComponentInChildren<UI_PlayerBars>();
+        _cameraFollow = GameManager.Instance.vCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+        _startCameraOffset = _cameraFollow.ShoulderOffset;
+    }
+
+    private void Start()
+    {
+        _cameraFollow.ShoulderOffset = _startCameraOffset;
     }
 
     private void FixedUpdate()
@@ -50,11 +59,16 @@ public class PlayerMovement : MonoBehaviour
     private float _rotationVelocity;
     public void Rotate(Vector2 rotationValue)
     {
-        //transform.Rotate(0f, Mathf.SmoothDamp(transform.rotation.x, rotationValue.x, ref _rotationVelocity, rotationSpeedDamp ), 0f);
+        //Rotate Player
         Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, rotationValue.x * rotationSpeed, 0) * Time.fixedDeltaTime);
         _rb.MoveRotation(_rb.rotation * deltaRotation);
+        
+        //Move Camera Up/Down
+        rotationValue.y = (_cameraFollow.ShoulderOffset.y < 0 && rotationValue.y < 0) ?  0 : rotationValue.y;
+        rotationValue.y = (_cameraFollow.ShoulderOffset.y > 10 && rotationValue.y > 0) ?  0 : rotationValue.y;
+       
+        _cameraFollow.ShoulderOffset += new Vector3(0f,-rotationValue.y * Time.fixedDeltaTime, 0f);
     }
-    
     public void Jump()
     {
         if (IsGrounded())
