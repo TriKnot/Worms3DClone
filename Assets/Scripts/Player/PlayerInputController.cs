@@ -4,7 +4,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CharacterController))]
 public class PlayerInputController : MonoBehaviour
 {
     [SerializeField, Range(0.1f, 20f)] private float moveSpeed = 5f;
