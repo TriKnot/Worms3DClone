@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public PlayerCharacter ActivePlayerCharacter { get; private set; }
     private int activePlayerIndex;
     
-    [SerializeField] CinemachineVirtualCamera vcam;
+    [SerializeField] public CinemachineVirtualCamera vCam { get; private set; }
 
     private bool paused = false;
     private void Awake()
@@ -182,8 +182,8 @@ public class GameManager : MonoBehaviour
         previousPlayer.GetComponent<PlayerInput>().DeactivateInput();
         ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
         var cameraTarget = ActivePlayerCharacter.transform.Find("CameraFollowTarget").transform;
-        vcam.Follow = cameraTarget;
-        vcam.LookAt = cameraTarget;
+        vCam.Follow = cameraTarget;
+        vCam.LookAt = cameraTarget;
     }
 
     public void PlayerDied(PlayerCharacter character)
