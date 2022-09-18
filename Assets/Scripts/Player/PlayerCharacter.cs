@@ -9,12 +9,12 @@ public class PlayerCharacter : MonoBehaviour
     public int characterNumber;
     private int _health;
     [SerializeField] private int _maxHealth = 5;
-    private UI_HealthBar _healthBar;
+    private UI_PlayerBars _playerBars;
     private void Start()
     {
-        _healthBar = GetComponent<UI_HealthBar>();
+        _playerBars = GetComponent<UI_PlayerBars>();
         _health = _maxHealth;
-        _healthBar.UpdateHealthBar(_maxHealth, _health);
+        _playerBars.UpdateHealthBar(_maxHealth, _health);
     }
 
     public void Damage(int damageAmount)
@@ -25,7 +25,7 @@ public class PlayerCharacter : MonoBehaviour
             _health = 0;
             Die();
         } 
-        _healthBar.UpdateHealthBar(_maxHealth, _health);
+        _playerBars.UpdateHealthBar(_maxHealth, _health);
     }
     
     private void Die()

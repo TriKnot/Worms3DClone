@@ -13,6 +13,7 @@ public class PlayerInputController : MonoBehaviour
     //private CharacterController _controller;
     private PlayerMovement _playerMovement;
     private Vector2 _moveValue;
+    private Vector2 _lookValue;
     
 
     
@@ -28,6 +29,10 @@ public class PlayerInputController : MonoBehaviour
         if(_moveValue != Vector2.zero)
         {
             _playerMovement.Move(_moveValue);
+        }
+        if(_lookValue != Vector2.zero)
+        {
+            _playerMovement.Rotate(_lookValue);
         }
     }
     
@@ -62,6 +67,7 @@ public class PlayerInputController : MonoBehaviour
     
     public void Aim(InputAction.CallbackContext context)
     {
+        _lookValue = context.ReadValue<Vector2>();
     }
     
     
