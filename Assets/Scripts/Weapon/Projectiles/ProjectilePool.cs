@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletPool 
+public class ProjectilePool 
 {
     private Stack<GameObject> _bulletPool;
     private GameObject _bulletPrefab;
     private Transform _poolParent;
 
-    public BulletPool(GameObject bulletPrefab)
+    public ProjectilePool(GameObject bulletPrefab)
     {
         _poolParent = new GameObject("BulletPool").GetComponent<Transform>();
         _bulletPool = new Stack<GameObject>();

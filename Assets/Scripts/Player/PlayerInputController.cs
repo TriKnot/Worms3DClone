@@ -7,20 +7,16 @@ using UnityEngine.InputSystem;
 public class PlayerInputController : MonoBehaviour
 {
     [SerializeField, Range(0.1f, 20f)] private float moveSpeed = 5f;
-    [SerializeField] GameObject weaponObject;
-    private GrenadeWeapon _grenadeWeapon;
     //private CharacterController _controller;
     private PlayerMovement _playerMovement;
     private Vector2 _moveValue;
-    private Vector2 _lookValue;
-    
+    private PlayerCharacter player;
 
-    
 
     private void Awake()
     {
         _playerMovement = GetComponent<PlayerMovement>();
-        _grenadeWeapon = weaponObject.GetComponent<GrenadeWeapon>();
+        player = GetComponent<PlayerCharacter>();
     }
     
     private void FixedUpdate()
@@ -29,10 +25,6 @@ public class PlayerInputController : MonoBehaviour
         {
             _playerMovement.Move(_moveValue);
         }
-        // if(_lookValue != Vector2.zero)
-        // {
-        //     _playerMovement.Rotate();
-        // }
     }
     
     public void Move(InputAction.CallbackContext context)
@@ -45,29 +37,32 @@ public class PlayerInputController : MonoBehaviour
         if(context.started)
         {
             _playerMovement.Jump();
+            player.Inventory.ChangeWeapon();
         }
     }
     
     public void Shoot(InputAction.CallbackContext context)
     {
-    
-        if(context.started)
+        var activeWeapon = player.Inventory.GetActiveWeapon();
+        if (activeWeapon == null) return;
+        
+        if (activeWeapon.GetWeaponObject().TryGetComponent(out IChargeableWeapon chargeableWeapon))
         {
-            
-            _grenadeWeapon.ChargeShot(true);
+            if (context.started)
+            {
+                chargeableWeapon.ChargeShot(true);
+            }
+            else if (context.canceled)
+            {
+                chargeableWeapon.ChargeShot(false);
+            }
         }
-        else if(context.canceled)
-        {
-            _grenadeWeapon.ChargeShot(false);
-            _grenadeWeapon.Shoot();
-        }
-    
+        
+        if (context.canceled)
+            activeWeapon.Shoot();
+
     }
-    
-    public void Aim(InputAction.CallbackContext context)
-    {
-        _lookValue = context.ReadValue<Vector2>();
-    }
+
     
     
 

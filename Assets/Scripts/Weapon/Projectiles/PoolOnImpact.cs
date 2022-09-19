@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class PoolOnImpact : MonoBehaviour
 {
-    private BulletPool _bulletPool;
+    private ProjectilePool _projectilePool;
     private Rigidbody _rigidbody;
     
-    public void Init(BulletPool bulletPool)
+    public void Init(ProjectilePool projectilePool)
     {
-        _bulletPool = bulletPool;
+        _projectilePool = projectilePool;
         _rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -27,6 +27,6 @@ public class PoolOnImpact : MonoBehaviour
 
     private void DestroyMe()
     {
-        _bulletPool.Return(gameObject);
+        _projectilePool.Return(gameObject);
     }
 }
