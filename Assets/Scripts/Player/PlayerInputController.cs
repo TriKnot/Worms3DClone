@@ -29,10 +29,10 @@ public class PlayerInputController : MonoBehaviour
         {
             _playerMovement.Move(_moveValue);
         }
-        if(_lookValue != Vector2.zero)
-        {
-            _playerMovement.Rotate(_lookValue);
-        }
+        // if(_lookValue != Vector2.zero)
+        // {
+        //     _playerMovement.Rotate();
+        // }
     }
     
     public void Move(InputAction.CallbackContext context)

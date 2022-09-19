@@ -1241,7 +1241,9 @@ MonoBehaviour:
   jumpForce: 5
   maxMoveRange: 20
   rotationSpeed: 5
-  vcam: {fileID: 0}
+  nextRotation: {x: 0, y: 0, z: 0, w: 0}
+  followTransform: {fileID: 2518862282681612243}
+  rotationPower: 2
 --- !u!54 &-7443361570448322333
 Rigidbody:
   m_ObjectHideFlags: 0

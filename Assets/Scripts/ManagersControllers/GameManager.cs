@@ -23,8 +23,9 @@ public class GameManager : MonoBehaviour
     private static TurnManager _turnManager;
     public PlayerCharacter ActivePlayerCharacter { get; private set; }
     private int activePlayerIndex;
-    
-    [SerializeField] public CinemachineVirtualCamera vCam { get; private set; }
+
+    public CinemachineVirtualCamera vCam;
+    public CinemachineFreeLook freeCam;
 
     private bool paused = false;
     private void Awake()
@@ -38,6 +39,9 @@ public class GameManager : MonoBehaviour
         _turnManager = new TurnManager(teamAmount);
         
         SetupGame();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Start()
@@ -182,8 +186,8 @@ public class GameManager : MonoBehaviour
         previousPlayer.GetComponent<PlayerInput>().DeactivateInput();
         ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
         var cameraTarget = ActivePlayerCharacter.transform.Find("CameraFollowTarget").transform;
-        vCam.Follow = cameraTarget;
-        vCam.LookAt = cameraTarget;
+        freeCam.Follow = cameraTarget;
+        freeCam.LookAt = cameraTarget;
     }
 
     public void PlayerDied(PlayerCharacter character)
