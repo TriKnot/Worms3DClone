@@ -20,7 +20,7 @@ public class Inventory
         GetActiveWeapon().GetWeaponObject().SetActive(false);
         _activeWeaponIndex++;
         _activeWeaponIndex %= inventory.Count;
-        GetActiveWeapon().GetWeaponObject().SetActive(false);
+        GetActiveWeapon().GetWeaponObject().SetActive(true);
     }
 
     public IWeapon GetActiveWeapon()

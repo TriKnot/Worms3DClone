@@ -27,6 +27,7 @@ public class PlayerCharacter : MonoBehaviour
         _playerBars = GetComponent<UI_PlayerBars>();
         _health = _maxHealth;
         _playerBars.UpdateHealthBar(_maxHealth, _health);
+        Inventory.AddWeapon(_weaponHolder.GetChild(0).gameObject);
     }
 
     public void Damage(int damageAmount)
