@@ -71,7 +71,6 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     {
         shotCharge += Time.deltaTime;
         _chargeBarScript.UpdateChargeBar(shotCharge, maxCharge);
-        _canAttack = false;
     }
 
     private void OnTriggerEnter(Collider other)
