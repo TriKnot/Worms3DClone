@@ -34,7 +34,8 @@ public class RifleWeapon : MonoBehaviour, IWeapon
             bullet.SetActive(true);
             var bulletRB = bullet.GetComponent<Rigidbody>();
             bulletRB.useGravity = false;
-            bulletRB.AddForce(transform.up * shotSpeedMultiplier, ForceMode.Impulse);
+            bulletRB.AddForce(transform.forward * shotSpeedMultiplier, ForceMode.Impulse);
+            _ammo--;
         }    
     }
 

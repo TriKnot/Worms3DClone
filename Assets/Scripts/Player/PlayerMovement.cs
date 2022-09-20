@@ -44,11 +44,6 @@ public class PlayerMovement : MonoBehaviour
         _playerBars.UpdateStaminaBar(maxMoveRange, _movedDistance);
     }
 
-    private void LateUpdate()
-    {
-        Rotate();
-    }
-
     public void Move(Vector2 moveValue)
     {
         if(_movedDistance > maxMoveRange)
@@ -63,35 +58,6 @@ public class PlayerMovement : MonoBehaviour
         _rb.AddForce(transform.right * (moveValue.x * moveSpeed));
     }
 
-    private float _rotationVelocity;
-    // public void Rotate(Vector2 rotationValue)
-    // {
-    //     //Rotate Player
-    //     Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, rotationValue.x * rotationSpeed, 0) * Time.fixedDeltaTime);
-    //     _rb.MoveRotation(_rb.rotation * deltaRotation);
-    //     
-    //     //Move Camera Up/Down
-    //     if(_cameraFollow.ShoulderOffset.y < 0) _cameraFollow.ShoulderOffset.y = 0;
-    //     if(_cameraFollow.ShoulderOffset.y > 10) _cameraFollow.ShoulderOffset.y = 10;
-    //    
-    //     _cameraFollow.ShoulderOffset += new Vector3(0f,-rotationValue.y * Time.fixedDeltaTime, 0f);
-    // }
-
-    // private float yaw = 0;
-    // private float pitch = 0;
-    // [SerializeField] private float speedH = 2;
-    // [SerializeField] private float speedV = 2;
-    // [SerializeField] private float pitchClamp = 10f;
-    //
-    // public void Rotate(Vector2 rotationValue)
-    // {
-    //     yaw += speedH * rotationValue.x;
-    //     pitch += speedV * rotationValue.y;
-    //     pitch = Mathf.Clamp(pitch, 0, pitchClamp);
-    //
-    //     _cameraFollow.ShoulderOffset = new Vector3(0.0f, pitch,  0.0f);
-    //     transform.eulerAngles = new Vector3(0f, yaw, 0f);
-    // }
 
     public void Rotate()
     {

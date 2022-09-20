@@ -1,3 +1,4 @@
+using System;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
@@ -9,7 +10,7 @@ public class PlayerInputController : MonoBehaviour
     private PlayerMovement _playerMovement;
     private Vector2 _moveValue;
     private PlayerCharacter _player;
-
+    private bool _aiming;
 
     private void Awake()
     {
@@ -24,7 +25,17 @@ public class PlayerInputController : MonoBehaviour
             _playerMovement.Move(_moveValue);
         }
     }
-    
+
+    private void LateUpdate()
+    {
+        if (_aiming)
+        {
+            _playerMovement.Rotate();
+        }
+
+        _aiming = false;
+    }
+
     public void Move(InputAction.CallbackContext context)
     {
         _moveValue = context.ReadValue<Vector2>();
@@ -62,7 +73,10 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
-    
+    public void Look(InputAction.CallbackContext context)
+    {
+        _aiming = true;
+    }
     
 
    

@@ -135,7 +135,9 @@ public class GameManager : MonoBehaviour
                 PlayerCharacter playerCharacter = newCharacter.GetComponent<PlayerCharacter>();
                 playerCharacter.team = teams[i];
                 playerCharacter.characterNumber = j;
-                newCharacter.GetComponent<MeshRenderer>().material.color = teams[i].TeamColor;
+                var color = teams[i].TeamColor;
+                color.a = 0.5f;
+                newCharacter.GetComponent<MeshRenderer>().material.color *= color;
                 teams[i].PlayerCharacters.Add(playerCharacter);
             }
         }

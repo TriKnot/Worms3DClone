@@ -14,7 +14,7 @@ public class TurnManager
     public TurnManager(int teamAmount)
     {
         _teamAmount = teamAmount;
-        currentTeamIndex = 1;
+        currentTeamIndex = 0;
         currentTurnIndex = 1;
         Instance = this;
     }

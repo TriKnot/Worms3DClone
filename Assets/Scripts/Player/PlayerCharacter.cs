@@ -1,8 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Cinemachine.Utility;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
@@ -16,11 +11,15 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField] private Transform _weaponHolder;
     
     public Inventory Inventory { get; private set; }
+    
+    [SerializeField] private GameObject[] _characters;
 
     private void Awake()
     {
         Inventory = new Inventory();
-        Inventory.AddWeapon(_weaponHolder.GetChild(0).gameObject);
+        //Inventory.AddWeapon(_weaponHolder.GetChild(0).gameObject);
+        gameObject.GetComponent<MeshFilter>().mesh = _characters[Random.Range(0, _characters.Length-1)].GetComponent<MeshFilter>().sharedMesh;
+        gameObject.GetComponent<MeshRenderer>().material = _characters[Random.Range(0, _characters.Length-1)].GetComponent<MeshRenderer>().sharedMaterial;
     }
 
     private void Start()
@@ -47,16 +46,16 @@ public class PlayerCharacter : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.TryGetComponent(out IWeapon weapon))
+        if (other.gameObject.TryGetComponent(out IWeapon weapon))
         {
-            Inventory.AddWeapon(collision.gameObject);
+            Inventory.AddWeapon(other.gameObject);
             var weaponTransform = weapon.GetWeaponObject().transform;
             weaponTransform.SetParent(_weaponHolder);
             weaponTransform.localPosition = new Vector3(0,0,0);
             weaponTransform.localRotation = weaponTransform.rotation;
-            weaponTransform.localScale = Vector3.one;
             weapon.SetCollider(false);
         }
     }

@@ -22,7 +22,7 @@ public class PoolOnImpact : MonoBehaviour
         }
         
         _rigidbody.Sleep();
-        Invoke(nameof(ReturnToPool), 0.2f);
+        Invoke(nameof(ReturnToPool), 0.1f);
     }
 
     public void ReturnToPool()

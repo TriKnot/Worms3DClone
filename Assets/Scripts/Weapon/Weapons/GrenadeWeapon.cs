@@ -61,10 +61,11 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
             bullet.transform.rotation = firePoint.transform.rotation;
             bullet.SetActive(true);
             bullet.GetComponent<Rigidbody>().AddForce(-transform.forward * shotCharge * shotSpeedMultiplier, ForceMode.Impulse);
+            _shootEffect.SetActive(true);
+            _ammo--;
         }
         shotCharge = 0f;
         _chargeBarScript.SetActive(false);
-        _shootEffect.SetActive(true);
     }
 
     
@@ -81,7 +82,6 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
 
     public int GetAmmoCount()
     {
-        print("Ammo: " + _ammo);
         return _ammo;
     }
 

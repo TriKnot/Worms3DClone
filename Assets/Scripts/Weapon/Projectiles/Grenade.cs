@@ -46,7 +46,7 @@ public class Grenade : MonoBehaviour
 
     IEnumerator ReturnIfNotExploded()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(20f);
         _rigidbody.velocity = Vector3.zero;
         _poolOnImpact.ReturnToPool();
     }
