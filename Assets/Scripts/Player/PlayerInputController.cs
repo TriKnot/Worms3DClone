@@ -37,7 +37,6 @@ public class PlayerInputController : MonoBehaviour
         if(context.started)
         {
             _playerMovement.Jump();
-            player.Inventory.ChangeWeapon();
         }
     }
     
@@ -59,8 +58,9 @@ public class PlayerInputController : MonoBehaviour
         }
         
         if (context.canceled)
+        {
             activeWeapon.Shoot();
-
+        }
     }
 
     

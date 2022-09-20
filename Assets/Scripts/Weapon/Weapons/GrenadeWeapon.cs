@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
 {
-    public Transform firePoint;
-    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] private GameObject firePoint;
+    [SerializeField] GameObject rocketPrefab;
     [SerializeField] private GameObject chargeBar;
     private UI_WeaponChargeBar _chargeBarScript;
 
@@ -21,7 +21,7 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
 
     private void Awake()
     {
-        _projectilePool = new ProjectilePool(bulletPrefab);
+        _projectilePool = new ProjectilePool(rocketPrefab);
         _chargeBarScript = GetComponent<UI_WeaponChargeBar>();
     }
 
@@ -48,13 +48,13 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     public void Shoot()
     {
         GameObject bullet = _projectilePool.GetBullet();
-        
+        firePoint.SetActive(false);
         if(bullet != null)
         {
-            bullet.transform.position = firePoint.position;
-            bullet.transform.rotation = firePoint.rotation;
+            bullet.transform.position = firePoint.transform.position;
+            bullet.transform.rotation = firePoint.transform.rotation;
             bullet.SetActive(true);
-            bullet.GetComponent<Rigidbody>().AddForce(transform.up * shotCharge * shotSpeedMultiplier, ForceMode.Impulse);
+            bullet.GetComponent<Rigidbody>().AddForce(-transform.forward * shotCharge * shotSpeedMultiplier, ForceMode.Impulse);
         }
         shotCharge = 0f;
         _chargeBarScript.SetActive(false);

@@ -1,14 +1,68 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Grenade : MonoBehaviour
 {
     [SerializeField] private int damage = 1;
     [SerializeField] private float radius = 10;
+    private CapsuleCollider _capsuleCollider;
+    private Rigidbody _rigidbody;
+    
+    [SerializeField] GameObject explosionPrefab;
+    private CapsuleCollider _collider;
+    private bool _hasExploded;
+    
+    private PoolOnImpact _poolOnImpact;
+
+
+    public void Awake()
+    {
+        print("Grenade init");
+        _rigidbody = GetComponent<Rigidbody>();
+        _collider = GetComponent<CapsuleCollider>();
+        _hasExploded = false;
+        _poolOnImpact = GetComponent<PoolOnImpact>();
+    }
+
+    private void OnEnable()
+    {
+        print("Enabled");
+        _collider.enabled = false;
+        StartCoroutine(EnableColliderAfterDelay());
+        StartCoroutine(ReturnIfNotExploded());
+    }
+
+    IEnumerator EnableColliderAfterDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        _collider.enabled = true;
+    }
+
+    IEnumerator ReturnIfNotExploded()
+    {
+        yield return new WaitForSeconds(20f);
+        _poolOnImpact.ReturnToPool();
+    }
+
+    private void LateUpdate()
+    {
+        var velocity = _rigidbody.velocity;
+        if (velocity != Vector3.zero) 
+            transform.rotation = Quaternion.LookRotation(-velocity, transform.up);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, radius);
+        
+        if (_hasExploded) return;
+        
+        print("Exploded on " + collision.gameObject.name);
+
+        var hits = Physics.OverlapSphere(transform.position, radius);
 
         foreach (var hit in hits)
         {
@@ -17,7 +71,19 @@ public class Grenade : MonoBehaviour
                 player.Damage(damage);
             }
         }
-        
-        Destroy(gameObject);
+        Explode();
+    }
+
+    private void Explode()
+    {
+        var explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        _hasExploded = true;
+        Destroy(explosion, 3f);
+    }
+
+    private void OnDisable()
+    {
+        _hasExploded = false;
+        print("Disabled");
     }
 }

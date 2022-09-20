@@ -22,10 +22,10 @@ public class PoolOnImpact : MonoBehaviour
         }
         
         _rigidbody.Sleep();
-        Invoke("DestroyMe", 0.2f);
+        Invoke(nameof(ReturnToPool), 0.2f);
     }
 
-    private void DestroyMe()
+    public void ReturnToPool()
     {
         _projectilePool.Return(gameObject);
     }
