@@ -75,6 +75,10 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
 
     private void OnTriggerEnter(Collider other)
     {
-        print(other.gameObject.name);
+        if(other.TryGetComponent(out PlayerCharacter player))
+        {
+            var direction = Vector3.ClampMagnitude(player.gameObject.transform.position - transform.position, 1f);
+            player.gameObject.GetComponent<Rigidbody>().AddForce(direction * 10f, ForceMode.Impulse);
+        }
     }
 }
