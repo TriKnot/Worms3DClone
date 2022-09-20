@@ -40,8 +40,8 @@ public class GameManager : MonoBehaviour
         
         SetupGame();
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        SetCursorLock(true);
+        
     }
 
     private void Start()
@@ -82,6 +82,12 @@ public class GameManager : MonoBehaviour
     {
         paused = false;
         Time.timeScale = 1;
+    }
+    
+    private void SetCursorLock(bool value)
+    {
+        Cursor.lockState = value ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !value;
     }
 
     private void SetupGame()

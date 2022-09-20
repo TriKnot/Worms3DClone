@@ -18,11 +18,17 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     [SerializeField] private float chargeSpeedMultiplier = 3f;
     [SerializeField] private float shotSpeedMultiplier = 3f;
     private bool _isCharging = false;
+    private CapsuleCollider _collider;
+    [SerializeField] private GameObject _shootEffect;
+
+    private int _ammo = 1;
+    [SerializeField] private int maxAmmo = 2;
 
     private void Awake()
     {
         _projectilePool = new ProjectilePool(rocketPrefab);
         _chargeBarScript = GetComponent<UI_WeaponChargeBar>();
+        _collider = GetComponent<CapsuleCollider>();
     }
 
     private void Update()
@@ -58,13 +64,31 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
         }
         shotCharge = 0f;
         _chargeBarScript.SetActive(false);
+        _shootEffect.SetActive(true);
     }
 
+    
+    
     public GameObject GetWeaponObject()
     {
         return gameObject;
     }
 
+    public void SetCollider(bool state)
+    {
+        _collider.enabled = state;
+    }
 
+    public int GetAmmoCount()
+    {
+        print("Ammo: " + _ammo);
+        return _ammo;
+    }
+
+
+    public void AddAmmo(int amount)
+    {
+        _ammo = _ammo + amount > maxAmmo ? maxAmmo : _ammo + amount;
+    }
 }
 

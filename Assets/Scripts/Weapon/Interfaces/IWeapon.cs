@@ -3,9 +3,16 @@ using UnityEngine;
 public interface IWeapon
 {
     
+    
     void Shoot();
 
     GameObject GetWeaponObject();
     
-    //TODO Ammo
+    void SetCollider(bool state);
+
+    int GetAmmoCount();
+    
+
+    void AddAmmo(int amount);
+    
 }

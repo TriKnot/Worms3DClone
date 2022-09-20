@@ -21,16 +21,18 @@ public class Grenade : MonoBehaviour
 
     public void Awake()
     {
-        print("Grenade init");
         _rigidbody = GetComponent<Rigidbody>();
         _collider = GetComponent<CapsuleCollider>();
         _hasExploded = false;
+    }
+
+    private void Start()
+    {
         _poolOnImpact = GetComponent<PoolOnImpact>();
     }
 
     private void OnEnable()
     {
-        print("Enabled");
         _collider.enabled = false;
         StartCoroutine(EnableColliderAfterDelay());
         StartCoroutine(ReturnIfNotExploded());
@@ -44,7 +46,8 @@ public class Grenade : MonoBehaviour
 
     IEnumerator ReturnIfNotExploded()
     {
-        yield return new WaitForSeconds(20f);
+        yield return new WaitForSeconds(2f);
+        _rigidbody.velocity = Vector3.zero;
         _poolOnImpact.ReturnToPool();
     }
 
@@ -60,8 +63,6 @@ public class Grenade : MonoBehaviour
         
         if (_hasExploded) return;
         
-        print("Exploded on " + collision.gameObject.name);
-
         var hits = Physics.OverlapSphere(transform.position, radius);
 
         foreach (var hit in hits)
@@ -84,6 +85,5 @@ public class Grenade : MonoBehaviour
     private void OnDisable()
     {
         _hasExploded = false;
-        print("Disabled");
     }
 }

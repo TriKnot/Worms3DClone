@@ -6,17 +6,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputController : MonoBehaviour
 {
-    [SerializeField, Range(0.1f, 20f)] private float moveSpeed = 5f;
-    //private CharacterController _controller;
     private PlayerMovement _playerMovement;
     private Vector2 _moveValue;
-    private PlayerCharacter player;
+    private PlayerCharacter _player;
 
 
     private void Awake()
     {
         _playerMovement = GetComponent<PlayerMovement>();
-        player = GetComponent<PlayerCharacter>();
+        _player = GetComponent<PlayerCharacter>();
     }
     
     private void FixedUpdate()
@@ -42,8 +40,9 @@ public class PlayerInputController : MonoBehaviour
     
     public void Shoot(InputAction.CallbackContext context)
     {
-        var activeWeapon = player.Inventory.GetActiveWeapon();
-        if (activeWeapon == null) return;
+        var activeWeapon = _player.Inventory.GetActiveWeapon();
+        
+        if (activeWeapon == null || activeWeapon.GetAmmoCount() <= 0) return;
         
         if (activeWeapon.GetWeaponObject().TryGetComponent(out IChargeableWeapon chargeableWeapon))
         {

@@ -11,7 +11,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float maxMoveRange = 20f;
-    [SerializeField] private float rotationSpeed = 5f;
     private float _movedDistance;
     private LayerMask _groundMask;
     private Vector3 _groundCheckOffset;
@@ -21,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private Cinemachine3rdPersonFollow _cameraFollow;
     private Vector3 _startCameraOffset;
 
-    private Quaternion lookRotation;
+    private Quaternion _lookRotation;
     
     void Awake()
     {

@@ -10,10 +10,17 @@ public class RifleWeapon : MonoBehaviour, IWeapon
     [SerializeField] GameObject bulletPrefab;
     private ProjectilePool _projectilePool;
     [SerializeField] private float shotSpeedMultiplier = 3f;
+    private CapsuleCollider _collider;
+
+
+    public int _ammo = 1;
+    [SerializeField] private int maxAmmo = 5;
+
 
     private void Awake()
     {
         _projectilePool = new ProjectilePool(bulletPrefab);
+        _collider = GetComponent<CapsuleCollider>();
     }
 
     public void Shoot()
@@ -34,5 +41,21 @@ public class RifleWeapon : MonoBehaviour, IWeapon
     public GameObject GetWeaponObject()
     {
         return gameObject;
+    }
+    
+    public void SetCollider(bool state)
+    {
+        _collider.enabled = state;
+    }
+
+    public int GetAmmoCount()
+    {
+        return _ammo;
+    }
+
+
+    public void AddAmmo(int amount)
+    {
+        _ammo = _ammo + amount > maxAmmo ? maxAmmo : _ammo + amount;
     }
 }
