@@ -55,7 +55,7 @@ public class PlayerCharacter : MonoBehaviour
             var weaponTransform = weapon.GetWeaponObject().transform;
             weaponTransform.SetParent(_weaponHolder);
             weaponTransform.localPosition = new Vector3(0,0,0);
-            weaponTransform.localRotation = Quaternion.Euler(Vector3.zero);
+            weaponTransform.localRotation = weaponTransform.rotation;
             weaponTransform.localScale = Vector3.one;
             weapon.SetCollider(false);
         }
