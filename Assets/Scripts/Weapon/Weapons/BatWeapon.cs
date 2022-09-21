@@ -6,7 +6,6 @@ using UnityEngine;
 public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
 {
     
-    private UI_WeaponChargeBar _chargeBarScript;
     private CapsuleCollider _collider;
     private Animator _animator;
     private bool _isCharging = false;
@@ -14,10 +13,12 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     [SerializeField] private float maxCharge = 1f;
 
     private bool _canAttack = true;
+    
+    public delegate void ChargeChanged(float shotCharge, float maxCharge);
+    public event ChargeChanged OnChargeChanged;
 
     private void Awake()
     {
-        _chargeBarScript = GetComponent<UI_WeaponChargeBar>();
         _collider = GetComponent<CapsuleCollider>();
         _collider.enabled = false;
         _animator = GetComponent<Animator>();
@@ -63,14 +64,13 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     public void ChargeShot(bool active)
     {
         _isCharging = active;
-        _chargeBarScript.SetActive(true);
         _animator.SetBool("Charge", active);
     }
 
     private void ChargeWeaponUp()
     {
         shotCharge += Time.deltaTime;
-        _chargeBarScript.UpdateChargeBar(shotCharge, maxCharge);
+        OnChargeChanged?.Invoke(shotCharge, maxCharge);
     }
 
     private void OnTriggerEnter(Collider other)

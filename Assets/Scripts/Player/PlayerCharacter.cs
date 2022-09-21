@@ -6,7 +6,6 @@ public class PlayerCharacter : MonoBehaviour
 {
     public Team team;
     [HideInInspector] public int characterNumber;
-    private UI_PlayerBars _playerBars;
 
     [SerializeField] private Transform _weaponHolder;
     
@@ -17,39 +16,51 @@ public class PlayerCharacter : MonoBehaviour
     [Header("Health")]
     private int _health;
     [SerializeField] private int _maxHealth = 5;
-    public delegate void HealthChanged(int maxHealth,int health);
-    public event HealthChanged OnHealthChanged;
 
     [Header("Stamina")] 
     private float _stamina;
     [SerializeField] private float _maxStamina = 20f;
     private PlayerMovement _playerMovement;
-    public delegate void StaminaChanged(float maxStamina,float stamina);
-    public event StaminaChanged OnStaminaChanged;
 
+    private bool _isActiveCharacter;
+    
     private void Awake()
     {
         Inventory = new Inventory();
-        //Inventory.AddWeapon(_weaponHolder.GetChild(0).gameObject);
-        gameObject.GetComponent<MeshFilter>().mesh = _characters[Random.Range(0, _characters.Length-1)].GetComponent<MeshFilter>().sharedMesh;
-        gameObject.GetComponent<MeshRenderer>().material = _characters[Random.Range(0, _characters.Length-1)].GetComponent<MeshRenderer>().sharedMaterial;
+        gameObject.GetComponent<MeshFilter>().mesh = _characters[Random.Range(0, _characters.Length)].GetComponent<MeshFilter>().sharedMesh;
+        gameObject.GetComponent<MeshRenderer>().material = _characters[Random.Range(0, _characters.Length)].GetComponent<MeshRenderer>().sharedMaterial;
         _playerMovement = GetComponent<PlayerMovement>();
-        _playerMovement.OnMoved += UpdateStamina;
+        EventManager.OnActiveCharacterChanged += SetActiveCharacter;
     }
 
     private void Start()
     {
-        _playerBars = GetComponent<UI_PlayerBars>();
         _health = _maxHealth;
         _stamina = _maxStamina;
-        OnHealthChanged?.Invoke(_maxHealth, _health);
-        OnStaminaChanged?.Invoke(_maxStamina, _stamina);
+        EventManager.InvokeHealthChanged(_maxHealth, _health);
         Inventory.AddWeapon(_weaponHolder.GetChild(0).gameObject);
+        EventManager.InvokeStaminaChanged(_maxStamina, _stamina);
     }
 
     private void OnDestroy()
     {
         _playerMovement.OnMoved -= UpdateStamina;
+    }
+    
+    public void SetActiveCharacter(PlayerCharacter character)
+    {
+        _isActiveCharacter = character == this;
+        if (_isActiveCharacter)
+        {
+            _playerMovement.OnMoved += UpdateStamina;
+            EventManager.InvokeStaminaChanged(_maxStamina, _stamina);
+            _weaponHolder.gameObject.SetActive(true);
+        }
+        else
+        {
+            _playerMovement.OnMoved -= UpdateStamina;
+            _weaponHolder.gameObject.SetActive(false);
+        }
     }
 
     public void Damage(int damageAmount)
@@ -60,13 +71,14 @@ public class PlayerCharacter : MonoBehaviour
             _health = 0;
             Die();
         } 
-        OnHealthChanged?.Invoke(_maxHealth, _health);
+        EventManager.InvokeHealthChanged(_maxHealth, _health);
     }
 
     private void UpdateStamina(float value)
     {
+        if(!_isActiveCharacter) return;
         _stamina = Mathf.Max(_stamina - value, 0);
-        OnStaminaChanged?.Invoke(_maxStamina, _stamina);
+        EventManager.InvokeStaminaChanged(_maxStamina, _stamina);
     }
     
     private void Die()

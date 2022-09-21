@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public static EventManager EventManager { get; private set; }
+    private static TurnManager _turnManager;
     
     private Team[] teams;
     [SerializeField] private int teamAmount = 2;
@@ -20,7 +22,6 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private Color[] teamColors;
 
-    private static TurnManager _turnManager;
     public PlayerCharacter ActivePlayerCharacter { get; private set; }
     private int activePlayerIndex;
 
@@ -35,10 +36,10 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
         Instance = this;
-        teams = new Team[teamAmount];
+        EventManager = new EventManager();
         _turnManager = new TurnManager(teamAmount);
+        teams = new Team[teamAmount];
         
-        SetupGame();
 
         SetCursorLock(true);
         
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        SetupGame();
     }
 
     private void Update()
@@ -195,6 +197,7 @@ public class GameManager : MonoBehaviour
         var cameraTarget = ActivePlayerCharacter.transform.Find("CameraFollowTarget").transform;
         freeCam.Follow = cameraTarget;
         freeCam.LookAt = cameraTarget;
+        EventManager.InvokeActiveCharacterChanged(ActivePlayerCharacter);
     }
 
     public void PlayerDied(PlayerCharacter character)

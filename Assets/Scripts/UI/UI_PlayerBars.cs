@@ -16,20 +16,22 @@ public class UI_PlayerBars : MonoBehaviour
     
     [Header("StaminaBar")]
     [SerializeField] private Image staminaBarSprite;
-    [SerializeField] private Image staminaBarLerp;
     [SerializeField] private GameObject staminaBar;
     private float _targetStamina;
     
+    [Header("ChargeBar")]
+    [SerializeField] private Image chargeBarSprite;
+    [SerializeField] private GameObject chargeBar;
+    private float _targetCharge;
+    
     private Camera _mainCamera;
     private Transform _barCanvasTransform;
-    private PlayerCharacter _playerCharacter;
 
 
     private void Awake()
     {
-        _playerCharacter = gameObject.GetComponent<PlayerCharacter>();
-        _playerCharacter.OnHealthChanged += UpdateHealthBar;
-        _playerCharacter.OnStaminaChanged += UpdateStaminaBar;
+        EventManager.OnStaminaChanged += UpdateStaminaBar;
+        EventManager.OnHealthChanged += UpdateHealthBar;
     }
 
     private void Start()
@@ -40,8 +42,8 @@ public class UI_PlayerBars : MonoBehaviour
 
     private void OnDestroy()
     {
-        _playerCharacter.OnHealthChanged -= UpdateHealthBar;
-        _playerCharacter.OnStaminaChanged -= UpdateStaminaBar;
+        EventManager.OnStaminaChanged -= UpdateStaminaBar;
+        EventManager.OnHealthChanged -= UpdateHealthBar;
     }
 
     private void LateUpdate()
