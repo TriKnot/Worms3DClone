@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -881109405264771846}
   - component: {fileID: -3306969781626295404}
   m_Layer: 8
-  m_Name: RocketPrefab
+  m_Name: RocketProjectilePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,7 +130,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  radius: 10
+  explosionRadius: 2.5
+  explosionForce: 500
+  explosionUpwardModifier: 2
   explosionPrefab: {fileID: 1764654978243476, guid: a98b15aa948478849b54661e4d9a317e, type: 3}
 --- !u!1001 &2516742504737414829
 PrefabInstance:

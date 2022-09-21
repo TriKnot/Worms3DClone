@@ -19,7 +19,7 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     private CapsuleCollider _collider;
     [SerializeField] private GameObject _shootEffect;
 
-    private int _ammo = 1;
+    private int _ammo ;
     [SerializeField] private int maxAmmo = 2;
 
     private void Awake()
@@ -27,6 +27,8 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
         _projectilePool = new ProjectilePool(rocketPrefab);
         _collider = GetComponent<CapsuleCollider>();
         EventManager.OnTurnChanged += OnTurnChanged;
+        EventManager.OnTogglePlayerControl += ResetWeapon;
+        _ammo = maxAmmo;
     }
 
     private void Update()
@@ -49,9 +51,15 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
             _shootEffect.SetActive(true);
             _ammo--;
         }
+        EventManager.InvokeAmmoChanged(_ammo);
+    }
+    
+    private void ResetWeapon(bool toggle)
+    {
+        if (!toggle) return;
         shotCharge = 0f;
         EventManager.InvokeChargeChanged(maxCharge, shotCharge);
-        EventManager.InvokeAmmoChanged(_ammo);
+        if(_ammo > 0) firePoint.SetActive(true);
     }
 
     public void ChargeShot(bool active)

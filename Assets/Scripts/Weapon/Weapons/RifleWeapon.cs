@@ -13,7 +13,7 @@ public class RifleWeapon : MonoBehaviour, IWeapon
     private CapsuleCollider _collider;
 
 
-    public int _ammo = 1;
+    private int _ammo = 1;
     [SerializeField] private int maxAmmo = 5;
 
 
@@ -22,6 +22,7 @@ public class RifleWeapon : MonoBehaviour, IWeapon
         _projectilePool = new ProjectilePool(bulletPrefab);
         _collider = GetComponent<CapsuleCollider>();
         EventManager.OnTurnChanged += OnTurnChanged;
+        _ammo = maxAmmo;
     }
 
     public void Shoot()

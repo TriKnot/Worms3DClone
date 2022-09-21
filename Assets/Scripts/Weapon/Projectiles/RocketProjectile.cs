@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -5,7 +6,9 @@ using UnityEngine;
 public class RocketProjectile : MonoBehaviour
 {
     [SerializeField] private int damage = 1;
-    [SerializeField] private float radius = 10;
+    [SerializeField] private float explosionRadius = 3;
+    [SerializeField] private float explosionForce = 10;
+    [SerializeField] private float explosionUpwardModifier = 2;
     private CapsuleCollider _capsuleCollider;
     private Rigidbody _rigidbody;
     
@@ -45,13 +48,13 @@ public class RocketProjectile : MonoBehaviour
 
     IEnumerator EnableColliderAfterDelay()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.3f);
         _collider.enabled = true;
     }
 
     IEnumerator ReturnIfNotExploded()
     {
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5f);
         _rigidbody.velocity = Vector3.zero;
         _poolOnImpact.ReturnToPool();
     }
@@ -68,17 +71,25 @@ public class RocketProjectile : MonoBehaviour
         
         if (_hasExploded) return;
         
-        var hits = Physics.OverlapSphere(transform.position, radius);
-
+        var hits = Physics.OverlapSphere(transform.position, explosionRadius);
+        
         foreach (var hit in hits)
         {
             if (hit.TryGetComponent(out PlayerCharacter player))
             {
                 player.Damage(damage);
+                player.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, explosionRadius, explosionUpwardModifier);
             }
         }
         Explode();
     }
+
+    // private void OnDrawGizmos()
+    // {
+    //     Gizmos.color = Color.white;
+    //     Gizmos.DrawWireSphere(transform.position, explosionRadius);
+    //     
+    // }
 
     private void Explode()
     {
