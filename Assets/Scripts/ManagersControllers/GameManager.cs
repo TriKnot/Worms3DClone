@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public static EventManager EventManager { get; private set; }
     private static TurnManager _turnManager;
     
+    public static Camera MainCamera { get; private set; }
+    
     private Team[] teams;
     [SerializeField] private int teamAmount = 2;
     [SerializeField] private int teamSize = 3;
@@ -25,7 +27,6 @@ public class GameManager : MonoBehaviour
     public PlayerCharacter ActivePlayerCharacter { get; private set; }
     private int activePlayerIndex;
 
-    public CinemachineVirtualCamera vCam;
     public CinemachineFreeLook freeCam;
 
     private bool paused = false;
@@ -39,10 +40,10 @@ public class GameManager : MonoBehaviour
         EventManager = new EventManager();
         _turnManager = new TurnManager(teamAmount);
         teams = new Team[teamAmount];
-        
+        MainCamera = Camera.main;
 
         SetCursorLock(true);
-        
+        EventManager.OnTogglePlayerControl += TogglePlayerControl;
     }
 
     private void Start()
@@ -135,7 +136,7 @@ public class GameManager : MonoBehaviour
                 GameObject newCharacter = Instantiate(characterPrefab, spawnLocation, Quaternion.identity);
                 newCharacter.GetComponent<PlayerInput>().DeactivateInput();
                 PlayerCharacter playerCharacter = newCharacter.GetComponent<PlayerCharacter>();
-                playerCharacter.team = teams[i];
+                playerCharacter.Team = teams[i];
                 playerCharacter.characterNumber = j;
                 var color = teams[i].TeamColor;
                 newCharacter.GetComponent<MeshRenderer>().material.SetColor("_Color", color);
@@ -178,6 +179,7 @@ public class GameManager : MonoBehaviour
         ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
         activePlayerIndex = 0;
         SetUpNewActivePlayer(prevPlayer);
+        EventManager.InvokeTurnChanged();
     }
 
     private void NextPlayer()
@@ -200,9 +202,21 @@ public class GameManager : MonoBehaviour
         EventManager.InvokeActiveCharacterChanged(ActivePlayerCharacter);
     }
 
+    private void TogglePlayerControl(bool value)
+    {
+        if (value)
+        {
+            ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
+        }
+        else
+        {
+            ActivePlayerCharacter.GetComponent<PlayerInput>().DeactivateInput();
+        }
+    }
+
     public void PlayerDied(PlayerCharacter character)
     {
-        teams[character.team.TeamNumber].PlayerCharacters.Remove(character);
+        teams[character.Team.TeamNumber].PlayerCharacters.Remove(character);
     }
 
 }

@@ -1,11 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Grenade : MonoBehaviour
+public class RocketProjectile : MonoBehaviour
 {
     [SerializeField] private int damage = 1;
     [SerializeField] private float radius = 10;
@@ -36,7 +33,15 @@ public class Grenade : MonoBehaviour
         _collider.enabled = false;
         StartCoroutine(EnableColliderAfterDelay());
         StartCoroutine(ReturnIfNotExploded());
+        EventManager.InvokeTogglePlayerControl(false);
     }
+    
+    private void OnDisable()
+    {
+        _hasExploded = false;
+        EventManager.InvokeTogglePlayerControl(true);
+    }
+    
 
     IEnumerator EnableColliderAfterDelay()
     {
@@ -46,7 +51,7 @@ public class Grenade : MonoBehaviour
 
     IEnumerator ReturnIfNotExploded()
     {
-        yield return new WaitForSeconds(20f);
+        yield return new WaitForSeconds(10f);
         _rigidbody.velocity = Vector3.zero;
         _poolOnImpact.ReturnToPool();
     }
@@ -82,8 +87,4 @@ public class Grenade : MonoBehaviour
         Destroy(explosion, 3f);
     }
 
-    private void OnDisable()
-    {
-        _hasExploded = false;
-    }
 }

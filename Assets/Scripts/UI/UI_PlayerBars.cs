@@ -24,34 +24,50 @@ public class UI_PlayerBars : MonoBehaviour
     [SerializeField] private GameObject chargeBar;
     private float _targetCharge;
     
+    [Header("Ammo")]
+    [SerializeField] private Transform ammoPane;
+    private List<Image> _ammoList = new List<Image>();
+    
     private Camera _mainCamera;
     private Transform _barCanvasTransform;
+    private PlayerCharacter _playerCharacter;
 
 
     private void Awake()
     {
-        EventManager.OnStaminaChanged += UpdateStaminaBar;
-        EventManager.OnHealthChanged += UpdateHealthBar;
+        _playerCharacter = gameObject.GetComponent<PlayerCharacter>();
+        _playerCharacter.OnStaminaChanged += UpdateStaminaBar;
+        _playerCharacter.OnHealthChanged += UpdateHealthBar;
+        EventManager.OnChargeChanged += UpdateChargeBar;
+        EventManager.OnAmmoChanged += UpdateAmmo;
+        _mainCamera = Camera.main;
+        _barCanvasTransform = gameObject.GetComponentInChildren<Canvas>().transform;
+        chargeBar.SetActive(false);
+        foreach (Transform child in ammoPane)
+        {
+            _ammoList.Add(child.gameObject.GetComponent<Image>());
+        }
+
     }
 
     private void Start()
     {
-        _mainCamera = Camera.main;
-        _barCanvasTransform = gameObject.GetComponentInChildren<Canvas>().transform;
     }
 
     private void OnDestroy()
     {
-        EventManager.OnStaminaChanged -= UpdateStaminaBar;
-        EventManager.OnHealthChanged -= UpdateHealthBar;
+        _playerCharacter.OnStaminaChanged -= UpdateStaminaBar;
+        _playerCharacter.OnHealthChanged -= UpdateHealthBar;
+        EventManager.OnChargeChanged -= UpdateChargeBar;
+        EventManager.OnAmmoChanged -= UpdateAmmo;
     }
 
     private void LateUpdate()
     {
         RotateCanvas();
         AnimateHealthBar();
-        if (GameManager.Instance.ActivePlayerCharacter.gameObject != gameObject) return;
         AnimateStaminaBar();
+        AnimateChargeBar();
     }
 
     /// <summary>
@@ -65,9 +81,9 @@ public class UI_PlayerBars : MonoBehaviour
 
     
     
-    public void UpdateHealthBar(int maxHealth, int currentHealth)
+    public void UpdateHealthBar(int health, int maxHealth)
     {
-        _targetHealth = (float)currentHealth / (float)maxHealth;
+        _targetHealth = (float)health / (float)maxHealth;
     }
 
     private void AnimateHealthBar()
@@ -89,5 +105,29 @@ public class UI_PlayerBars : MonoBehaviour
         staminaBar.SetActive(!(staminaBarSprite.fillAmount >= 1));
         staminaBarSprite.fillAmount = _targetStamina;
         staminaBarSprite.color = Color.Lerp(minHealthColor, maxHealthColor, staminaBarSprite.fillAmount);
+    }
+    
+    private void UpdateChargeBar(float maxCharge, float currentCharge)
+    {
+        if(GameManager.Instance.ActivePlayerCharacter != _playerCharacter) return;
+        _targetCharge = currentCharge / maxCharge;
+    }
+    
+    private void AnimateChargeBar()
+    {
+        //Update ChargeBar
+        chargeBar.SetActive((chargeBarSprite.fillAmount > 0));
+        chargeBarSprite.fillAmount = _targetCharge;
+        chargeBarSprite.color = Color.Lerp(minHealthColor, maxHealthColor, chargeBarSprite.fillAmount);
+    }
+    
+    public void UpdateAmmo(int ammo)
+    {
+        if(GameManager.Instance.ActivePlayerCharacter != _playerCharacter) return;
+        if(ammo > 0) ammoPane.gameObject.SetActive(true);
+        for (int i = 0; i < _ammoList.Count; i++)
+        {
+            _ammoList[i].enabled = (i < ammo);
+        }
     }
 }

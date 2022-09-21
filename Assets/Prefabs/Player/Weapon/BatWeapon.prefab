@@ -380,19 +380,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCharge: 1
---- !u!114 &1154780205
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2314717508081068798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da995a939baaf3c4da5480d3e0f4551f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chargeBarSprite: {fileID: 1007675934}
-  chargeBarCanvas: {fileID: 544222194}
-  minChargeColor: {r: 1, g: 0.703978, b: 0, a: 1}
-  maxChargeColor: {r: 1, g: 0, b: 0, a: 1}

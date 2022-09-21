@@ -21,6 +21,7 @@ public class RifleWeapon : MonoBehaviour, IWeapon
     {
         _projectilePool = new ProjectilePool(bulletPrefab);
         _collider = GetComponent<CapsuleCollider>();
+        EventManager.OnTurnChanged += OnTurnChanged;
     }
 
     public void Shoot()
@@ -36,6 +37,7 @@ public class RifleWeapon : MonoBehaviour, IWeapon
             bulletRB.useGravity = false;
             bulletRB.AddForce(transform.forward * shotSpeedMultiplier, ForceMode.Impulse);
             _ammo--;
+            EventManager.InvokeAmmoChanged(_ammo);
         }    
     }
 
@@ -59,4 +61,10 @@ public class RifleWeapon : MonoBehaviour, IWeapon
     {
         _ammo = _ammo + amount > maxAmmo ? maxAmmo : _ammo + amount;
     }
+    
+    public void OnTurnChanged()
+    {
+        _ammo = maxAmmo;
+    }
+
 }

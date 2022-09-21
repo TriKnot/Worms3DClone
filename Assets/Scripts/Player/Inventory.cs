@@ -20,7 +20,9 @@ public class Inventory
         GetActiveWeapon().GetWeaponObject().SetActive(false);
         _activeWeaponIndex++;
         _activeWeaponIndex %= inventory.Count;
-        GetActiveWeapon().GetWeaponObject().SetActive(true);
+        var newActiveWeapon = GetActiveWeapon();
+        newActiveWeapon.GetWeaponObject().SetActive(true);
+        EventManager.InvokeAmmoChanged(newActiveWeapon.GetAmmoCount());
     }
 
     public IWeapon GetActiveWeapon()
@@ -32,6 +34,7 @@ public class Inventory
     {
         if(inventory.Count > 0) weapon.SetActive(false);
         inventory.Add(weapon);
+        ChangeWeapon();
     }
     
 }

@@ -5,12 +5,10 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
+public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
 {
     [SerializeField] private GameObject firePoint;
     [SerializeField] GameObject rocketPrefab;
-    [SerializeField] private GameObject chargeBar;
-    private UI_WeaponChargeBar _chargeBarScript;
 
     private ProjectilePool _projectilePool;
     private float shotCharge = 0f;
@@ -27,8 +25,8 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     private void Awake()
     {
         _projectilePool = new ProjectilePool(rocketPrefab);
-        _chargeBarScript = GetComponent<UI_WeaponChargeBar>();
         _collider = GetComponent<CapsuleCollider>();
+        EventManager.OnTurnChanged += OnTurnChanged;
     }
 
     private void Update()
@@ -38,19 +36,6 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
             ChargeWeaponUp();
         }
     }
-
-    public void ChargeShot(bool active)
-    {
-        _isCharging = active;
-        _chargeBarScript.SetActive(true);
-    }
-
-    private void ChargeWeaponUp()
-    {
-        shotCharge += Time.deltaTime * chargeSpeedMultiplier;
-        _chargeBarScript.UpdateChargeBar(shotCharge, maxCharge);
-    }
-    
     public void Shoot()
     {
         GameObject bullet = _projectilePool.GetBullet();
@@ -65,11 +50,23 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
             _ammo--;
         }
         shotCharge = 0f;
-        _chargeBarScript.SetActive(false);
+        EventManager.InvokeChargeChanged(maxCharge, shotCharge);
+        EventManager.InvokeAmmoChanged(_ammo);
     }
 
+    public void ChargeShot(bool active)
+    {
+        _isCharging = active;
+    }
+
+    private void ChargeWeaponUp()
+    {
+        shotCharge += Time.deltaTime * chargeSpeedMultiplier;
+        EventManager.InvokeChargeChanged(maxCharge, shotCharge);
+
+    }
     
-    
+
     public GameObject GetWeaponObject()
     {
         return gameObject;
@@ -90,5 +87,11 @@ public class GrenadeWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     {
         _ammo = _ammo + amount > maxAmmo ? maxAmmo : _ammo + amount;
     }
+    
+    public void OnTurnChanged()
+    {
+        _ammo = maxAmmo;
+    }
+
 }
 
