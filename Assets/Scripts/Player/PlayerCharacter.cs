@@ -1,11 +1,11 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerCharacter : MonoBehaviour
 {
     public Team team;
     [HideInInspector] public int characterNumber;
-    private int _health;
-    [SerializeField] private int _maxHealth = 5;
     private UI_PlayerBars _playerBars;
 
     [SerializeField] private Transform _weaponHolder;
@@ -14,20 +14,42 @@ public class PlayerCharacter : MonoBehaviour
     
     [SerializeField] private GameObject[] _characters;
 
+    [Header("Health")]
+    private int _health;
+    [SerializeField] private int _maxHealth = 5;
+    public delegate void HealthChanged(int maxHealth,int health);
+    public event HealthChanged OnHealthChanged;
+
+    [Header("Stamina")] 
+    private float _stamina;
+    [SerializeField] private float _maxStamina = 20f;
+    private PlayerMovement _playerMovement;
+    public delegate void StaminaChanged(float maxStamina,float stamina);
+    public event StaminaChanged OnStaminaChanged;
+
     private void Awake()
     {
         Inventory = new Inventory();
         //Inventory.AddWeapon(_weaponHolder.GetChild(0).gameObject);
         gameObject.GetComponent<MeshFilter>().mesh = _characters[Random.Range(0, _characters.Length-1)].GetComponent<MeshFilter>().sharedMesh;
         gameObject.GetComponent<MeshRenderer>().material = _characters[Random.Range(0, _characters.Length-1)].GetComponent<MeshRenderer>().sharedMaterial;
+        _playerMovement = GetComponent<PlayerMovement>();
+        _playerMovement.OnMoved += UpdateStamina;
     }
 
     private void Start()
     {
         _playerBars = GetComponent<UI_PlayerBars>();
         _health = _maxHealth;
-        _playerBars.UpdateHealthBar(_maxHealth, _health);
+        _stamina = _maxStamina;
+        OnHealthChanged?.Invoke(_maxHealth, _health);
+        OnStaminaChanged?.Invoke(_maxStamina, _stamina);
         Inventory.AddWeapon(_weaponHolder.GetChild(0).gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        _playerMovement.OnMoved -= UpdateStamina;
     }
 
     public void Damage(int damageAmount)
@@ -38,7 +60,13 @@ public class PlayerCharacter : MonoBehaviour
             _health = 0;
             Die();
         } 
-        _playerBars.UpdateHealthBar(_maxHealth, _health);
+        OnHealthChanged?.Invoke(_maxHealth, _health);
+    }
+
+    private void UpdateStamina(float value)
+    {
+        _stamina = Mathf.Max(_stamina - value, 0);
+        OnStaminaChanged?.Invoke(_maxStamina, _stamina);
     }
     
     private void Die()

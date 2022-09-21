@@ -10,8 +10,6 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 5f;
-    [SerializeField] private float maxMoveRange = 20f;
-    private float _movedDistance;
     private LayerMask _groundMask;
     private Vector3 _groundCheckOffset;
     private Rigidbody _rb;
@@ -22,6 +20,11 @@ public class PlayerMovement : MonoBehaviour
 
     private Quaternion _lookRotation;
     
+    
+    public delegate void Moved(float movedDistance);
+    public event Moved OnMoved;
+
+    
     void Awake()
     {
         _groundCheckOffset = new Vector3(0, -1f, 0);
@@ -30,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
         _playerBars = GetComponentInChildren<UI_PlayerBars>();
         _cameraFollow = GameManager.Instance.vCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
         _startCameraOffset = _cameraFollow.ShoulderOffset;
+        
     }
 
     private void Start()
@@ -40,16 +44,13 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         var velocity = _rb.velocity;
-        _movedDistance += new Vector3(velocity.x, 0, velocity.z).magnitude * Time.fixedDeltaTime;
-        _playerBars.UpdateStaminaBar(maxMoveRange, _movedDistance);
+        var movedDistance = new Vector3(velocity.x, 0, velocity.z).magnitude * Time.fixedDeltaTime;
+        if(movedDistance > 0.01f)
+            OnMoved?.Invoke(movedDistance);
     }
 
     public void Move(Vector2 moveValue)
     {
-        if(_movedDistance > maxMoveRange)
-        {
-            return;
-        }
         if (!IsGrounded())
         {
             moveValue *= 0.5f;
