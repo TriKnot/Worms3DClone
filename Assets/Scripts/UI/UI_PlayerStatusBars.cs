@@ -79,11 +79,8 @@ public class UI_PlayerStatusBars : MonoBehaviour
     /// </summary>
     private void RotateCanvas()
     {
-         var lookRotation = transform.position - _mainCameraTransform.position;
-        _barCanvasTransform.LookAt(lookRotation);
+        _barCanvasTransform.rotation = Quaternion.LookRotation(_barCanvasTransform.position - _mainCameraTransform.position);
     }
-
-    
     
     public void HealthSystem_OnHealthChanged()
     {
