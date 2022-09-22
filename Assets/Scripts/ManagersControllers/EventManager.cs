@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class EventManager
@@ -23,6 +24,10 @@ public class EventManager
     public delegate void TogglePlayerControl(bool toggle);
 
     public static event TogglePlayerControl OnTogglePlayerControl;
+    
+    public delegate void PlayerDied(PlayerCharacter character);
+    
+    public static event PlayerDied OnPlayerDied;
 
 
     public static void InvokeActiveCharacterChanged(PlayerCharacter character)
@@ -48,5 +53,10 @@ public class EventManager
     public static void InvokeAmmoChanged(int ammoLeft)
     {
         OnAmmoChanged?.Invoke(ammoLeft);
+    }
+    
+    public static void InvokePlayerDied(PlayerCharacter character)
+    {
+        OnPlayerDied?.Invoke(character);
     }
 }

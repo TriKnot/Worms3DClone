@@ -1,9 +1,11 @@
+using System;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Android;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,7 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Color[] teamColors;
 
     public PlayerCharacter ActivePlayerCharacter { get; private set; }
-    private int activePlayerIndex;
+    private int _activePlayerIndex;
 
     public CinemachineFreeLook freeCam;
 
@@ -44,11 +46,18 @@ public class GameManager : MonoBehaviour
 
         SetCursorLock(true);
         EventManager.OnTogglePlayerControl += TogglePlayerControl;
+        EventManager.OnPlayerDied += OnPlayerDied;
     }
 
     private void Start()
     {
         SetupGame();
+    }
+    
+    private void OnDisable()
+    {
+        EventManager.OnTogglePlayerControl -= TogglePlayerControl;
+        EventManager.OnPlayerDied -= OnPlayerDied;
     }
 
     private void Update()
@@ -177,7 +186,7 @@ public class GameManager : MonoBehaviour
         _turnManager.NextTurn();
         ActivePlayerCharacter = teams[_turnManager.currentTeamIndex].PlayerCharacters[0];
         ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
-        activePlayerIndex = 0;
+        _activePlayerIndex = 0;
         SetUpNewActivePlayer(prevPlayer);
         EventManager.InvokeTurnChanged();
     }
@@ -186,9 +195,9 @@ public class GameManager : MonoBehaviour
     {
         var prevPlayer = ActivePlayerCharacter;
         var currentTeam = teams[_turnManager.currentTeamIndex];
-        activePlayerIndex++;
-        activePlayerIndex %= currentTeam.PlayerCharacters.Count;
-        ActivePlayerCharacter = currentTeam.PlayerCharacters[activePlayerIndex];
+        _activePlayerIndex++;
+        _activePlayerIndex %= currentTeam.PlayerCharacters.Count;
+        ActivePlayerCharacter = currentTeam.PlayerCharacters[_activePlayerIndex];
         SetUpNewActivePlayer(prevPlayer);
     }
 
@@ -214,9 +223,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void PlayerDied(PlayerCharacter character)
+    public void OnPlayerDied(PlayerCharacter character)
     {
         teams[character.Team.TeamNumber].PlayerCharacters.Remove(character);
+        Destroy(character.gameObject);
     }
 
 }

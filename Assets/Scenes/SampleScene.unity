@@ -581,7 +581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamAmount: 3
   teamSize: 2
-  characterPrefab: {fileID: 8394286187492490272, guid: ca35ba1a503e72a49beaea4bbc0a612a, type: 3}
+  characterPrefab: {fileID: 8394286187492490272, guid: 675d2d99b4643724b9b8cc5e3bf7d761, type: 3}
   mapSize: 20
   spawnDistance: 2
   teamColors:
@@ -589,7 +589,6 @@ MonoBehaviour:
   - {r: 0.033431053, g: 0, b: 1, a: 1}
   - {r: 0.23363125, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.99701774, b: 0, a: 1}
-  vCam: {fileID: 1351649543}
   freeCam: {fileID: 134026604}
 --- !u!4 &242615522
 Transform:
@@ -1314,10 +1313,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterNumber: 0
-  _weaponHolder: {fileID: 0}
-  _characters: []
-  maxHealth: 5
-  _maxStamina: 20
+  weaponHolder: {fileID: 0}
+  characters: []
+  _statusBarsPrefab: {fileID: 0}
 --- !u!65 &1165587651
 BoxCollider:
   m_ObjectHideFlags: 0

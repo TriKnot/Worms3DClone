@@ -25,7 +25,7 @@ public class StaminaSystem
         return _stamina / _maxStamina;
     }
        
-    public void DecreaseStamina(float amount)
+    public void ConsumeStamina(float amount)
     {
         _stamina -= amount;
         _stamina = _stamina < 0 ? 0 : _stamina;

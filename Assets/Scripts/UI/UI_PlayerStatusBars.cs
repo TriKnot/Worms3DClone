@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_PlayerBars : MonoBehaviour
+public class UI_PlayerStatusBars : MonoBehaviour
 {
     [Header("HealthBar")]
     [SerializeField] private Image healthBarFill;
@@ -79,8 +79,8 @@ public class UI_PlayerBars : MonoBehaviour
     /// </summary>
     private void RotateCanvas()
     {
-        var mainCameraPosition = _mainCamera.transform.position;
-        _barCanvasTransform.rotation = Quaternion.LookRotation(_barCanvasTransform.position - mainCameraPosition);
+         var mainCameraPosition = _mainCamera.transform.position;
+        _barCanvasTransform.LookAt(mainCameraPosition);
     }
 
     

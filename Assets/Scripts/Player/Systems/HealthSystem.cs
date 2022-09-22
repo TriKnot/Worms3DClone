@@ -15,10 +15,13 @@ public class HealthSystem
     public int Health { get { return _health; } }
     public int MaxHealth { get { return _maxHealth; } }
     
-    public HealthSystem(int healthMax)
+    PlayerCharacter _playerCharacter;
+    
+    public HealthSystem(int healthMax, PlayerCharacter player)
     {
         _maxHealth = healthMax;
         _health = healthMax;
+        _playerCharacter = player;
     }
     
     public float GetHealthPercent()
@@ -29,8 +32,11 @@ public class HealthSystem
     public void Damage(int damageAmount)
     {
         _health -= damageAmount;
-        Debug.Log("health after damage: " + _health);
         _health = _health < 0 ? 0 : _health;
+        if(_health == 0)
+        {
+            _playerCharacter.Die();
+        }
         OnHealthChanged?.Invoke();
     }
     

@@ -1,5 +1,7 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerCharacter : MonoBehaviour
 {
@@ -23,24 +25,29 @@ public class PlayerCharacter : MonoBehaviour
 
     [SerializeField] private GameObject _statusBarsPrefab;
 
-    private UI_PlayerBars statusBars;
+    private UI_PlayerStatusBars _statusStatusBars;
 
    private void Awake()
     {
         Inventory = new Inventory();
-        HealthSystem = new HealthSystem(_maxHealth);
+        HealthSystem = new HealthSystem(_maxHealth, this);
         StaminaSystem = new StaminaSystem(_maxStamina);
         gameObject.GetComponent<MeshFilter>().mesh = characters[Random.Range(0, characters.Length)].GetComponent<MeshFilter>().sharedMesh;
         gameObject.GetComponent<MeshRenderer>().material = characters[Random.Range(0, characters.Length)].GetComponent<MeshRenderer>().sharedMaterial;
         _playerMovement = GetComponent<PlayerMovement>();
+        _statusStatusBars = Instantiate(_statusBarsPrefab, transform).GetComponent<UI_PlayerStatusBars>();
         EventManager.OnActiveCharacterChanged += SetActiveCharacter;
-        statusBars = Instantiate(_statusBarsPrefab, transform).GetComponent<UI_PlayerBars>();
     }
 
     private void Start()
     {
         Inventory.AddWeapon(weaponHolder.GetChild(0).gameObject);
-        statusBars.Init(this);
+        _statusStatusBars.Init(this);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnActiveCharacterChanged -= SetActiveCharacter;
     }
 
     private void Update()
@@ -64,10 +71,9 @@ public class PlayerCharacter : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
-        GameManager.Instance.PlayerDied(this);
-        Destroy(gameObject);
+        EventManager.InvokePlayerDied(this);
     }
 
 
