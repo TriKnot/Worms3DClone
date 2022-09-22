@@ -28,7 +28,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
     [SerializeField] private Transform ammoPane;
     private List<Image> _ammoList = new List<Image>();
     
-    private Camera _mainCamera;
+    private Transform _mainCameraTransform;
     private Transform _barCanvasTransform;
     private PlayerCharacter _playerCharacter;
     private HealthSystem _healthSystem;
@@ -42,13 +42,13 @@ public class UI_PlayerStatusBars : MonoBehaviour
         _playerCharacter = parent;
         _healthSystem = _playerCharacter.HealthSystem;
         _staminaSystem = _playerCharacter.StaminaSystem;
-        _mainCamera = Camera.main;
+        _mainCameraTransform = Camera.main.transform;
         _barCanvasTransform = gameObject.GetComponentInChildren<Canvas>().transform;
         //Subscribe to events
         _healthSystem.OnHealthChanged += HealthSystem_OnHealthChanged;
         _staminaSystem.OnStaminaChanged += StaminaSystem_OnStaminaChanged;
+        _playerCharacter.OnWeaponChargeChanged += PlayerCharacter_OnChargeChanged;
         
-        EventManager.OnChargeChanged += UpdateChargeBar;
         EventManager.OnAmmoChanged += UpdateAmmo;
         
         foreach (Transform child in ammoPane)
@@ -62,7 +62,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
         //Unsubscribe from events
         _playerCharacter.HealthSystem.OnHealthChanged -= HealthSystem_OnHealthChanged;
         _playerCharacter.StaminaSystem.OnStaminaChanged -= StaminaSystem_OnStaminaChanged;
-        EventManager.OnChargeChanged -= UpdateChargeBar;
+        _playerCharacter.OnWeaponChargeChanged -= PlayerCharacter_OnChargeChanged;
         EventManager.OnAmmoChanged -= UpdateAmmo;
     }
 
@@ -79,8 +79,8 @@ public class UI_PlayerStatusBars : MonoBehaviour
     /// </summary>
     private void RotateCanvas()
     {
-         var mainCameraPosition = _mainCamera.transform.position;
-        _barCanvasTransform.LookAt(mainCameraPosition);
+         var lookRotation = transform.position - _mainCameraTransform.position;
+        _barCanvasTransform.LookAt(lookRotation);
     }
 
     
@@ -111,7 +111,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
         staminaBarSprite.color = Color.Lerp(minHealthColor, maxHealthColor, staminaBarSprite.fillAmount);
     }
     
-    private void UpdateChargeBar(float maxCharge, float currentCharge)
+    private void PlayerCharacter_OnChargeChanged(float maxCharge, float currentCharge)
     {
         if(GameManager.Instance.ActivePlayerCharacter != _playerCharacter) return;
         _targetCharge = currentCharge / maxCharge;

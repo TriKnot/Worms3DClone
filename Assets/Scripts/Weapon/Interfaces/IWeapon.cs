@@ -16,5 +16,8 @@ public interface IWeapon
     void AddAmmo(int amount);
 
     void OnTurnChanged();
+    
+    void OnPickup(PlayerCharacter player);
 
+    bool CanShoot();
 }

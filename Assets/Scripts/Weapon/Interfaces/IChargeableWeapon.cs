@@ -8,6 +8,9 @@ public interface IChargeableWeapon
     /// Pass true when starting and false when ending charge
     /// </summary>
     /// <param name="active"></param>
-    void ChargeShot(bool active);
+   
+    void Shoot(float charge);
+    
+    void SetChargeAnimation(bool active);
 
 }

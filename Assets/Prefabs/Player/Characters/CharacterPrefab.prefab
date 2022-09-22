@@ -328,12 +328,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterNumber: 0
   weaponHolder: {fileID: 7375017585030168240}
-  characters:
+  statusBarsPrefab: {fileID: 8770978904602962273, guid: 3373d6d6ac283774ebcf7758ed3503a1, type: 3}
+  characterModels:
   - {fileID: 1283017171755564, guid: b847152f5163a4b4d98e390fe0bbc79a, type: 3}
-  - {fileID: 1645872946987862, guid: a77b758e54b86744b9623fd0d3aeb90a, type: 3}
-  - {fileID: 1965410809269166, guid: 7d55993bc0180314fa3e70ec01174dee, type: 3}
   - {fileID: 1849736199912346, guid: a12a8e6080b1a90418b5c9b3c09bf7cc, type: 3}
-  _statusBarsPrefab: {fileID: 8770978904602962273, guid: 3373d6d6ac283774ebcf7758ed3503a1, type: 3}
+  - {fileID: 1965410809269166, guid: 7d55993bc0180314fa3e70ec01174dee, type: 3}
+  - {fileID: 1645872946987862, guid: a77b758e54b86744b9623fd0d3aeb90a, type: 3}
 --- !u!114 &-8228104139777837167
 MonoBehaviour:
   m_ObjectHideFlags: 0

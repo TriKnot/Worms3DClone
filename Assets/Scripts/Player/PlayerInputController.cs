@@ -38,29 +38,7 @@ public class PlayerInputController : MonoBehaviour
     
     public void Shoot(InputAction.CallbackContext context)
     {
-        var activeWeapon = _player.Inventory.GetActiveWeapon();
-        
-        if (activeWeapon == null) return;
-        if (!activeWeapon.GetWeaponObject().TryGetComponent(out IMeleeWeapon meleeWeapon) && activeWeapon.GetAmmoCount() <= 0) return;
-        
-        if (activeWeapon.GetWeaponObject().TryGetComponent(out IChargeableWeapon chargeableWeapon))
-        {
-            if (context.started)
-            {
-                chargeableWeapon.ChargeShot(true);
-            }
-            else if (context.canceled)
-            {
-                chargeableWeapon.ChargeShot(false);
-                activeWeapon.Shoot();
-            }
-            return;
-        }
-        if (context.started)
-        {
-            activeWeapon.Shoot();
-        }
-        
+        _player.FireWeapon(context);
     }
 
     

@@ -68,4 +68,14 @@ public class RifleWeapon : MonoBehaviour, IWeapon
         _ammo = maxAmmo;
     }
 
+    public void OnPickup(PlayerCharacter player)
+    {
+        
+    }
+
+    public bool CanShoot()
+    {
+        return (_ammo > 0);
+    }
+
 }

@@ -6,9 +6,10 @@ using UnityEngine;
 public class RocketProjectile : MonoBehaviour
 {
     [SerializeField] private int damage = 1;
-    [SerializeField] private float explosionRadius = 3;
+    [SerializeField] private float explosionRadiusModifier = 1.5f;
     [SerializeField] private float explosionForce = 10;
     [SerializeField] private float explosionUpwardModifier = 2;
+    private readonly float _explosionRadius = 2f;
     private CapsuleCollider _capsuleCollider;
     private Rigidbody _rigidbody;
     
@@ -17,6 +18,7 @@ public class RocketProjectile : MonoBehaviour
     private bool _hasExploded;
     
     private PoolOnImpact _poolOnImpact;
+    private RocketWeapon _rocketWeapon;
 
 
     public void Awake()
@@ -31,18 +33,23 @@ public class RocketProjectile : MonoBehaviour
         _poolOnImpact = GetComponent<PoolOnImpact>();
     }
 
+    public void Init(RocketWeapon parent)
+    {
+        _rocketWeapon = parent;
+        _rocketWeapon.ToggleVisibleRocket(false);
+    }
+
     private void OnEnable()
     {
         _collider.enabled = false;
         StartCoroutine(EnableColliderAfterDelay());
         StartCoroutine(ReturnIfNotExploded());
-        EventManager.InvokeTogglePlayerControl(false);
     }
     
     private void OnDisable()
     {
         _hasExploded = false;
-        EventManager.InvokeTogglePlayerControl(true);
+        _rocketWeapon.ToggleVisibleRocket(true);
     }
     
 
@@ -71,29 +78,30 @@ public class RocketProjectile : MonoBehaviour
         
         if (_hasExploded) return;
         
-        var hits = Physics.OverlapSphere(transform.position, explosionRadius);
+        var hits = Physics.OverlapSphere(transform.position, _explosionRadius * explosionRadiusModifier);
         
         foreach (var hit in hits)
         {
             if (hit.TryGetComponent(out PlayerCharacter player))
             {
                 player.HealthSystem.Damage(damage);
-                player.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, explosionRadius, explosionUpwardModifier);
+                player.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, _explosionRadius * explosionRadiusModifier, explosionUpwardModifier);
             }
         }
         Explode();
     }
 
-    // private void OnDrawGizmos()
-    // {
-    //     Gizmos.color = Color.white;
-    //     Gizmos.DrawWireSphere(transform.position, explosionRadius);
-    //     
-    // }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, _explosionRadius * explosionRadiusModifier);
+        
+    }
 
     private void Explode()
     {
         var explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        explosion.transform.localScale = Vector3.one * explosionRadiusModifier;
         _hasExploded = true;
         Destroy(explosion, 3f);
     }

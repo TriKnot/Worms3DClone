@@ -7,74 +7,62 @@ using UnityEngine;
 
 public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
 {
-    [SerializeField] private GameObject firePoint;
-    [SerializeField] GameObject rocketPrefab;
-
     private ProjectilePool _projectilePool;
-    private float shotCharge = 0f;
-    [SerializeField] private float maxCharge = 3f;
-    [SerializeField] private float chargeSpeedMultiplier = 3f;
+    [SerializeField] private GameObject firePoint;
+    [SerializeField] private GameObject rocketPrefab;
+
     [SerializeField] private float shotSpeedMultiplier = 3f;
-    private bool _isCharging = false;
     private CapsuleCollider _collider;
     [SerializeField] private GameObject _shootEffect;
 
     private int _ammo ;
     [SerializeField] private int maxAmmo = 2;
+    
+    private GameObject _currentRocket;
 
     private void Awake()
     {
         _projectilePool = new ProjectilePool(rocketPrefab);
         _collider = GetComponent<CapsuleCollider>();
-        EventManager.OnTurnChanged += OnTurnChanged;
-        EventManager.OnTogglePlayerControl += ResetWeapon;
         _ammo = maxAmmo;
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (_isCharging && shotCharge < maxCharge)
-        {
-            ChargeWeaponUp();
-        }
+        ToggleVisibleRocket(true);
     }
+
     public void Shoot()
     {
-        GameObject bullet = _projectilePool.GetBullet();
-        firePoint.SetActive(false);
-        if(bullet != null)
+        Shoot(0);
+    }
+    public void Shoot(float shotCharge)
+    {
+        _currentRocket = _projectilePool.GetBullet();
+        if(_currentRocket != null)
         {
-            bullet.transform.position = firePoint.transform.position;
-            bullet.transform.rotation = firePoint.transform.rotation;
-            bullet.SetActive(true);
-            bullet.GetComponent<Rigidbody>().AddForce(-transform.forward * shotCharge * shotSpeedMultiplier, ForceMode.Impulse);
+            _currentRocket.GetComponent<RocketProjectile>().Init(this);
+            _currentRocket.transform.position = firePoint.transform.position;
+            _currentRocket.transform.rotation = firePoint.transform.rotation;
+            _currentRocket.SetActive(true);
+            _currentRocket.GetComponent<Rigidbody>().AddForce(-transform.forward * shotCharge * shotSpeedMultiplier, ForceMode.Impulse);
             _shootEffect.SetActive(true);
             _ammo--;
         }
         EventManager.InvokeAmmoChanged(_ammo);
     }
-    
-    private void ResetWeapon(bool toggle)
+
+    public void SetChargeAnimation(bool active)
     {
-        if (!toggle) return;
-        shotCharge = 0f;
-        EventManager.InvokeChargeChanged(maxCharge, shotCharge);
-        if(_ammo > 0) firePoint.SetActive(true);
+        //No charge animation (yet?)
     }
 
-    public void ChargeShot(bool active)
+    public void ToggleVisibleRocket(bool active)
     {
-        _isCharging = active;
-    }
-
-    private void ChargeWeaponUp()
-    {
-        shotCharge += Time.deltaTime * chargeSpeedMultiplier;
-        EventManager.InvokeChargeChanged(maxCharge, shotCharge);
-
+        var showRocket = active && _ammo > 0;
+        firePoint.SetActive(showRocket);
     }
     
-
     public GameObject GetWeaponObject()
     {
         return gameObject;
@@ -101,5 +89,14 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
         _ammo = maxAmmo;
     }
 
+    public void OnPickup(PlayerCharacter player)
+    {
+        
+    }
+    
+    public bool CanShoot()
+    {
+        return (_ammo > 0 && (_currentRocket == null || _currentRocket.activeSelf == false));
+    }
 }
 

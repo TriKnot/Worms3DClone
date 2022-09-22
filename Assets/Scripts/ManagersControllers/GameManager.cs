@@ -45,7 +45,6 @@ public class GameManager : MonoBehaviour
         MainCamera = Camera.main;
 
         SetCursorLock(true);
-        EventManager.OnTogglePlayerControl += TogglePlayerControl;
         EventManager.OnPlayerDied += OnPlayerDied;
     }
 
@@ -56,7 +55,6 @@ public class GameManager : MonoBehaviour
     
     private void OnDisable()
     {
-        EventManager.OnTogglePlayerControl -= TogglePlayerControl;
         EventManager.OnPlayerDied -= OnPlayerDied;
     }
 
@@ -211,17 +209,17 @@ public class GameManager : MonoBehaviour
         EventManager.InvokeActiveCharacterChanged(ActivePlayerCharacter);
     }
 
-    private void TogglePlayerControl(bool value)
-    {
-        if (value)
-        {
-            ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
-        }
-        else
-        {
-            ActivePlayerCharacter.GetComponent<PlayerInput>().DeactivateInput();
-        }
-    }
+    // private void TogglePlayerControl(bool value)
+    // {
+    //     if (value)
+    //     {
+    //         ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
+    //     }
+    //     else
+    //     {
+    //         ActivePlayerCharacter.GetComponent<PlayerInput>().DeactivateInput();
+    //     }
+    // }
 
     public void OnPlayerDied(PlayerCharacter character)
     {

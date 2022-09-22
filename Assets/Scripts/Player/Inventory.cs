@@ -29,6 +29,11 @@ public class Inventory
     {
         return inventory[_activeWeaponIndex].GetComponent<IWeapon>();
     }
+    
+    public GameObject GetActiveWeaponObject()
+    {
+        return inventory[_activeWeaponIndex];
+    }
 
     public void AddWeapon(GameObject weapon)
     {
@@ -36,5 +41,8 @@ public class Inventory
         inventory.Add(weapon);
         ChangeWeapon();
     }
+    
+    //TODO add remove weapon
+    //TODO set active weapon to new weapon on pickup
     
 }

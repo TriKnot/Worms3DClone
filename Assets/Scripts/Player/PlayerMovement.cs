@@ -11,13 +11,20 @@ public class PlayerMovement : MonoBehaviour
     
     private StaminaSystem _staminaSystem;
     private bool _canMove = false;
+    private Transform _cameraTransform;
 
     void Awake()
     {
         _groundMask = LayerMask.GetMask("Ground");
         _rb = GetComponent<Rigidbody>();
         _staminaSystem = gameObject.GetComponent<PlayerCharacter>().StaminaSystem;
+        _cameraTransform = Camera.main.transform;
         EventManager.OnActiveCharacterChanged += OnActiveCharacterChanged;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnActiveCharacterChanged -= OnActiveCharacterChanged;
     }
 
     private void FixedUpdate()
@@ -32,21 +39,21 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(Vector2 moveValue)
     {
-        if(!_canMove) return;
         if (!IsGrounded())
         {
             moveValue *= 0.3f;
         }
 
-        Vector3 forward = Camera.main.transform.forward;
-        Vector3 right = Camera.main.transform.right;
+        Vector3 forward = _cameraTransform.forward;
+        Vector3 right = _cameraTransform.right;
         forward.y = 0f;
         right.y = 0f;
         forward.Normalize();
         right.Normalize();
         
         Vector3 desiredMoveDirection = forward * moveValue.y + right * moveValue.x;
-        _rb.AddForce(desiredMoveDirection * moveSpeed, ForceMode.Force);
+        if(_canMove)
+            _rb.AddForce(desiredMoveDirection * moveSpeed, ForceMode.Force);
         Rotate(desiredMoveDirection);
         
         

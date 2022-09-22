@@ -212,9 +212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firePoint: {fileID: 956005868876938855}
   rocketPrefab: {fileID: 6380244137059741245, guid: 34656e04a9fd29c41964a0ca3f74de6b, type: 3}
-  maxCharge: 3
-  chargeSpeedMultiplier: 3
-  shotSpeedMultiplier: 10
+  shotSpeedMultiplier: 30
   _shootEffect: {fileID: 769699670944283121}
   maxAmmo: 2
 --- !u!1 &956005868876938855 stripped

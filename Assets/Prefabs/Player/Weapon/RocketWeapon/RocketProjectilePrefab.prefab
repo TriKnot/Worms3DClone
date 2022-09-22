@@ -129,10 +129,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bca2ca7a197367a42a1b973efa462875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
-  explosionRadius: 2.5
-  explosionForce: 500
-  explosionUpwardModifier: 2
+  damage: 2
+  explosionRadiusModifier: 3
+  explosionForce: 1000
+  explosionUpwardModifier: 500
   explosionPrefab: {fileID: 1764654978243476, guid: a98b15aa948478849b54661e4d9a317e, type: 3}
 --- !u!1001 &2516742504737414829
 PrefabInstance:
