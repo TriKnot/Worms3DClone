@@ -9,66 +9,64 @@ public class PlayerMovement : MonoBehaviour
     private LayerMask _groundMask;
     private Rigidbody _rb;
     
-    private Cinemachine3rdPersonFollow _cameraFollow;
-    private Vector3 _startCameraOffset;
-
-    private Quaternion _lookRotation;
-    
-    private bool _isActiveCharacter;
-    public delegate void Moved(float movedDistance);
-    public event Moved OnMoved;
-
+    private StaminaSystem _staminaSystem;
+    private bool _canMove = false;
 
     void Awake()
     {
         _groundMask = LayerMask.GetMask("Ground");
         _rb = GetComponent<Rigidbody>();
-        EventManager.OnActiveCharacterChanged += SetActiveCharacter;
+        _staminaSystem = gameObject.GetComponent<PlayerCharacter>().StaminaSystem;
+        EventManager.OnActiveCharacterChanged += OnActiveCharacterChanged;
     }
 
     private void FixedUpdate()
     {
         var velocity = _rb.velocity;
         var movedDistance = new Vector3(velocity.x, 0, velocity.z).magnitude * Time.fixedDeltaTime;
-        if(movedDistance > 0.01f)
-            OnMoved?.Invoke(movedDistance);
     }
 
     private void LateUpdate()
     {
-        if (_isActiveCharacter)
-        {
-            Rotate();
-        }
-        
-    }
-
-    private void SetActiveCharacter(PlayerCharacter character)
-    {
-        _isActiveCharacter = character == gameObject.GetComponent<PlayerCharacter>();
     }
 
     public void Move(Vector2 moveValue)
     {
-        var vel = _rb.velocity;
+        if(!_canMove) return;
         if (!IsGrounded())
         {
-            moveValue *= 0f;
+            moveValue *= 0.3f;
         }
 
-        var t = transform;
-        vel += t.forward * (moveValue.y * moveSpeed * Time.fixedDeltaTime) + t.right * (moveValue.x * moveSpeed * Time.fixedDeltaTime);
-        _rb.velocity = vel;
+        Vector3 forward = Camera.main.transform.forward;
+        Vector3 right = Camera.main.transform.right;
+        forward.y = 0f;
+        right.y = 0f;
+        forward.Normalize();
+        right.Normalize();
+        
+        Vector3 desiredMoveDirection = forward * moveValue.y + right * moveValue.x;
+        _rb.AddForce(desiredMoveDirection * moveSpeed, ForceMode.Force);
+        Rotate(desiredMoveDirection);
+        
+        
+        if(_staminaSystem.Stamina <= 0)
+        {
+            _canMove = false;
+        }
+        _staminaSystem.ConsumeStamina(_rb.velocity.magnitude * Time.fixedDeltaTime);
     }
 
 
-    private void Rotate()
+    private void Rotate(Vector3 velocity)
     {
-        transform.rotation = Quaternion.Euler(0, GameManager.MainCamera.transform.eulerAngles.y, 0);
+        var targetRotation = Quaternion.LookRotation(velocity);
+        transform.rotation = targetRotation;
     }
     
     public void Jump()
     {
+        if(!_canMove) return;
         if (IsGrounded())
         {
             _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -78,6 +76,11 @@ public class PlayerMovement : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics.CheckSphere(transform.position, 0.1f, _groundMask);
+    }
+    
+    private void OnActiveCharacterChanged(PlayerCharacter character)
+    {
+        _canMove = character.gameObject == gameObject;
     }
 
 }
