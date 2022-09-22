@@ -47,7 +47,7 @@ public class Projectile : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent( out PlayerCharacter player))
         {
-            player.Damage(damage);
+            player.HealthSystem.Damage(damage);
         }
     }
 }

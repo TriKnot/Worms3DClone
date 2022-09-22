@@ -12,17 +12,17 @@ public class UI_PlayerBars : MonoBehaviour
     [SerializeField] private float lerpSpeed = 2f;
     [SerializeField] private Color maxHealthColor;
     [SerializeField] private Color minHealthColor;
-    private float _targetHealth;
+    private float _targetHealth = 1;
     
     [Header("StaminaBar")]
     [SerializeField] private Image staminaBarSprite;
     [SerializeField] private GameObject staminaBar;
-    private float _targetStamina;
+    private float _targetStamina = 1;
     
     [Header("ChargeBar")]
     [SerializeField] private Image chargeBarSprite;
     [SerializeField] private GameObject chargeBar;
-    private float _targetCharge;
+    private float _targetCharge = 0;
     
     [Header("Ammo")]
     [SerializeField] private Transform ammoPane;
@@ -31,33 +31,37 @@ public class UI_PlayerBars : MonoBehaviour
     private Camera _mainCamera;
     private Transform _barCanvasTransform;
     private PlayerCharacter _playerCharacter;
+    private HealthSystem _healthSystem;
+    private StaminaSystem _staminaSystem;
 
 
-    private void Awake()
+
+    public void Init(PlayerCharacter parent)
     {
-        _playerCharacter = gameObject.GetComponent<PlayerCharacter>();
-        _playerCharacter.OnStaminaChanged += UpdateStaminaBar;
-        _playerCharacter.OnHealthChanged += UpdateHealthBar;
-        EventManager.OnChargeChanged += UpdateChargeBar;
-        EventManager.OnAmmoChanged += UpdateAmmo;
+        //Setup references
+        _playerCharacter = parent;
+        _healthSystem = _playerCharacter.HealthSystem;
+        _staminaSystem = _playerCharacter.StaminaSystem;
         _mainCamera = Camera.main;
         _barCanvasTransform = gameObject.GetComponentInChildren<Canvas>().transform;
-        chargeBar.SetActive(false);
+        //Subscribe to events
+        _healthSystem.OnHealthChanged += HealthSystem_OnHealthChanged;
+        _staminaSystem.OnStaminaChanged += StaminaSystem_OnStaminaChanged;
+        
+        EventManager.OnChargeChanged += UpdateChargeBar;
+        EventManager.OnAmmoChanged += UpdateAmmo;
+        
         foreach (Transform child in ammoPane)
         {
             _ammoList.Add(child.gameObject.GetComponent<Image>());
         }
 
     }
-
-    private void Start()
-    {
-    }
-
     private void OnDestroy()
     {
-        _playerCharacter.OnStaminaChanged -= UpdateStaminaBar;
-        _playerCharacter.OnHealthChanged -= UpdateHealthBar;
+        //Unsubscribe from events
+        _playerCharacter.HealthSystem.OnHealthChanged -= HealthSystem_OnHealthChanged;
+        _playerCharacter.StaminaSystem.OnStaminaChanged -= StaminaSystem_OnStaminaChanged;
         EventManager.OnChargeChanged -= UpdateChargeBar;
         EventManager.OnAmmoChanged -= UpdateAmmo;
     }
@@ -81,9 +85,9 @@ public class UI_PlayerBars : MonoBehaviour
 
     
     
-    public void UpdateHealthBar(int health, int maxHealth)
+    public void HealthSystem_OnHealthChanged()
     {
-        _targetHealth = (float)health / (float)maxHealth;
+        _targetHealth = _healthSystem.GetHealthPercent();
     }
 
     private void AnimateHealthBar()
@@ -93,10 +97,10 @@ public class UI_PlayerBars : MonoBehaviour
         healthBarFill.fillAmount = _targetHealth;
         healthBarFill.color = Color.Lerp(minHealthColor, maxHealthColor, healthBarFill.fillAmount);
     }
-    
-    public void UpdateStaminaBar(float maxStamina, float currentStamina)
+
+    public void StaminaSystem_OnStaminaChanged()
     {
-        _targetStamina = currentStamina / maxStamina;
+        _targetStamina = _staminaSystem.GetStaminaPercent();
     }
 
     private void AnimateStaminaBar()
