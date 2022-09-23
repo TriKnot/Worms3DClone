@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class EventManager
 {
-    public delegate void ActiveCharacterChanged(PlayerCharacter character);
+    public delegate void ActiveCharacterChanged();
     public static event ActiveCharacterChanged OnActiveCharacterChanged;
+    
+    public delegate void TogglePLayerControl(bool toggle);
+    public static event TogglePLayerControl OnTogglePlayerControl;
 
     public delegate void TurnChanged();
     public static event TurnChanged OnTurnChanged;
@@ -18,9 +21,14 @@ public class EventManager
     public static event PlayerDied OnPlayerDied;
 
 
-    public static void InvokeActiveCharacterChanged(PlayerCharacter character)
+    public static void InvokeActiveCharacterChanged()
     {
-        OnActiveCharacterChanged?.Invoke(character);
+        OnActiveCharacterChanged?.Invoke();
+    }
+    
+    public static void InvokeTogglePlayerControl(bool toggle)
+    {
+        OnTogglePlayerControl?.Invoke(toggle);
     }
 
     public static void InvokeTurnChanged()

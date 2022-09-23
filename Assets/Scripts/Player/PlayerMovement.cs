@@ -85,9 +85,9 @@ public class PlayerMovement : MonoBehaviour
         return Physics.CheckSphere(transform.position, 0.1f, _groundMask);
     }
     
-    private void OnActiveCharacterChanged(PlayerCharacter character)
+    private void OnActiveCharacterChanged()
     {
-        _canMove = character.gameObject == gameObject;
+        _canMove = GameManager.Instance.ActivePlayerCharacter.gameObject == gameObject;
     }
 
 }

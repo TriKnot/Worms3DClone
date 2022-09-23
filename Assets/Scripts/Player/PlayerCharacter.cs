@@ -27,8 +27,6 @@ public class PlayerCharacter : MonoBehaviour
     public delegate void WeaponChargeChanged(float maxCharge, float currentCharge);
     public event WeaponChargeChanged OnWeaponChargeChanged;
 
-    private bool _isActiveCharacter;
-
    private void Awake()
     {
         Inventory = new Inventory();
@@ -105,10 +103,9 @@ public class PlayerCharacter : MonoBehaviour
     }
 
 
-    private void SetActiveCharacter(PlayerCharacter character)
+    private void SetActiveCharacter()
     {
-        _isActiveCharacter = character == this;
-        weaponHolder.gameObject.SetActive(_isActiveCharacter);
+        weaponHolder.gameObject.SetActive(GetComponent<PlayerInput>().inputIsActive);
     }
 
     public void Die()
