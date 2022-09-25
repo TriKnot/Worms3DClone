@@ -110,7 +110,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
     
     private void PlayerCharacter_OnChargeChanged(float maxCharge, float currentCharge)
     {
-        if(GameManager.Instance.ActivePlayerCharacter != _playerCharacter) return;
+        if(GameManager.Instance.ActiveCharacter != _playerCharacter) return;
         _targetCharge = currentCharge / maxCharge;
     }
     
@@ -124,7 +124,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
     
     public void UpdateAmmo(int ammo)
     {
-        if(GameManager.Instance.ActivePlayerCharacter != _playerCharacter) return;
+        if(GameManager.Instance.ActiveCharacter != _playerCharacter) return;
         if(ammo > 0) ammoPane.gameObject.SetActive(true);
         for (int i = 0; i < _ammoList.Count; i++)
         {

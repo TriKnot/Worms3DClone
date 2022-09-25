@@ -26,12 +26,15 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private Color[] teamColors;
 
-    public PlayerCharacter ActivePlayerCharacter { get; private set; }
-    private int _activePlayerIndex;
+    public PlayerCharacter ActiveCharacter { get; private set; }
+    public int CurrentCharacterIndex { get; private set; } = 0;
 
     public CinemachineFreeLook freeCam;
 
     public bool IsPaused { get; private set; }= false;
+
+    public int CurrentTeamIndex { get; private set; } = 0;
+
     
     private void Awake()
     {
@@ -42,13 +45,13 @@ public class GameManager : MonoBehaviour
         Instance = this;
         EventManager = new EventManager();
         _turnManager = GetComponent<TurnManager>();
-        _turnManager.Init(teamAmount);
         teams = new Team[teamAmount];
         MainCamera = Camera.main;
 
         SetCursorLock(true);
         EventManager.OnPlayerDied += OnPlayerDied;
         EventManager.OnTogglePlayerControl += TogglePlayerControl;
+        EventManager.OnTurnChanged += OnTurnChanged;
     }
 
     private void Start()
@@ -60,18 +63,17 @@ public class GameManager : MonoBehaviour
     {
         EventManager.OnPlayerDied -= OnPlayerDied;
         EventManager.OnTogglePlayerControl -= TogglePlayerControl;
+        EventManager.OnTurnChanged -= OnTurnChanged;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            print("GameManager -> TurnChanged");
-            EventManager.InvokeTurnChanged();
+            _turnManager.EndTurn();
         }
         if(Input.GetKeyDown(KeyCode.Tab))
         {
-            print("GameManager -> Change active character");
             ChangeActivePlayer();
         }
 
@@ -110,7 +112,7 @@ public class GameManager : MonoBehaviour
     {
         CreateTeams();
         SpawnPlayers();
-        ActivePlayerCharacter = teams[0].PlayerCharacters[0];
+        ActiveCharacter = teams[0].PlayerCharacters[0];
         ChangeActivePlayer();
     }
     
@@ -181,54 +183,42 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    // private void NextPlayer()
-    // {
-    //     var prevPlayer = ActivePlayerCharacter;
-    //     var currentTeam = teams[_turnManager.currentTeamIndex];
-    //     _activePlayerIndex++;
-    //     _activePlayerIndex %= currentTeam.PlayerCharacters.Count;
-    //     ActivePlayerCharacter = currentTeam.PlayerCharacters[_activePlayerIndex];
-    //     ChangeActivePlayer(prevPlayer);
-    // }
-
+    private void ChangeActiveTeam()
+    {
+        CurrentTeamIndex ++;
+        CurrentTeamIndex %= teamAmount;
+    }
+    
     private void ChangeActivePlayer()
     {
-        ActivePlayerCharacter.GetComponent<PlayerInput>().DeactivateInput();
-        print("previous player index: " + _activePlayerIndex);
-        ActivePlayerCharacter = teams[_turnManager.currentTeamIndex].PlayerCharacters[GetNextPlayerIndex()];
-        print("active player index: " + _activePlayerIndex);
+        //Change active player
+        var prevPlayer = ActiveCharacter;
+        var currentTeam = teams[CurrentTeamIndex];
+        CurrentCharacterIndex++;
+        CurrentCharacterIndex %= currentTeam.PlayerCharacters.Count;
+        ActiveCharacter = currentTeam.PlayerCharacters[CurrentCharacterIndex];
+       
+        //Set controls to active player
+        prevPlayer.GetComponent<PlayerInput>().DeactivateInput();
+        ActiveCharacter.GetComponent<PlayerInput>().ActivateInput();
 
-        ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
-        var cameraTarget = ActivePlayerCharacter.transform.Find("CameraFollowTarget").transform;
+        //Set camera to new target
+        var cameraTarget = ActiveCharacter.transform.Find("CameraFollowTarget").transform;
         freeCam.Follow = cameraTarget;
         freeCam.LookAt = cameraTarget;
         EventManager.InvokeActiveCharacterChanged();
-
-    }
-    
-    private int GetNextTeamIndex()
-    {
-        var nextTeamIndex = _turnManager.currentTeamIndex + 1;
-        nextTeamIndex %= teamAmount;
-        return nextTeamIndex;
-    }
-    
-    private int GetNextPlayerIndex()
-    {
-        var nextPlayerIndex = _activePlayerIndex++;
-        nextPlayerIndex %= teamSize;
-        return nextPlayerIndex;
+        
     }
 
     private void TogglePlayerControl(bool value)
     {
         if (value)
         {
-            ActivePlayerCharacter.GetComponent<PlayerInput>().ActivateInput();
+            ActiveCharacter.GetComponent<PlayerInput>().ActivateInput();
         }
         else
         {
-            ActivePlayerCharacter.GetComponent<PlayerInput>().DeactivateInput();
+            ActiveCharacter.GetComponent<PlayerInput>().DeactivateInput();
         }
     }
 
@@ -238,6 +228,10 @@ public class GameManager : MonoBehaviour
         Destroy(character.gameObject);
     }
 
-
+    private void OnTurnChanged()
+    {
+        ChangeActiveTeam();
+        ChangeActivePlayer();
+    }
 }
 

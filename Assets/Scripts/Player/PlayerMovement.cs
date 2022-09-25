@@ -87,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
     
     private void OnActiveCharacterChanged()
     {
-        _canMove = GameManager.Instance.ActivePlayerCharacter.gameObject == gameObject;
+        _canMove = GameManager.Instance.ActiveCharacter.gameObject == gameObject;
     }
 
 }

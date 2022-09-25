@@ -115,7 +115,7 @@ public class PlayerCharacter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(GameManager.Instance.ActivePlayerCharacter != this) return;
+        if(GameManager.Instance.ActiveCharacter != this) return;
         if (!other.gameObject.TryGetComponent(out IWeapon weapon)) return;
         Inventory.AddWeapon(other.gameObject);
         var weaponTransform = weapon.GetWeaponObject().transform;

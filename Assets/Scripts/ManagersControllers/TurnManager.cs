@@ -6,8 +6,6 @@ using TMPro;
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance;
-    private int _teamAmount;
-    public int currentTeamIndex { get; private set; }
     public int currentTurnIndex { get; private set; }
     
     public float turnTime { get; private set; }
@@ -16,24 +14,9 @@ public class TurnManager : MonoBehaviour
 
     private void Awake()
     {
-        currentTeamIndex = 0;
         currentTurnIndex = 1;
         Instance = this;
-        EventManager.OnTurnChanged += OnTurnChanged;
-    }
-
-    public void Init(int teamAmount)
-    {
-        _teamAmount = teamAmount;
-    }
-
-    public void OnTurnChanged()
-    {
-        currentTeamIndex++;
-        currentTeamIndex %= _teamAmount;
-        currentTurnIndex++;
         turnTime = _turnTimeMax;
-        EventManager.InvokeActiveCharacterChanged();
     }
     
     private void Update()
@@ -44,12 +27,25 @@ public class TurnManager : MonoBehaviour
             TurnTimerOnGUI();
             if(turnTime <= 0)
             {
-                EventManager.InvokeTurnChanged();
+                ChangeTurn();
             }
         }
     }
-
     
+    public void EndTurn()
+    {
+        ChangeTurn();
+    }
+    
+    private void ChangeTurn()
+    {
+        currentTurnIndex++;
+        turnTime = _turnTimeMax;
+        EventManager.InvokeTurnChanged();
+        print("Turn changed to " + currentTurnIndex);
+        print("Team numer is: " + GameManager.Instance.CurrentTeamIndex );
+    }
+
     private void TurnTimerOnGUI()
     {
         _turnTimerText.SetText(turnTime.ToString("F0"));
