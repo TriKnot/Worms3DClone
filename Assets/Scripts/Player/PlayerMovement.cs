@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private StaminaSystem _staminaSystem;
     private bool _canMove = false;
     private Transform _cameraTransform;
+    private CapsuleCollider _collider;
 
     void Awake()
     {
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
         _staminaSystem = gameObject.GetComponent<PlayerCharacter>().StaminaSystem;
         _cameraTransform = Camera.main.transform;
         EventManager.OnActiveCharacterChanged += OnActiveCharacterChanged;
+        _collider = GetComponent<CapsuleCollider>();
     }
 
     private void OnDisable()
@@ -33,9 +35,6 @@ public class PlayerMovement : MonoBehaviour
         var movedDistance = new Vector3(velocity.x, 0, velocity.z).magnitude * Time.fixedDeltaTime;
     }
 
-    private void LateUpdate()
-    {
-    }
 
     public void Move(Vector2 moveValue)
     {
@@ -51,10 +50,12 @@ public class PlayerMovement : MonoBehaviour
         forward.Normalize();
         right.Normalize();
         
-        Vector3 desiredMoveDirection = forward * moveValue.y + right * moveValue.x;
-        if(_canMove)
-            _rb.AddForce(desiredMoveDirection * moveSpeed, ForceMode.Force);
-        Rotate(desiredMoveDirection);
+        Vector3 desiredVelocity = forward * moveValue.y + right * moveValue.x;
+            desiredVelocity.Set(desiredVelocity.x, _rb.velocity.y, desiredVelocity.z);
+        if(CheckMoveableTerrain(transform.position, new Vector3(desiredVelocity.x, 0, desiredVelocity.z), 10f) && _canMove)
+            _rb.velocity = desiredVelocity * moveSpeed;
+            //_rb.AddForce(desiredMoveDirection * moveSpeed, ForceMode.Force);
+        Rotate(desiredVelocity);
         
         
         if(_staminaSystem.Stamina <= 0)
@@ -63,7 +64,32 @@ public class PlayerMovement : MonoBehaviour
         }
         _staminaSystem.ConsumeStamina(_rb.velocity.magnitude * Time.fixedDeltaTime);
     }
+    
+    [SerializeField] private float slopeRayHeight = 0.1f;
+    [SerializeField] private float steepSlopeAngle = 0.1f;
+    [SerializeField] private float slopeThreshold = 0.1f;
+    private bool CheckMoveableTerrain(Vector3 position, Vector3 desiredDirection, float distance)
+    {
+        Ray myRay = new Ray(position, desiredDirection);
+        RaycastHit hit;
+        if(Physics.Raycast(myRay, out hit, distance, _groundMask))
+        {
+            float slopeAngle = Mathf.Deg2Rad * Vector3.Angle(Vector3.up, hit.normal);
+            float radius = Mathf.Abs(slopeRayHeight / Mathf.Sin(slopeAngle));
+            if (slopeAngle >= steepSlopeAngle * Mathf.Deg2Rad)
+            {
+                if(hit.distance - _collider.radius > Mathf.Abs(Mathf.Cos(slopeAngle) * radius) + slopeThreshold)
+                {
+                    return true;
+                }
 
+                return false;
+            }
+            return true;
+        }
+
+        return false;
+    }
 
     private void Rotate(Vector3 velocity)
     {
