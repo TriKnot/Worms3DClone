@@ -76,11 +76,8 @@ GameObject:
   - component: {fileID: 8394286187492490300}
   - component: {fileID: 8394286187492490301}
   - component: {fileID: 8394286187492490275}
-  - component: {fileID: 8394286187492490297}
   - component: {fileID: 6118795607136621683}
-  - component: {fileID: -8228104139777837167}
   - component: {fileID: -7443361570448322333}
-  - component: {fileID: 4125901821470777563}
   - component: {fileID: -4002985446916853829}
   m_Layer: 3
   m_Name: CharacterPrefab
@@ -197,7 +194,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8394286187492490297}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerInputController2, Assembly-CSharp
         m_MethodName: Move
         m_Mode: 0
@@ -213,7 +210,7 @@ MonoBehaviour:
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8394286187492490297}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
         m_MethodName: Look
         m_Mode: 0
@@ -229,7 +226,7 @@ MonoBehaviour:
     m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8394286187492490297}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
         m_MethodName: Shoot
         m_Mode: 0
@@ -285,7 +282,7 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8394286187492490297}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
         m_MethodName: Jump
         m_Mode: 0
@@ -299,23 +296,23 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 1bac0f4f-4178-484c-80c3-91637d85ac43
     m_ActionName: Player/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9ec75bef-eeb6-4651-bf2a-b852f9c16a10
+    m_ActionName: Player/ChangeCamera[/Keyboard/c]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8255afc5-933b-4634-bb11-80ef92879bb7
+    m_ActionName: Player/ZoomCamera[/Mouse/scroll/y]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 54bc5e7b-cf42-4b12-9f11-a969111e67e0
+    m_ActionName: Player/Run[/Keyboard/leftShift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &8394286187492490297
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8394286187492490272}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce6991f8ed136e04c8197696a80cd405, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6118795607136621683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,23 +333,6 @@ MonoBehaviour:
   - {fileID: 1849736199912346, guid: a12a8e6080b1a90418b5c9b3c09bf7cc, type: 3}
   - {fileID: 1965410809269166, guid: 7d55993bc0180314fa3e70ec01174dee, type: 3}
   - {fileID: 1645872946987862, guid: a77b758e54b86744b9623fd0d3aeb90a, type: 3}
---- !u!114 &-8228104139777837167
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8394286187492490272}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b12a592a7a2211f47a55898d8a12dfca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 10
-  jumpForce: 5
-  slopeRayHeight: 0.1
-  steepSlopeAngle: 0.1
-  slopeThreshold: 0.1
 --- !u!54 &-7443361570448322333
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -369,18 +349,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 3
---- !u!114 &4125901821470777563
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8394286187492490272}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fa9f232085b4984cb3cb42e17f83958, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-4002985446916853829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,29 +363,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugMode: 0
   transformCenterYOffset: 1
+  playerMoveInput: {x: 0, y: 0, z: 0}
   playerLookInputLerpTime: 0.35
-  moveSpeed: 30
+  moveSpeedMultiplier: 30
+  notGroundedMoveSpeedMultiplier: 0.7
   rotationSpeedMultiplier: 20
   pitchSpeedMultiplier: 20
   runSpeedMultiplier: 2
   isGrounded: 1
-  groundCheckRadiusMultiplier: 0.9
-  groundCheckDistance: -0.9
-  gravityFallCurrent: -25
-  gravityFallMin: -25
-  gravityFallMax: -300
-  gravityFallIncrementAmount: -10
+  groundCheckRadiusMultiplier: 0.95
+  groundCheckDistanceTolerance: 0.05
+  playerCenterToGroundDistance: 0.9999988
+  gravityFallCurrent: 0
+  gravityFallMin: 0
   gravityFallIncrementTime: 0.1
-  playerFallTimer: 0.04
-  gravityGrounded: 0
+  playerFallTimer: 0.1
+  gravityGrounded: 0.005
   maxSlopeAngle: 50
   slipSpeedModifier: -0.2
-  initialJumpForce: 350
+  maxStepHeight: 1
+  minStepDepth: 0.3
+  stairHeightPaddingMultiplier: 1.5
+  isFirstStep: 1
+  firstStepVelocityDistanceMultiplier: 0.1
+  playerIsAscendingStairs: 0
+  playerIsDescendingStairs: 0
+  ascendingStairsMoveSpeedMultiplier: 0.35
+  descendingStairsMoveSpeedMultiplier: 0.7
+  maximumAngleOfApproachToAscend: 45
+  initialJumpForceMultiplier: 250
   continualJumpForceMultiplier: 0.5
-  jumpTime: 0.2
-  jumpTimeCounter: 0
+  jumpTime: 0.1
+  jumpTimeCounter: 0.1
   coyoteTime: 0.2
-  coyoteTimeCounter: 0
+  coyoteTimeCounter: 0.2
   jumpBufferTime: 0.1
   jumpBufferTimeCounter: 0
   isJumping: 0
