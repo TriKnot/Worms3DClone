@@ -43,7 +43,7 @@ public class TurnManager : MonoBehaviour
         turnTime = _turnTimeMax;
         EventManager.InvokeTurnChanged();
         print("Turn changed to " + currentTurnIndex);
-        print("Team numer is: " + GameManager.Instance.CurrentTeamIndex );
+        print("Team nummer is: " + GameManager.Instance.CurrentTeamIndex );
     }
 
     private void TurnTimerOnGUI()

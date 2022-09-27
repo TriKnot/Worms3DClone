@@ -80,6 +80,8 @@ GameObject:
   - component: {fileID: 6118795607136621683}
   - component: {fileID: -8228104139777837167}
   - component: {fileID: -7443361570448322333}
+  - component: {fileID: 4125901821470777563}
+  - component: {fileID: -4002985446916853829}
   m_Layer: 3
   m_Name: CharacterPrefab
   m_TagString: Untagged
@@ -309,7 +311,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8394286187492490272}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce6991f8ed136e04c8197696a80cd405, type: 3}
   m_Name: 
@@ -341,13 +343,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8394286187492490272}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b12a592a7a2211f47a55898d8a12dfca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
   jumpForce: 5
+  slopeRayHeight: 0.1
+  steepSlopeAngle: 0.1
+  slopeThreshold: 0.1
 --- !u!54 &-7443361570448322333
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -356,14 +361,68 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8394286187492490272}
   serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_Mass: 60
+  m_Drag: 4
+  m_AngularDrag: 4
+  m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
+--- !u!114 &4125901821470777563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394286187492490272}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fa9f232085b4984cb3cb42e17f83958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-4002985446916853829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394286187492490272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4e6f2d593536144b27b2a356f20d29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
+  transformCenterYOffset: 1
+  playerLookInputLerpTime: 0.35
+  moveSpeed: 30
+  rotationSpeedMultiplier: 20
+  pitchSpeedMultiplier: 20
+  runSpeedMultiplier: 2
+  isGrounded: 1
+  groundCheckRadiusMultiplier: 0.9
+  groundCheckDistance: -0.9
+  gravityFallCurrent: -25
+  gravityFallMin: -25
+  gravityFallMax: -300
+  gravityFallIncrementAmount: -10
+  gravityFallIncrementTime: 0.1
+  playerFallTimer: 0.04
+  gravityGrounded: 0
+  maxSlopeAngle: 50
+  slipSpeedModifier: -0.2
+  initialJumpForce: 350
+  continualJumpForceMultiplier: 0.5
+  jumpTime: 0.2
+  jumpTimeCounter: 0
+  coyoteTime: 0.2
+  coyoteTimeCounter: 0
+  jumpBufferTime: 0.1
+  jumpBufferTimeCounter: 0
+  isJumping: 0
+  jumpWasPressedLastFrame: 0
+  maxSlopeAngleToJump: 45
 --- !u!1001 &471551639850468209
 PrefabInstance:
   m_ObjectHideFlags: 0

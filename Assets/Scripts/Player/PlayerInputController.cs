@@ -3,14 +3,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputController : MonoBehaviour
 {
-    private PlayerMovement _playerMovement;
+    private OldPlayerMovement _oldPlayerMovement;
     private Vector2 _moveValue;
     private PlayerCharacter _player;
     private bool _aiming;
 
     private void Awake()
     {
-        _playerMovement = GetComponent<PlayerMovement>();
+        _oldPlayerMovement = GetComponent<OldPlayerMovement>();
         _player = GetComponent<PlayerCharacter>();
     }
     
@@ -18,7 +18,7 @@ public class PlayerInputController : MonoBehaviour
     {
         if(_moveValue != Vector2.zero)
         {
-            _playerMovement.Move(_moveValue);
+            _oldPlayerMovement.Move(_moveValue);
         }
     }
 
@@ -32,7 +32,7 @@ public class PlayerInputController : MonoBehaviour
     {
         if(context.started)
         {
-            _playerMovement.Jump();
+            _oldPlayerMovement.Jump();
         }
     }
     

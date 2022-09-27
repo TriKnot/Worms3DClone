@@ -14,7 +14,7 @@ public class PlayerCharacter : MonoBehaviour
     private UI_PlayerStatusBars _statusStatusBars;
     public Inventory Inventory { get; private set; }
     [SerializeField] private GameObject[] characterModels;
-    private PlayerMovement _playerMovement;
+    private OldPlayerMovement _oldPlayerMovement;
 
     [Header("Character Stats")]
     private int _maxHealth = 5;
@@ -34,7 +34,7 @@ public class PlayerCharacter : MonoBehaviour
         StaminaSystem = new StaminaSystem(_maxStamina);
         gameObject.GetComponent<MeshFilter>().mesh = characterModels[Random.Range(0, characterModels.Length)].GetComponent<MeshFilter>().sharedMesh;
         gameObject.GetComponent<MeshRenderer>().material = characterModels[Random.Range(0, characterModels.Length)].GetComponent<MeshRenderer>().sharedMaterial;
-        _playerMovement = GetComponent<PlayerMovement>();
+        _oldPlayerMovement = GetComponent<OldPlayerMovement>();
         _statusStatusBars = Instantiate(statusBarsPrefab, transform).GetComponent<UI_PlayerStatusBars>();
         EventManager.OnActiveCharacterChanged += SetActiveCharacter;
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public static EventManager EventManager { get; private set; }
     private static TurnManager _turnManager;
+    private static CameraController _cameraController;
     
     public static Camera MainCamera { get; private set; }
     
@@ -27,13 +29,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Color[] teamColors;
 
     public PlayerCharacter ActiveCharacter { get; private set; }
-    public int CurrentCharacterIndex { get; private set; } = 0;
+    public int CurrentCharacterIndex { get; private set; }
 
-    public CinemachineFreeLook freeCam;
+    public bool IsPaused { get; private set; }
 
-    public bool IsPaused { get; private set; }= false;
-
-    public int CurrentTeamIndex { get; private set; } = 0;
+    public int CurrentTeamIndex { get; private set; }
 
     
     private void Awake()
@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
         EventManager = new EventManager();
         _turnManager = GetComponent<TurnManager>();
+        _cameraController = GetComponent<CameraController>();
         teams = new Team[teamAmount];
         MainCamera = Camera.main;
 
@@ -158,6 +159,11 @@ public class GameManager : MonoBehaviour
                 teams[i].PlayerCharacters.Add(playerCharacter);
             }
         }
+
+        foreach (var col in colArray)
+        {
+            Destroy(col.gameObject);
+        }
     }
 
     private Vector3 RandomSpawnLocation()
@@ -203,9 +209,8 @@ public class GameManager : MonoBehaviour
         ActiveCharacter.GetComponent<PlayerInput>().ActivateInput();
 
         //Set camera to new target
-        var cameraTarget = ActiveCharacter.transform.Find("CameraFollowTarget").transform;
-        freeCam.Follow = cameraTarget;
-        freeCam.LookAt = cameraTarget;
+        var cameraTarget = ActiveCharacter.GetComponent<PlayerMovement>().CameraFollow;
+        _cameraController.SetCameraTarget(cameraTarget);
         EventManager.InvokeActiveCharacterChanged();
         
     }
@@ -233,5 +238,6 @@ public class GameManager : MonoBehaviour
         ChangeActiveTeam();
         ChangeActivePlayer();
     }
+    
 }
 
