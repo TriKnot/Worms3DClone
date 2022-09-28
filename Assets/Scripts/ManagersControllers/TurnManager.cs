@@ -1,31 +1,25 @@
-using System;
-using System.Net.Mime;
 using UnityEngine;
-using TMPro;
 
 public class TurnManager : MonoBehaviour
 {
-    public static TurnManager Instance;
-    public int currentTurnIndex { get; private set; }
+    private int CurrentTurnIndex { get; set; }
     
-    public float turnTime { get; private set; }
-    [SerializeField] private float _turnTimeMax = 60f;
-    [SerializeField] private TextMeshProUGUI _turnTimerText;
+    private float TurnTime { get; set; }
+    [SerializeField] private float turnTimeMax = 60f;
 
     private void Awake()
     {
-        currentTurnIndex = 1;
-        Instance = this;
-        turnTime = _turnTimeMax;
+        CurrentTurnIndex = 1;
+        TurnTime = turnTimeMax;
     }
     
     private void Update()
     {
         if (!GameManager.Instance.IsPaused)
         {
-            turnTime -= Time.deltaTime;
-            TurnTimerOnGUI();
-            if(turnTime <= 0)
+            TurnTime -= Time.deltaTime;
+            UpdateTurnTimeOnGUI();
+            if(TurnTime <= 0)
             {
                 ChangeTurn();
             }
@@ -39,16 +33,14 @@ public class TurnManager : MonoBehaviour
     
     private void ChangeTurn()
     {
-        currentTurnIndex++;
-        turnTime = _turnTimeMax;
+        CurrentTurnIndex++;
+        TurnTime = turnTimeMax;
         EventManager.InvokeTurnChanged();
-        print("Turn changed to " + currentTurnIndex);
-        print("Team nummer is: " + GameManager.Instance.CurrentTeamIndex );
     }
 
-    private void TurnTimerOnGUI()
+    private void UpdateTurnTimeOnGUI()
     {
-        _turnTimerText.SetText(turnTime.ToString("F0"));
+        GameManager.Instance.UIManager.TurnTimerOnGUI(TurnTime);
     }
 
     

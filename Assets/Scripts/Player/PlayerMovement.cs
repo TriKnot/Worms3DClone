@@ -168,7 +168,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 PlayerMove()
     {
-        return ((isGrounded) ? (playerMoveInput * moveSpeedMultiplier) : (playerMoveInput * moveSpeedMultiplier * notGroundedMoveSpeedMultiplier));
+        return ((isGrounded) ? (playerMoveInput * moveSpeedMultiplier) : (playerMoveInput * (moveSpeedMultiplier * notGroundedMoveSpeedMultiplier)));
     }
 
     private bool GroundCheck()

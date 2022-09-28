@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
-using UnityEngine;
-
-public class EventManager
+public static class EventManager
 {
     public delegate void ActiveCharacterChanged();
     public static event ActiveCharacterChanged OnActiveCharacterChanged;
@@ -19,6 +14,9 @@ public class EventManager
     
     public delegate void PlayerDied(PlayerCharacter character);
     public static event PlayerDied OnPlayerDied;
+    
+    public delegate void GamePaused(bool isPaused);
+    public static event GamePaused OnGamePaused;
 
 
     public static void InvokeActiveCharacterChanged()
@@ -44,5 +42,10 @@ public class EventManager
     public static void InvokePlayerDied(PlayerCharacter character)
     {
         OnPlayerDied?.Invoke(character);
+    }
+
+    public static void InvokeGamePaused(bool isPaused)
+    {
+        OnGamePaused?.Invoke(isPaused);
     }
 }

@@ -1,23 +1,16 @@
-using System;
-using System.Security.Cryptography;
-using Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Android;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public static EventManager EventManager { get; private set; }
-    private static TurnManager _turnManager;
-    private static CameraController _cameraController;
-    
+    private TurnManager _turnManager;
+    private CameraController _cameraController;
+    public UIManager UIManager { get; private set; }
     public static Camera MainCamera { get; private set; }
     
-    private Team[] teams;
+    private Team[] _teams;
     [SerializeField] private int teamAmount = 2;
     [SerializeField] private int teamSize = 3;
 
@@ -35,7 +28,7 @@ public class GameManager : MonoBehaviour
 
     public int CurrentTeamIndex { get; private set; }
 
-    
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -43,16 +36,17 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
         Instance = this;
-        EventManager = new EventManager();
         _turnManager = GetComponent<TurnManager>();
         _cameraController = GetComponent<CameraController>();
-        teams = new Team[teamAmount];
+        _teams = new Team[teamAmount];
         MainCamera = Camera.main;
+        UIManager = GetComponent<UIManager>();
 
         SetCursorLock(true);
         EventManager.OnPlayerDied += OnPlayerDied;
         EventManager.OnTogglePlayerControl += TogglePlayerControl;
         EventManager.OnTurnChanged += OnTurnChanged;
+        EventManager.OnGamePaused += OnGamePaused;
     }
 
     private void Start()
@@ -65,6 +59,7 @@ public class GameManager : MonoBehaviour
         EventManager.OnPlayerDied -= OnPlayerDied;
         EventManager.OnTogglePlayerControl -= TogglePlayerControl;
         EventManager.OnTurnChanged -= OnTurnChanged;
+        EventManager.OnGamePaused -= OnGamePaused;
     }
 
     private void Update()
@@ -80,27 +75,15 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(IsPaused)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+            EventManager.InvokeGamePaused(!IsPaused);
         }
     }
-
-    private void Pause()
+    
+    private void OnGamePaused(bool isPaused)
     {
-        IsPaused = true;
-        Time.timeScale = 0;
-    }
-
-    private void Resume()
-    {
-        IsPaused = false;
-        Time.timeScale = 1;
+        IsPaused = isPaused;
+        Time.timeScale = isPaused ? 0 : 1;
+        SetCursorLock(!isPaused);
     }
     
     private void SetCursorLock(bool value)
@@ -113,7 +96,7 @@ public class GameManager : MonoBehaviour
     {
         CreateTeams();
         SpawnPlayers();
-        ActiveCharacter = teams[0].PlayerCharacters[0];
+        ActiveCharacter = _teams[0].PlayerCharacters[0];
         ChangeActivePlayer();
     }
     
@@ -127,13 +110,13 @@ public class GameManager : MonoBehaviour
                 TeamColor = teamColors[i],
                 TeamNumber = i
             };
-            teams[i] = newTeam;
+            _teams[i] = newTeam;
         }
     }
 
     private void SpawnPlayers()
     {
-        for(int i = 0; i < teams.Length; i++)
+        for(int i = 0; i < _teams.Length; i++)
         {
             for (int j = 0; j < teamSize; j++)
             {
@@ -152,11 +135,11 @@ public class GameManager : MonoBehaviour
                 GameObject newCharacter = Instantiate(characterPrefab, spawnLocation, Quaternion.identity);
                 newCharacter.GetComponent<PlayerInput>().DeactivateInput();
                 PlayerCharacter playerCharacter = newCharacter.GetComponent<PlayerCharacter>();
-                playerCharacter.Team = teams[i];
+                playerCharacter.Team = _teams[i];
                 playerCharacter.characterNumber = j;
-                var color = teams[i].TeamColor;
+                var color = _teams[i].TeamColor;
                 newCharacter.GetComponent<MeshRenderer>().material.SetColor("_Color", color);
-                teams[i].PlayerCharacters.Add(playerCharacter);
+                _teams[i].PlayerCharacters.Add(playerCharacter);
             }
         }
 
@@ -199,7 +182,7 @@ public class GameManager : MonoBehaviour
     {
         //Change active player
         var prevPlayer = ActiveCharacter;
-        var currentTeam = teams[CurrentTeamIndex];
+        var currentTeam = _teams[CurrentTeamIndex];
         CurrentCharacterIndex++;
         CurrentCharacterIndex %= currentTeam.PlayerCharacters.Count;
         ActiveCharacter = currentTeam.PlayerCharacters[CurrentCharacterIndex];
@@ -229,7 +212,7 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerDied(PlayerCharacter character)
     {
-        teams[character.Team.TeamNumber].PlayerCharacters.Remove(character);
+        _teams[character.Team.TeamNumber].PlayerCharacters.Remove(character);
         Destroy(character.gameObject);
     }
 
