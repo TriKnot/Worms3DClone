@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &587017176534038325
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 587017176534038327}
+  - component: {fileID: 587017176534038324}
+  - component: {fileID: 587017176534038326}
+  - component: {fileID: 587017176534038321}
+  - component: {fileID: 587017176534038320}
+  - component: {fileID: 587017176534038323}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &587017176534038327
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587017176534038325}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -171.5, y: 60, z: -25.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &587017176534038324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587017176534038325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2552189eab5226a408720b8048ece759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamAmount: 1
+  teamSize: 1
+  characterPrefab: {fileID: 8394286187492490272, guid: 675d2d99b4643724b9b8cc5e3bf7d761, type: 3}
+  spawnDistance: 10
+  colArray:
+  - {fileID: 0}
+  teamColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0.033431053, g: 0, b: 1, a: 1}
+  - {r: 0.23363125, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.99701774, b: 0, a: 1}
+--- !u!114 &587017176534038326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587017176534038325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a628d460724853141a80d2ca6a99ad42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnTimeMax: 60
+--- !u!114 &587017176534038321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587017176534038325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df50c96d74c8e914a91cda478b7bab0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraZoomModifier: 6
+  _minCameraZoom: 0
+  _minOrbitCameraZoomDistance: 1
+  _maxCameraZoom: 12
+  _maxOrbitCameraZoomDistance: 36
+  _activeCamera: {fileID: 0}
+  thirdPersonCam: {fileID: 0}
+  firstPersonCam: {fileID: 0}
+  orbitCam: {fileID: 0}
+--- !u!114 &587017176534038320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587017176534038325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fa9f232085b4984cb3cb42e17f83958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &587017176534038323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587017176534038325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06c90efe160feac45a92a56d3d120a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasPrefab: {fileID: 8574948210569279514, guid: 2944e6d18a71e21429841ddfc9e2426b, type: 3}
+  pauseMenuPrefab: {fileID: 6120907365922762553, guid: 82d0751fa479a164f909dafdda83ac6a, type: 3}
+  turnTimerPrefab: {fileID: 449022231058372412, guid: ea12f353d9b847241a7d0d91faa371f6, type: 3}
+  optionsMenu: {fileID: 6120907365922762553, guid: 8908ac16058104041b4525c574bbfab7, type: 3}
+  confirmQuitMenuPrefab: {fileID: 6120907365922762553, guid: 2cee3a3e7fbf5e844b49a84b0d2de88b, type: 3}

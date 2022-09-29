@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,15 +10,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenuPrefab;
     [SerializeField] private GameObject turnTimerPrefab;
     [SerializeField] private GameObject optionsMenu;
+    [SerializeField] private GameObject confirmQuitMenuPrefab;
     
     private GameObject _canvas;
     private GameObject _pauseMenu;
     private TextMeshProUGUI _turnTimer;
-    public GameObject OptionsMenu { get; private set; }
-    
+    private GameObject _optionsMenu;
+    private GameObject _confirmQuitMenu;
+
     private float _turnTime;
 
-    private void Awake()
+    private void Start()
     {
         //Instantiate the canvas and UI elements
         _canvas = Instantiate(canvasPrefab);
@@ -25,11 +28,13 @@ public class UIManager : MonoBehaviour
         
         //Instantiate the pause menu
         _pauseMenu = Instantiate(pauseMenuPrefab, _canvas.transform);
-        _pauseMenu.GetComponent<UI_PausMenuButtonFunctions>().Init(this);
         _pauseMenu.SetActive(false);
-        OptionsMenu = Instantiate(optionsMenu, _pauseMenu.transform);
-        OptionsMenu.SetActive(false);
-        
+        _optionsMenu = Instantiate(optionsMenu, _pauseMenu.transform);
+        _optionsMenu.SetActive(false);
+        _confirmQuitMenu = Instantiate(confirmQuitMenuPrefab, _pauseMenu.transform);
+        _confirmQuitMenu.SetActive(false);
+
+
         //Subscribe to events
         EventManager.OnGamePaused += OnGamePaused;
     }
@@ -47,7 +52,7 @@ public class UIManager : MonoBehaviour
             _turnTimer.SetText("Paused: " + _turnTime.ToString("F0"));
         }
 
-        OptionsMenu.SetActive(false);
+        _optionsMenu.SetActive(false);
     }
     
     public void TurnTimerOnGUI(float turnTime)
@@ -56,4 +61,34 @@ public class UIManager : MonoBehaviour
         _turnTimer.SetText(_turnTime.ToString("F0"));
     }
     
+    public void ResumeGame()
+    {
+        EventManager.InvokeGamePaused(false);
+    }
+    
+    public void ToggleOptions(bool active)
+    {
+        _optionsMenu.SetActive(active);
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void QuitGame()
+    {
+        _confirmQuitMenu.SetActive(true);
+    }
+
+    public void ConfirmQuitToMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+    
+    public void ConfirmQuitToDesktop()
+    {
+        Application.Quit();
+    }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6120907365035357505}
   - component: {fileID: 6120907365035357504}
   m_Layer: 5
-  m_Name: ExitButton
+  m_Name: QuitToDesktopButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 587017176534038323, guid: e4630471cf68d1046937b153e333d77a, type: 3}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: QuitGame
+        m_MethodName: ConfirmQuitToDesktop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -306,7 +306,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Continue
+  m_text: 'Continue Game
 
 '
   m_isRightToLeft: 0
@@ -390,7 +390,7 @@ GameObject:
   - component: {fileID: 6120907365426556874}
   - component: {fileID: 6120907365426556873}
   m_Layer: 5
-  m_Name: OptionsButton
+  m_Name: QuitMainMenuButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -501,8 +501,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 587017176534038323, guid: e4630471cf68d1046937b153e333d77a, type: 3}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ToggleOptions
-        m_Mode: 6
+        m_MethodName: ConfirmQuitToMainMenu
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -577,7 +577,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Quit Game
+  m_text: Quit To Desktop
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -656,7 +656,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6120907365922762554}
   m_Layer: 5
-  m_Name: PauseMenu
+  m_Name: ConfirmQuit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -933,9 +933,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Options
-
-'
+  m_text: Quit To Main Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
