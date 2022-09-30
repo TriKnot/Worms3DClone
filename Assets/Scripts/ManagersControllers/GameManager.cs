@@ -17,7 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject characterPrefab;
 
     [SerializeField] private float spawnDistance;
-    [SerializeField] private Collider[] colArray;
+    [SerializeField] private GameObject spawnBounds;
+    private Collider[] _spawnColliderArray;
     
     [SerializeField] private Color[] teamColors;
 
@@ -95,6 +96,7 @@ public class GameManager : MonoBehaviour
     private void SetupGame()
     {
         CreateTeams();
+        FinaAllSpawnBounds();
         SpawnPlayers();
         ActiveCharacter = _teams[0].PlayerCharacters[0];
         ChangeActivePlayer();
@@ -142,16 +144,22 @@ public class GameManager : MonoBehaviour
                 _teams[i].PlayerCharacters.Add(playerCharacter);
             }
         }
+        RemoveAllSpawnLocations();
+    }
 
-        foreach (var col in colArray)
-        {
-            Destroy(col.gameObject);
-        }
+    private void FinaAllSpawnBounds()
+    {
+        _spawnColliderArray = spawnBounds.GetComponentsInChildren<Collider>();
+    }
+    
+    private void RemoveAllSpawnLocations()
+    {
+        Destroy(spawnBounds);
     }
 
     private Vector3 RandomSpawnLocation()
     {
-        var col = colArray[Random.Range(0, colArray.Length)];
+        var col = _spawnColliderArray[Random.Range(0, _spawnColliderArray.Length)];
         var finalPosition = new Vector3(
             Random.Range(col.bounds.min.x, col.bounds.max.x),
             Random.Range(col.bounds.min.y, col.bounds.max.y),

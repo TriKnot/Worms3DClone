@@ -120,5 +120,3 @@ MonoBehaviour:
   canvasPrefab: {fileID: 8574948210569279514, guid: 2944e6d18a71e21429841ddfc9e2426b, type: 3}
   pauseMenuPrefab: {fileID: 6120907365922762553, guid: 82d0751fa479a164f909dafdda83ac6a, type: 3}
   turnTimerPrefab: {fileID: 449022231058372412, guid: ea12f353d9b847241a7d0d91faa371f6, type: 3}
-  optionsMenu: {fileID: 6120907365922762553, guid: 8908ac16058104041b4525c574bbfab7, type: 3}
-  confirmQuitMenuPrefab: {fileID: 6120907365922762553, guid: 2cee3a3e7fbf5e844b49a84b0d2de88b, type: 3}
