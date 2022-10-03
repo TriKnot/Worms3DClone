@@ -17,7 +17,7 @@ public interface IWeapon
 
     void OnTurnChanged();
     
-    void OnPickup(PlayerCharacter player);
+    void OnPickup(CharacterManager player);
 
     bool CanShoot();
 }

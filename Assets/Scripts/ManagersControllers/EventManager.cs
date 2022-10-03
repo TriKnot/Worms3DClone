@@ -12,7 +12,7 @@ public static class EventManager
     public delegate void AmmoChanged(int ammoLeft);
     public static event AmmoChanged OnAmmoChanged;
     
-    public delegate void PlayerDied(PlayerCharacter character);
+    public delegate void PlayerDied(CharacterManager characterManager);
     public static event PlayerDied OnPlayerDied;
     
     public delegate void GamePaused(bool isPaused);
@@ -39,9 +39,9 @@ public static class EventManager
         OnAmmoChanged?.Invoke(ammoLeft);
     }
     
-    public static void InvokePlayerDied(PlayerCharacter character)
+    public static void InvokePlayerDied(CharacterManager characterManager)
     {
-        OnPlayerDied?.Invoke(character);
+        OnPlayerDied?.Invoke(characterManager);
     }
 
     public static void InvokeGamePaused(bool isPaused)

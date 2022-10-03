@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,15 +9,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool debugMode = false;
     [SerializeField] private float transformCenterYOffset = 0.5f;
 
-    public Transform CameraFollow { get; private set; }
+    private Transform _cameraFollow;
     private CameraController _cameraController;
-
-    private Rigidbody _rigidbody;
-    private CapsuleCollider _collider;
     private InputHandler _input;
+    private CapsuleCollider _collider;
+    private Rigidbody _rigidbody;
+    private CharacterManager _characterManager;
     
     private Vector3 _rigidbodyPosition;
     private float _colliderYBounds;
+    
     
     [Header("Input")]
     [SerializeField] private Vector3 playerMoveInput = Vector3.zero;
@@ -87,9 +89,11 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _input = GameManager.Instance.GetComponent<InputHandler>();
         _collider = GetComponent<CapsuleCollider>();
+        _characterManager = GetComponent<CharacterManager>();
+
         _colliderYBounds = _collider.bounds.extents.y;
 
-        CameraFollow = transform.Find("CameraFollowTarget").transform;
+        _cameraFollow = _characterManager.CameraFollow;
         _cameraController = GameManager.Instance.GetComponent<CameraController>();
         
         _maxAscendRayDistance = maxStepHeight / Mathf.Cos(maximumAngleOfApproachToAscend * Mathf.Deg2Rad);
@@ -98,6 +102,7 @@ public class PlayerMovement : MonoBehaviour
         _numberOfStepsDetectRays = Mathf.RoundToInt(((maxStepHeight * 100.0f) * 0.5f) + 1.0f);
         _rayIncrementAmount = maxStepHeight / _numberOfStepsDetectRays;
     }
+
 
     private void FixedUpdate()
     {
@@ -154,15 +159,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void PitchCamera()
     {
-        Vector3 rotationValues = CameraFollow.rotation.eulerAngles;
+        Vector3 rotationValues = _cameraFollow.rotation.eulerAngles;
         _cameraPitch += _playerLookInput.y * pitchSpeedMultiplier;
         _cameraPitch = Mathf.Clamp(_cameraPitch, -90f, 90f);
         
-        CameraFollow.rotation = Quaternion.Euler(_cameraPitch, rotationValues.y, rotationValues.z);
+        _cameraFollow.rotation = Quaternion.Euler(_cameraPitch, rotationValues.y, rotationValues.z);
     }
     
     private Vector3 GetMoveInput()
     {
+        if(!_characterManager.IsActiveCharacter)return Vector3.zero;
+        
         return new Vector3(_input.MoveInput.x, 0, _input.MoveInput.y);
     }
 
@@ -283,6 +290,7 @@ public class PlayerMovement : MonoBehaviour
     
     private float PlayerJump()
     {
+        if(!_characterManager.IsActiveCharacter) return playerMoveInput.y;
         float calculatedJumpInput = playerMoveInput.y;
 
         SetJumpTimeCounter();
@@ -550,4 +558,5 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position + Vector3.up * transformCenterYOffset, _collider.radius * groundCheckRadiusMultiplier);
         }
     }
+
 }

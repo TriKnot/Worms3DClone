@@ -146,10 +146,6 @@ PrefabInstance:
       propertyPath: spawnBounds
       value: 
       objectReference: {fileID: 776891696}
-    - target: {fileID: 587017176534038324, guid: e4630471cf68d1046937b153e333d77a, type: 3}
-      propertyPath: colArray.Array.data[0]
-      value: 
-      objectReference: {fileID: 1716877876}
     - target: {fileID: 587017176534038325, guid: e4630471cf68d1046937b153e333d77a, type: 3}
       propertyPath: m_Name
       value: GameManager

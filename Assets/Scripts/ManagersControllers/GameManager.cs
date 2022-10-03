@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private Color[] teamColors;
 
-    public PlayerCharacter ActiveCharacter { get; private set; }
+    public CharacterManager ActiveCharacter { get; private set; }
     public int CurrentCharacterIndex { get; private set; }
 
     public bool IsPaused { get; private set; }
@@ -46,7 +46,6 @@ public class GameManager : MonoBehaviour
 
         SetCursorLock(true);
         EventManager.OnPlayerDied += OnPlayerDied;
-        EventManager.OnTogglePlayerControl += TogglePlayerControl;
         EventManager.OnTurnChanged += OnTurnChanged;
         EventManager.OnGamePaused += OnGamePaused;
         
@@ -67,7 +66,6 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         EventManager.OnPlayerDied -= OnPlayerDied;
-        EventManager.OnTogglePlayerControl -= TogglePlayerControl;
         EventManager.OnTurnChanged -= OnTurnChanged;
         EventManager.OnGamePaused -= OnGamePaused;
     }
@@ -80,7 +78,7 @@ public class GameManager : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Tab))
         {
-            ChangeActivePlayer();
+            ChangeActiveCharacter();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -110,7 +108,7 @@ public class GameManager : MonoBehaviour
         FindAllSpawnBounds();
         SpawnPlayers();
         ActiveCharacter = _teams[0].PlayerCharacters[0];
-        ChangeActivePlayer();
+        ChangeActiveCharacter();
     }
     
     private void CreateTeams()
@@ -148,12 +146,12 @@ public class GameManager : MonoBehaviour
 
                 GameObject newCharacter = Instantiate(characterPrefab, spawnLocation, Quaternion.identity);
                 newCharacter.GetComponent<PlayerInput>().DeactivateInput();
-                PlayerCharacter playerCharacter = newCharacter.GetComponent<PlayerCharacter>();
-                playerCharacter.Team = _teams[i];
-                playerCharacter.characterNumber = j;
+                CharacterManager characterManager = newCharacter.GetComponent<CharacterManager>();
+                characterManager.Team = _teams[i];
+                characterManager.characterNumber = j;
                 var color = _teams[i].TeamColor;
                 newCharacter.GetComponent<MeshRenderer>().material.SetColor("_Color", color);
-                _teams[i].PlayerCharacters.Add(playerCharacter);
+                _teams[i].PlayerCharacters.Add(characterManager);
             }
         }
         RemoveAllSpawnLocations();
@@ -198,48 +196,38 @@ public class GameManager : MonoBehaviour
         CurrentTeamIndex %= _teamAmount;
     }
     
-    private void ChangeActivePlayer()
+    public void ChangeActiveCharacter()
     {
         //Change active player
-        var prevPlayer = ActiveCharacter;
+        //Setold active player to inactive
+        ActiveCharacter.IsActiveCharacter = false;
+        
+        //Find new active player and set active
         var currentTeam = _teams[CurrentTeamIndex];
         CurrentCharacterIndex++;
         CurrentCharacterIndex %= currentTeam.PlayerCharacters.Count;
         ActiveCharacter = currentTeam.PlayerCharacters[CurrentCharacterIndex];
+        ActiveCharacter.IsActiveCharacter = true;
        
-        //Set controls to active player
-        prevPlayer.GetComponent<PlayerInput>().DeactivateInput();
-        ActiveCharacter.GetComponent<PlayerInput>().ActivateInput();
-
+       
         //Set camera to new target
-        var cameraTarget = ActiveCharacter.GetComponent<PlayerMovement>().CameraFollow;
+        var cameraTarget = ActiveCharacter.CameraFollow;
         _cameraController.SetCameraTarget(cameraTarget);
+
+        //Change active player input
         EventManager.InvokeActiveCharacterChanged();
-        
     }
 
-    private void TogglePlayerControl(bool value)
+    private void OnPlayerDied(CharacterManager characterManager)
     {
-        if (value)
-        {
-            ActiveCharacter.GetComponent<PlayerInput>().ActivateInput();
-        }
-        else
-        {
-            ActiveCharacter.GetComponent<PlayerInput>().DeactivateInput();
-        }
-    }
-
-    private void OnPlayerDied(PlayerCharacter character)
-    {
-        _teams[character.Team.TeamNumber].PlayerCharacters.Remove(character);
-        Destroy(character.gameObject);
+        _teams[characterManager.Team.TeamNumber].PlayerCharacters.Remove(characterManager);
+        Destroy(characterManager.gameObject);
     }
 
     private void OnTurnChanged()
     {
         ChangeActiveTeam();
-        ChangeActivePlayer();
+        ChangeActiveCharacter();
     }
     
 }

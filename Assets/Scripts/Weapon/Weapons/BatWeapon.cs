@@ -51,7 +51,7 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon, IMeleeWeapon
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent(out PlayerCharacter player))
+        if(other.TryGetComponent(out CharacterManager player))
         {   
             if(_hitColliders.Contains(other)) return;
             _hitColliders.Add(other);
@@ -61,7 +61,7 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon, IMeleeWeapon
         }
     }
     
-    public void OnPickup(PlayerCharacter player)
+    public void OnPickup(CharacterManager player)
     {
         
     }

@@ -89,6 +89,15 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ChangeCharacter"",
+                    ""type"": ""Button"",
+                    ""id"": ""53daeac2-79e6-42d1-ae3c-2d651b910b45"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -397,6 +406,28 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""197dbbea-6459-4fed-8877-c7bc0c969c3e"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ChangeCharacter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6619c3ec-a4df-4377-bd59-89d43ad5a812"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ChangeCharacter"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -991,6 +1022,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_Player_ChangeCamera = m_Player.FindAction("ChangeCamera", throwIfNotFound: true);
         m_Player_ZoomCamera = m_Player.FindAction("ZoomCamera", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
+        m_Player_ChangeCharacter = m_Player.FindAction("ChangeCharacter", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1069,6 +1101,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ChangeCamera;
     private readonly InputAction m_Player_ZoomCamera;
     private readonly InputAction m_Player_Run;
+    private readonly InputAction m_Player_ChangeCharacter;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -1080,6 +1113,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @ChangeCamera => m_Wrapper.m_Player_ChangeCamera;
         public InputAction @ZoomCamera => m_Wrapper.m_Player_ZoomCamera;
         public InputAction @Run => m_Wrapper.m_Player_Run;
+        public InputAction @ChangeCharacter => m_Wrapper.m_Player_ChangeCharacter;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1110,6 +1144,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                @ChangeCharacter.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeCharacter;
+                @ChangeCharacter.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeCharacter;
+                @ChangeCharacter.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeCharacter;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1135,6 +1172,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
+                @ChangeCharacter.started += instance.OnChangeCharacter;
+                @ChangeCharacter.performed += instance.OnChangeCharacter;
+                @ChangeCharacter.canceled += instance.OnChangeCharacter;
             }
         }
     }
@@ -1298,6 +1338,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnChangeCamera(InputAction.CallbackContext context);
         void OnZoomCamera(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnChangeCharacter(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

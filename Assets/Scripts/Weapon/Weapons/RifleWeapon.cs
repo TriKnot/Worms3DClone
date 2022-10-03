@@ -68,7 +68,7 @@ public class RifleWeapon : MonoBehaviour, IWeapon
         _ammo = maxAmmo;
     }
 
-    public void OnPickup(PlayerCharacter player)
+    public void OnPickup(CharacterManager player)
     {
         
     }

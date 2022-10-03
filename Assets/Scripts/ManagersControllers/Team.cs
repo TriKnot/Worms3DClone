@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Team 
 {
-    public List<PlayerCharacter> PlayerCharacters = new List<PlayerCharacter>();
+    public List<CharacterManager> PlayerCharacters = new List<CharacterManager>();
     public string TeamName;
     public int TeamNumber;
     public Color TeamColor;

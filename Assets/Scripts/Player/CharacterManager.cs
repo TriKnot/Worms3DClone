@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
-public class PlayerCharacter : MonoBehaviour
+public class CharacterManager : MonoBehaviour
 {
     [Header("External References/Objects")]
     public Team Team;
@@ -12,9 +12,9 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField] private Transform weaponHolder;
     [SerializeField] private GameObject statusBarsPrefab;
     private UI_PlayerStatusBars _statusStatusBars;
+    public InputActions InputActions { get; private set; }
     public Inventory Inventory { get; private set; }
     [SerializeField] private GameObject[] characterModels;
-    private OldPlayerMovement _oldPlayerMovement;
 
     [Header("Character Stats")]
     private int _maxHealth = 5;
@@ -26,16 +26,21 @@ public class PlayerCharacter : MonoBehaviour
     private bool _isChargingWeapon = false;
     public delegate void WeaponChargeChanged(float maxCharge, float currentCharge);
     public event WeaponChargeChanged OnWeaponChargeChanged;
+    
+    public Transform CameraFollow { get; private set; }
 
-   private void Awake()
+    public bool IsActiveCharacter { get; set; }
+
+    private void Awake()
     {
         Inventory = new Inventory();
         HealthSystem = new HealthSystem(_maxHealth, this);
         StaminaSystem = new StaminaSystem(_maxStamina);
         gameObject.GetComponent<MeshFilter>().mesh = characterModels[Random.Range(0, characterModels.Length)].GetComponent<MeshFilter>().sharedMesh;
         gameObject.GetComponent<MeshRenderer>().material = characterModels[Random.Range(0, characterModels.Length)].GetComponent<MeshRenderer>().sharedMaterial;
-        _oldPlayerMovement = GetComponent<OldPlayerMovement>();
         _statusStatusBars = Instantiate(statusBarsPrefab, transform).GetComponent<UI_PlayerStatusBars>();
+        InputActions = new InputActions();
+        CameraFollow = transform.Find("CameraFollowTarget").transform;
         EventManager.OnActiveCharacterChanged += SetActiveCharacter;
     }
 
@@ -105,7 +110,10 @@ public class PlayerCharacter : MonoBehaviour
 
     private void SetActiveCharacter()
     {
-        weaponHolder.gameObject.SetActive(GetComponent<PlayerInput>().inputIsActive);
+        bool active = GameManager.Instance.ActiveCharacter == this;
+
+        weaponHolder.gameObject.SetActive(active);
+
     }
 
     public void Die()

@@ -30,24 +30,24 @@ public class UI_PlayerStatusBars : MonoBehaviour
     
     private Transform _mainCameraTransform;
     private Transform _barCanvasTransform;
-    private PlayerCharacter _playerCharacter;
+    private CharacterManager characterManager;
     private HealthSystem _healthSystem;
     private StaminaSystem _staminaSystem;
 
 
 
-    public void Init(PlayerCharacter parent)
+    public void Init(CharacterManager parent)
     {
         //Setup references
-        _playerCharacter = parent;
-        _healthSystem = _playerCharacter.HealthSystem;
-        _staminaSystem = _playerCharacter.StaminaSystem;
+        characterManager = parent;
+        _healthSystem = characterManager.HealthSystem;
+        _staminaSystem = characterManager.StaminaSystem;
         _mainCameraTransform = Camera.main.transform;
         _barCanvasTransform = gameObject.GetComponentInChildren<Canvas>().transform;
         //Subscribe to events
         _healthSystem.OnHealthChanged += HealthSystem_OnHealthChanged;
         _staminaSystem.OnStaminaChanged += StaminaSystem_OnStaminaChanged;
-        _playerCharacter.OnWeaponChargeChanged += PlayerCharacter_OnChargeChanged;
+        characterManager.OnWeaponChargeChanged += CharacterManagerOnChargeChanged;
         
         EventManager.OnAmmoChanged += UpdateAmmo;
         
@@ -60,9 +60,9 @@ public class UI_PlayerStatusBars : MonoBehaviour
     private void OnDestroy()
     {
         //Unsubscribe from events
-        _playerCharacter.HealthSystem.OnHealthChanged -= HealthSystem_OnHealthChanged;
-        _playerCharacter.StaminaSystem.OnStaminaChanged -= StaminaSystem_OnStaminaChanged;
-        _playerCharacter.OnWeaponChargeChanged -= PlayerCharacter_OnChargeChanged;
+        characterManager.HealthSystem.OnHealthChanged -= HealthSystem_OnHealthChanged;
+        characterManager.StaminaSystem.OnStaminaChanged -= StaminaSystem_OnStaminaChanged;
+        characterManager.OnWeaponChargeChanged -= CharacterManagerOnChargeChanged;
         EventManager.OnAmmoChanged -= UpdateAmmo;
     }
 
@@ -108,9 +108,9 @@ public class UI_PlayerStatusBars : MonoBehaviour
         staminaBarSprite.color = Color.Lerp(minHealthColor, maxHealthColor, staminaBarSprite.fillAmount);
     }
     
-    private void PlayerCharacter_OnChargeChanged(float maxCharge, float currentCharge)
+    private void CharacterManagerOnChargeChanged(float maxCharge, float currentCharge)
     {
-        if(GameManager.Instance.ActiveCharacter != _playerCharacter) return;
+        if(GameManager.Instance.ActiveCharacter != characterManager) return;
         _targetCharge = currentCharge / maxCharge;
     }
     
@@ -124,7 +124,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
     
     public void UpdateAmmo(int ammo)
     {
-        if(GameManager.Instance.ActiveCharacter != _playerCharacter) return;
+        if(GameManager.Instance.ActiveCharacter != characterManager) return;
         if(ammo > 0) ammoPane.gameObject.SetActive(true);
         for (int i = 0; i < _ammoList.Count; i++)
         {

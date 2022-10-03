@@ -8,7 +8,7 @@ using UnityEngine.XR;
 public class InputHandler : MonoBehaviour
 {
     // Declare references to the components we need
-    InputActions _input;
+    private InputActions _input;
     
     // Declare variables for movement
     public Vector2 MoveInput { get; private set; } = Vector2.zero;
@@ -20,6 +20,7 @@ public class InputHandler : MonoBehaviour
     public float ZoomCameraInput { get; private set; } = 0f;
     public bool InvertCameraZoom { get; private set; } = false;
     public bool CameraChangePressed { get; private set; } = false;
+    
     
     private void OnEnable()
     {
@@ -41,6 +42,8 @@ public class InputHandler : MonoBehaviour
         
         _input.Player.ZoomCamera.started += OnZoomCamera;
         _input.Player.ZoomCamera.canceled += OnZoomCamera;
+        
+        _input.Player.ChangeCharacter.started += OnCharacterChange;
     }
     
     private void OnDisable()
@@ -60,6 +63,8 @@ public class InputHandler : MonoBehaviour
 
         _input.Player.ZoomCamera.started -= OnZoomCamera;
         _input.Player.ZoomCamera.canceled -= OnZoomCamera;
+        
+        _input.Player.ChangeCharacter.started -= OnCharacterChange;
         
         _input.Player.Disable();
     }
@@ -93,5 +98,10 @@ public class InputHandler : MonoBehaviour
     private void OnZoomCamera(InputAction.CallbackContext context)
     {
         ZoomCameraInput = context.ReadValue<float>();
+    }
+    
+    private void OnCharacterChange(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.ChangeActiveCharacter();
     }
 }
