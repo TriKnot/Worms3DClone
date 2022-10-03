@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
     public static Camera MainCamera { get; private set; }
     
     private Team[] _teams;
-    [SerializeField] private int teamAmount = 2;
-    [SerializeField] private int teamSize = 3;
+    private int _teamAmount = 2;
+    private int _teamSize = 3;
 
     [SerializeField] private GameObject characterPrefab;
 
@@ -35,11 +35,12 @@ public class GameManager : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Destroy(this);
+        }else{
+            Instance = this;
         }
-        Instance = this;
+        
         _turnManager = GetComponent<TurnManager>();
         _cameraController = GetComponent<CameraController>();
-        _teams = new Team[teamAmount];
         MainCamera = Camera.main;
         UIManager = GetComponent<UIManager>();
 
@@ -48,11 +49,19 @@ public class GameManager : MonoBehaviour
         EventManager.OnTogglePlayerControl += TogglePlayerControl;
         EventManager.OnTurnChanged += OnTurnChanged;
         EventManager.OnGamePaused += OnGamePaused;
+        
     }
 
     private void Start()
     {
+        GetSettings();
         SetupGame();
+    }
+
+    private void GetSettings()
+    {
+        _teamAmount = SettingsManager.TeamAmount;
+        _teamSize = SettingsManager.TeamSize;
     }
     
     private void OnDisable()
@@ -87,6 +96,8 @@ public class GameManager : MonoBehaviour
         SetCursorLock(!isPaused);
     }
     
+    
+    
     private void SetCursorLock(bool value)
     {
         Cursor.lockState = value ? CursorLockMode.Locked : CursorLockMode.None;
@@ -96,7 +107,7 @@ public class GameManager : MonoBehaviour
     private void SetupGame()
     {
         CreateTeams();
-        FinaAllSpawnBounds();
+        FindAllSpawnBounds();
         SpawnPlayers();
         ActiveCharacter = _teams[0].PlayerCharacters[0];
         ChangeActivePlayer();
@@ -104,7 +115,8 @@ public class GameManager : MonoBehaviour
     
     private void CreateTeams()
     {
-        for(int i = 0; i < teamAmount; i++)
+        _teams = new Team[_teamAmount];
+        for(int i = 0; i < _teamAmount; i++)
         {
             var newTeam = new Team
             {
@@ -120,7 +132,7 @@ public class GameManager : MonoBehaviour
     {
         for(int i = 0; i < _teams.Length; i++)
         {
-            for (int j = 0; j < teamSize; j++)
+            for (int j = 0; j < _teamSize; j++)
             {
                 var spawnLocation = Vector3.zero;
                 var maxTries = 100;
@@ -147,7 +159,7 @@ public class GameManager : MonoBehaviour
         RemoveAllSpawnLocations();
     }
 
-    private void FinaAllSpawnBounds()
+    private void FindAllSpawnBounds()
     {
         _spawnColliderArray = spawnBounds.GetComponentsInChildren<Collider>();
     }
@@ -183,7 +195,7 @@ public class GameManager : MonoBehaviour
     private void ChangeActiveTeam()
     {
         CurrentTeamIndex ++;
-        CurrentTeamIndex %= teamAmount;
+        CurrentTeamIndex %= _teamAmount;
     }
     
     private void ChangeActivePlayer()

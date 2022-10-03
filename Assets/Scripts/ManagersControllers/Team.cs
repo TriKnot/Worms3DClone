@@ -10,8 +10,4 @@ public class Team
     public int TeamNumber;
     public Color TeamColor;
 
-    private void Awake()
-    {
-        PlayerCharacters = new List<PlayerCharacter>();
-    }
 }

@@ -53,6 +53,7 @@ public class PauseMenuController : MonoBehaviour
     public void ConfirmQuitToMainMenu()
     {
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
     }
     
     public void ConfirmQuitToDesktop()
