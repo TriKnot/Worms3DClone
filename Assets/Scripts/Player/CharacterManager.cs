@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -83,6 +84,7 @@ public class CharacterManager : MonoBehaviour
             {
                 if(weapon.CanShoot())
                     _isChargingWeapon = true;
+                StartCoroutine(ChargeWeaponUp());
             }else if (context.canceled && _isChargingWeapon)
             { 
                 chargeableWeapon.Shoot(_weaponCharge);
@@ -101,10 +103,14 @@ public class CharacterManager : MonoBehaviour
         }
     }
     
-    private void ChargeWeaponUp()
+    private IEnumerator ChargeWeaponUp()
     {
-        _weaponCharge = Mathf.Min(_weaponCharge + Time.fixedDeltaTime, _maxWeaponCharge);
-        OnWeaponChargeChanged?.Invoke(_maxWeaponCharge, _weaponCharge);
+        while(_isChargingWeapon)
+        {
+            _weaponCharge = Mathf.Min(_weaponCharge + Time.fixedDeltaTime, _maxWeaponCharge);
+            OnWeaponChargeChanged?.Invoke(_maxWeaponCharge, _weaponCharge);
+            yield return new WaitForFixedUpdate();
+        }    
     }
 
 

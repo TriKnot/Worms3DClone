@@ -34,6 +34,9 @@ public class InputHandler : MonoBehaviour
         _input.Player.Look.performed += OnLook;
         _input.Player.Look.canceled += OnLook;
         
+        _input.Player.Fire.started += OnFire;
+        _input.Player.Fire.canceled += OnFire;
+        
         _input.Player.Jump.started += OnJump;
         _input.Player.Jump.canceled += OnJump;
         
@@ -54,6 +57,9 @@ public class InputHandler : MonoBehaviour
         
         _input.Player.Look.performed -= OnLook;
         _input.Player.Look.canceled -= OnLook;
+        
+        _input.Player.Fire.started -= OnFire;
+        _input.Player.Fire.canceled -= OnFire;
         
         _input.Player.Jump.started -= OnJump;
         _input.Player.Jump.canceled -= OnJump;
@@ -83,6 +89,11 @@ public class InputHandler : MonoBehaviour
     private void OnLook(InputAction.CallbackContext context)
     {
         LookInput = context.ReadValue<Vector2>();
+    }
+    
+    private void OnFire(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.ActiveCharacter.FireWeapon(context);
     }
     
     private void OnRun(InputAction.CallbackContext context)
