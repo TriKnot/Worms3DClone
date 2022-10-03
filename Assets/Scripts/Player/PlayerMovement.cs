@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -107,8 +108,13 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         _rigidbodyPosition = _rigidbody.position + Vector3.up * transformCenterYOffset;
-        playerMoveInput = GetMoveInput();
-
+        playerMoveInput = Vector3.zero;
+        
+        if(_characterManager.IsActiveCharacter)
+        {
+            playerMoveInput = GetMoveInput();
+        }
+        
         if(!_cameraController.UsingOrbitalCamera)
         {
             _playerLookInput = GetLookInput();
@@ -128,8 +134,12 @@ public class PlayerMovement : MonoBehaviour
         playerMoveInput = PlayerRun();
         
         playerMoveInput.y = PlayerFallGravity();
-        playerMoveInput.y = PlayerJump();
-
+        
+        if(_characterManager.IsActiveCharacter)
+        {
+            playerMoveInput.y = PlayerJump();
+        }
+        
         if(debugMode)
         {
             Debug.DrawRay(_rigidbodyPosition, _rigidbody.transform.TransformDirection(playerMoveInput), Color.red,
@@ -168,8 +178,7 @@ public class PlayerMovement : MonoBehaviour
     
     private Vector3 GetMoveInput()
     {
-        if(!_characterManager.IsActiveCharacter)return Vector3.zero;
-        
+       
         return new Vector3(_input.MoveInput.x, 0, _input.MoveInput.y);
     }
 
@@ -290,7 +299,6 @@ public class PlayerMovement : MonoBehaviour
     
     private float PlayerJump()
     {
-        if(!_characterManager.IsActiveCharacter) return playerMoveInput.y;
         float calculatedJumpInput = playerMoveInput.y;
 
         SetJumpTimeCounter();
@@ -549,6 +557,20 @@ public class PlayerMovement : MonoBehaviour
 
         return calculatedStepInput;
     }
+    
+    public void AddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionUpwardModifier = 0.0f)
+    {
+        var mass = _rigidbody.mass;
+        Vector3 calculatedMove = playerMoveInput;
+        Vector3 explosionDirection = _rigidbodyPosition - explosionPosition;
+        float explosionDistance = explosionDirection.magnitude;
+        explosionDirection.Normalize();
+        float explosionForceAtDistance = explosionForce / (explosionDistance * explosionDistance);
+        calculatedMove += explosionDirection * explosionForceAtDistance * Time.fixedDeltaTime;
+        calculatedMove.y += explosionUpwardModifier * explosionForceAtDistance * Time.fixedDeltaTime;
+        _rigidbody.AddForce(calculatedMove, ForceMode.Impulse);
+        print("Explosion force added");
+    }
 
     private void OnDrawGizmos()
     {
@@ -558,5 +580,7 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position + Vector3.up * transformCenterYOffset, _collider.radius * groundCheckRadiusMultiplier);
         }
     }
+    
+    
 
 }

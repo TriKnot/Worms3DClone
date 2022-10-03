@@ -131,7 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 2
   explosionRadiusModifier: 3
-  explosionForce: 1000
+  explosionForce: 10000
   explosionUpwardModifier: 500
   explosionPrefab: {fileID: 1764654978243476, guid: a98b15aa948478849b54661e4d9a317e, type: 3}
 --- !u!1001 &2516742504737414829

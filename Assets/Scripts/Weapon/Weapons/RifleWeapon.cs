@@ -25,6 +25,11 @@ public class RifleWeapon : MonoBehaviour, IWeapon
         _ammo = maxAmmo;
     }
 
+    private void OnDestroy()
+    {
+        EventManager.OnTurnChanged -= OnTurnChanged;
+    }
+
     public void Shoot()
     {
         GameObject bullet = _projectilePool.GetBullet();

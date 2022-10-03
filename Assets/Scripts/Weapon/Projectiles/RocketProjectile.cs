@@ -85,7 +85,8 @@ public class RocketProjectile : MonoBehaviour
             if (hit.TryGetComponent(out CharacterManager player))
             {
                 player.HealthSystem.Damage(damage);
-                player.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, _explosionRadius * explosionRadiusModifier, explosionUpwardModifier);
+                if(player.HealthSystem.Health > 0)
+                    player.GetComponent<PlayerMovement>().AddExplosionForce(explosionForce, transform.position, explosionUpwardModifier);
             }
         }
         Explode();

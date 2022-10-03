@@ -25,11 +25,17 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
         _projectilePool = new ProjectilePool(rocketPrefab);
         _collider = GetComponent<CapsuleCollider>();
         _ammo = maxAmmo;
+        EventManager.OnTurnChanged += OnTurnChanged;
     }
 
     private void OnEnable()
     {
         ToggleVisibleRocket(true);
+    }
+    
+    private void OnDestroy()
+    {
+        EventManager.OnTurnChanged -= OnTurnChanged;
     }
 
     public void Shoot()
@@ -49,7 +55,6 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
             _shootEffect.SetActive(true);
             _ammo--;
         }
-        EventManager.InvokeAmmoChanged(_ammo);
     }
 
     public void SetChargeAnimation(bool active)
