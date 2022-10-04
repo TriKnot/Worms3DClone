@@ -151,10 +151,6 @@ public class PlayerMovement : MonoBehaviour
         if(_characterManager.IsActiveCharacter)
         {
             playerMoveInput.y = PlayerJump();
-            if(isJumping)
-            {
-                UseStaminaByJump();
-            }
         }
         
         if(debugMode)
@@ -314,7 +310,7 @@ public class PlayerMovement : MonoBehaviour
         return calculatedPlayerRunSpeed;
     }
     
-    private void UseStaminaByJump()
+    private void UseStaminaOnJump()
     {
         if (_input.JumpIsPressed && isGrounded)
         {
@@ -339,6 +335,10 @@ public class PlayerMovement : MonoBehaviour
                 isJumping = true;
                 coyoteTimeCounter = 0f;
                 jumpBufferTimeCounter = 0f;
+            }
+            if(SettingsManager.UseStamina)
+            { 
+                UseStaminaOnJump();
             }
         }
         else if(_input.JumpIsPressed && isJumping && !isGrounded && jumpTimeCounter > 0f)
