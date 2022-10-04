@@ -82,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool isJumping = false;
     [SerializeField] private bool jumpWasPressedLastFrame = false;
     [SerializeField] private float maxSlopeAngleToJump = 45.0f;
+    [SerializeField] private float jumpStaminaCost = 10.0f;
 
 
     
@@ -113,7 +114,9 @@ public class PlayerMovement : MonoBehaviour
         if(_characterManager.IsActiveCharacter)
         {
             playerMoveInput = GetMoveInput();
+            
         }
+        
         
         if(!_cameraController.UsingOrbitalCamera)
         {
@@ -133,11 +136,25 @@ public class PlayerMovement : MonoBehaviour
         playerMoveInput = PlayerSlope();
         playerMoveInput = PlayerRun();
         
+        if(SettingsManager.UseStamina)
+        {
+            var staminaUsed = new Vector3(playerMoveInput.x, 0, playerMoveInput.z).magnitude * Time.fixedDeltaTime / 30.0f;
+            _characterManager.StaminaSystem.DecreaseStamina(staminaUsed);
+            if(_characterManager.StaminaSystem.Stamina <= 0.0f)
+            {
+                playerMoveInput = Vector3.zero;
+            }
+        }        
+        
         playerMoveInput.y = PlayerFallGravity();
         
         if(_characterManager.IsActiveCharacter)
         {
             playerMoveInput.y = PlayerJump();
+            if(isJumping)
+            {
+                UseStaminaByJump();
+            }
         }
         
         if(debugMode)
@@ -145,7 +162,8 @@ public class PlayerMovement : MonoBehaviour
             Debug.DrawRay(_rigidbodyPosition, _rigidbody.transform.TransformDirection(playerMoveInput), Color.red,
                 0.5f);
         }      
-        playerMoveInput *= _rigidbody.mass; // for dev testing
+        playerMoveInput *= _rigidbody.mass;
+
         
         _rigidbody.AddRelativeForce(playerMoveInput, ForceMode.Force);
     }
@@ -294,6 +312,14 @@ public class PlayerMovement : MonoBehaviour
         }
 
         return calculatedPlayerRunSpeed;
+    }
+    
+    private void UseStaminaByJump()
+    {
+        if (_input.JumpIsPressed && isGrounded)
+        {
+            _characterManager.StaminaSystem.DecreaseStamina(jumpStaminaCost);
+        }
     }
 
     
@@ -561,15 +587,14 @@ public class PlayerMovement : MonoBehaviour
     public void AddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionUpwardModifier = 0.0f)
     {
         var mass = _rigidbody.mass;
-        Vector3 calculatedMove = playerMoveInput;
         Vector3 explosionDirection = _rigidbodyPosition - explosionPosition;
         float explosionDistance = explosionDirection.magnitude;
         explosionDirection.Normalize();
-        float explosionForceAtDistance = explosionForce / (explosionDistance * explosionDistance);
-        calculatedMove += explosionDirection * explosionForceAtDistance * Time.fixedDeltaTime;
-        calculatedMove.y += explosionUpwardModifier * explosionForceAtDistance * Time.fixedDeltaTime;
-        _rigidbody.AddForce(calculatedMove, ForceMode.Impulse);
-        print("Explosion force added");
+        //float explosionForceAtDistance = explosionForce / (explosionDistance * explosionDistance);
+        explosionDirection *= explosionForce;
+        explosionDirection.y = Mathf.Abs(explosionDirection.y);
+        explosionDirection.y *= explosionUpwardModifier;
+        _rigidbody.AddForce(explosionDirection, ForceMode.Impulse);
     }
 
     private void OnDrawGizmos()

@@ -17,10 +17,16 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private Slider playerAmountSlider;
     [SerializeField] private TMP_Text teamSizeNumberText;
     [SerializeField] private Slider teamSizeSlider;
+    [SerializeField] private TMP_Text staminaOnOffText;
+    [SerializeField] private Toggle useStaminaToggle;
+    [SerializeField] private TMP_Text timerNumberText;
+    [SerializeField] private Slider timerSlider;
 
     private int _levelToLoad = 1;
     private int _teamSize;
     private int _playerAmount;
+    private bool _useStamina = true;
+    private int timer;
     
     
     public void NewGame()
@@ -33,6 +39,8 @@ public class MainMenuController : MonoBehaviour
     {
         SettingsManager.TeamSize = _teamSize;
         SettingsManager.TeamAmount = _playerAmount;
+        SettingsManager.UseStamina = _useStamina;
+        SettingsManager.TurnTimerValue = timer;
         
         SceneManager.LoadScene(_levelToLoad);
     }
@@ -63,6 +71,14 @@ public class MainMenuController : MonoBehaviour
         teamSizeSlider.minValue = SettingsManager.MinTeamSize;
         teamSizeSlider.maxValue = SettingsManager.MaxTeamSize;
         teamSizeSlider.value = SettingsManager.MinTeamSize;
+        
+        //Setup staminaToggle
+        useStaminaToggle.isOn = _useStamina;
+        
+        //Setup timer
+        timerSlider.minValue = SettingsManager.MinTurnTimerValue;
+        timerSlider.maxValue = SettingsManager.MaxTurnTimerValue;
+        timerSlider.value = SettingsManager.MinTurnTimerValue * 2;
     }
     
     public void SetTeamSize(float teamSize)
@@ -87,6 +103,18 @@ public class MainMenuController : MonoBehaviour
     {
         optionsMenu.SetActive(false);
         newGameMenu.SetActive(false);
+    }
+    
+    public void ToggleStamina()
+    {
+        _useStamina = useStaminaToggle.isOn;
+        staminaOnOffText.text = _useStamina ? "On" : "Off";
+    }
+    
+    public void SetTimer(float timerValue)
+    {
+        timer = (int)timerValue;
+        timerNumberText.text = timer.ToString();
     }
 
     

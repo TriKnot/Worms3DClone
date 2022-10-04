@@ -5,11 +5,12 @@ public class TurnManager : MonoBehaviour
     private int CurrentTurnIndex { get; set; }
     
     private float TurnTime { get; set; }
-    [SerializeField] private float turnTimeMax = 60f;
+    private float turnTimeMax = 60f;
 
     private void Awake()
     {
         CurrentTurnIndex = 1;
+        turnTimeMax = SettingsManager.TurnTimerValue;
         TurnTime = turnTimeMax;
     }
     

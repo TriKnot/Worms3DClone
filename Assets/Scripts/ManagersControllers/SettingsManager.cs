@@ -20,9 +20,14 @@ public static class SettingsManager
     public static int TeamAmount { get; set; }
     public static List<string> TeamNames { get; set; }
     public static List<Color> TeamColors { get; set; }
+    public static bool UseStamina { get; set; }
+    public static int MinTurnTimerValue { get; } = 30;
+    public static int MaxTurnTimerValue { get; } = 300;
+    public static int TurnTimerValue { get; set; }
     
+
     //Controls Settings
-    
+
     //Other Settings
 
 

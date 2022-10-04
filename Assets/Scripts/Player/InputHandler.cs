@@ -20,6 +20,7 @@ public class InputHandler : MonoBehaviour
     public float ZoomCameraInput { get; private set; } = 0f;
     public bool InvertCameraZoom { get; private set; } = false;
     public bool CameraChangePressed { get; private set; } = false;
+
     
     
     private void OnEnable()
@@ -47,6 +48,13 @@ public class InputHandler : MonoBehaviour
         _input.Player.ZoomCamera.canceled += OnZoomCamera;
         
         _input.Player.ChangeCharacter.started += OnCharacterChange;
+        
+        _input.Player.CycleWeapon.started += OnCycleWeapon;
+        
+        _input.Player.EndTurn.started += OnEndTurn;
+        
+        _input.Player.Pause.started += OnPause;
+        
     }
     
     private void OnDisable()
@@ -72,6 +80,12 @@ public class InputHandler : MonoBehaviour
         
         _input.Player.ChangeCharacter.started -= OnCharacterChange;
         
+        _input.Player.CycleWeapon.started -= OnCycleWeapon;
+        
+        _input.Player.EndTurn.started -= OnEndTurn;
+        
+        _input.Player.Pause.started -= OnPause;
+        
         _input.Player.Disable();
     }
 
@@ -96,6 +110,12 @@ public class InputHandler : MonoBehaviour
         GameManager.Instance.ActiveCharacter.FireWeapon(context);
     }
     
+    //TODO - Add cycle weapon for controllers   
+    private void OnCycleWeapon(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.ActiveCharacter.Inventory.ChangeWeapon();
+    }
+    
     private void OnRun(InputAction.CallbackContext context)
     {
         RunIsPressed = context.started;
@@ -114,5 +134,15 @@ public class InputHandler : MonoBehaviour
     private void OnCharacterChange(InputAction.CallbackContext context)
     {
         GameManager.Instance.ChangeActiveCharacter();
+    }
+    
+    private void OnEndTurn(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.TurnManager.EndTurn();
+    }
+
+    private void OnPause(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.TogglePause();
     }
 }

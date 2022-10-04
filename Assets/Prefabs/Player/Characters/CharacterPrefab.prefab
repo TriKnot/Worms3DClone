@@ -337,6 +337,8 @@ MonoBehaviour:
   - {fileID: 1849736199912346, guid: a12a8e6080b1a90418b5c9b3c09bf7cc, type: 3}
   - {fileID: 1965410809269166, guid: 7d55993bc0180314fa3e70ec01174dee, type: 3}
   - {fileID: 1645872946987862, guid: a77b758e54b86744b9623fd0d3aeb90a, type: 3}
+  _maxHealth: 5
+  _maxStamina: 20
 --- !u!54 &-7443361570448322333
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -380,7 +382,7 @@ MonoBehaviour:
   playerCenterToGroundDistance: 0.9999988
   gravityFallCurrent: 0
   gravityFallMin: 0
-  gravityFallIncrementTime: 0.1
+  gravityFallIncrementTime: 0.3
   playerFallTimer: 0.1
   gravityGrounded: 0.005
   maxSlopeAngle: 50
@@ -395,7 +397,7 @@ MonoBehaviour:
   ascendingStairsMoveSpeedMultiplier: 0.35
   descendingStairsMoveSpeedMultiplier: 0.7
   maximumAngleOfApproachToAscend: 45
-  initialJumpForceMultiplier: 250
+  initialJumpForceMultiplier: 350
   continualJumpForceMultiplier: 0.5
   jumpTime: 0.1
   jumpTimeCounter: 0.1
@@ -406,6 +408,7 @@ MonoBehaviour:
   isJumping: 0
   jumpWasPressedLastFrame: 0
   maxSlopeAngleToJump: 45
+  jumpStaminaCost: 2
 --- !u!1001 &471551639850468209
 PrefabInstance:
   m_ObjectHideFlags: 0

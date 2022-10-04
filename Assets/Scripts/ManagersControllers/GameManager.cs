@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    private TurnManager _turnManager;
+    public TurnManager TurnManager { get; private set; }
     private CameraController _cameraController;
     public UIManager UIManager { get; private set; }
     public static Camera MainCamera { get; private set; }
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
         
-        _turnManager = GetComponent<TurnManager>();
+        TurnManager = GetComponent<TurnManager>();
         _cameraController = GetComponent<CameraController>();
         MainCamera = Camera.main;
         UIManager = GetComponent<UIManager>();
@@ -68,23 +68,6 @@ public class GameManager : MonoBehaviour
         EventManager.OnPlayerDied -= OnPlayerDied;
         EventManager.OnTurnChanged -= OnTurnChanged;
         EventManager.OnGamePaused -= OnGamePaused;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            _turnManager.EndTurn();
-        }
-        if(Input.GetKeyDown(KeyCode.Tab))
-        {
-            ChangeActiveCharacter();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            EventManager.InvokeGamePaused(!IsPaused);
-        }
     }
     
     private void OnGamePaused(bool isPaused)
@@ -228,6 +211,11 @@ public class GameManager : MonoBehaviour
     {
         ChangeActiveTeam();
         ChangeActiveCharacter();
+    }
+
+    public void TogglePause()
+    {
+        EventManager.InvokeGamePaused(!IsPaused);
     }
     
 }

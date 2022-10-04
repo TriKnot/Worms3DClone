@@ -13,15 +13,15 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] private Transform weaponHolder;
     [SerializeField] private GameObject statusBarsPrefab;
     private UI_PlayerStatusBars _statusStatusBars;
-    public InputActions InputActions { get; private set; }
     public Inventory Inventory { get; private set; }
     [SerializeField] private GameObject[] characterModels;
 
     [Header("Character Stats")]
-    private int _maxHealth = 5;
-    private float _maxStamina = 20;
+    [SerializeField] private int _maxHealth = 5;
+    [SerializeField] private float _maxStamina = 20;
     public HealthSystem HealthSystem { get; private set; }
     public StaminaSystem StaminaSystem { get; private set; }
+    private InputHandler _inputHandler;
     private readonly float _maxWeaponCharge = 1;
     private float _weaponCharge = 0;
     private bool _isChargingWeapon = false;
@@ -40,8 +40,8 @@ public class CharacterManager : MonoBehaviour
         gameObject.GetComponent<MeshFilter>().mesh = characterModels[Random.Range(0, characterModels.Length)].GetComponent<MeshFilter>().sharedMesh;
         gameObject.GetComponent<MeshRenderer>().material = characterModels[Random.Range(0, characterModels.Length)].GetComponent<MeshRenderer>().sharedMaterial;
         _statusStatusBars = Instantiate(statusBarsPrefab, transform).GetComponent<UI_PlayerStatusBars>();
-        InputActions = new InputActions();
         CameraFollow = transform.Find("CameraFollowTarget").transform;
+        _inputHandler = GameManager.Instance.GetComponent<InputHandler>();
         EventManager.OnActiveCharacterChanged += SetActiveCharacter;
     }
 
@@ -54,19 +54,6 @@ public class CharacterManager : MonoBehaviour
     private void OnDisable()
     {
         EventManager.OnActiveCharacterChanged -= SetActiveCharacter;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Inventory.ChangeWeapon();
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if(_isChargingWeapon) ChargeWeaponUp();
     }
 
     public void FireWeapon(InputAction.CallbackContext context)
@@ -112,8 +99,7 @@ public class CharacterManager : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }    
     }
-
-
+    
     private void SetActiveCharacter()
     {
         bool active = GameManager.Instance.ActiveCharacter == this;

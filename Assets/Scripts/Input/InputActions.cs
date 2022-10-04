@@ -106,6 +106,24 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""EndTurn"",
+                    ""type"": ""Button"",
+                    ""id"": ""66d99d8b-af1e-404f-9d57-efe20f4a0ebb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""d87a6143-a9f2-4ab7-8349-74a10feaebab"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
@@ -443,7 +461,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""61be7969-870f-419e-802e-f57ab442f969"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -453,12 +471,23 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8771a541-e1ed-443d-abcd-d15017bec0e0"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""id"": ""eda8160d-a146-4a9e-b0e0-0790b84ca203"",
+                    ""path"": ""<Keyboard>/numpadEnter"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""CycleWeapon"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""EndTurn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6daccb17-a5cf-484c-a9e8-8ab4034c17d4"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1055,6 +1084,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_ChangeCharacter = m_Player.FindAction("ChangeCharacter", throwIfNotFound: true);
         m_Player_CycleWeapon = m_Player.FindAction("CycleWeapon", throwIfNotFound: true);
+        m_Player_EndTurn = m_Player.FindAction("EndTurn", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1135,6 +1166,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_ChangeCharacter;
     private readonly InputAction m_Player_CycleWeapon;
+    private readonly InputAction m_Player_EndTurn;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -1148,6 +1181,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @ChangeCharacter => m_Wrapper.m_Player_ChangeCharacter;
         public InputAction @CycleWeapon => m_Wrapper.m_Player_CycleWeapon;
+        public InputAction @EndTurn => m_Wrapper.m_Player_EndTurn;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1184,6 +1219,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @CycleWeapon.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCycleWeapon;
                 @CycleWeapon.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCycleWeapon;
                 @CycleWeapon.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCycleWeapon;
+                @EndTurn.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEndTurn;
+                @EndTurn.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEndTurn;
+                @EndTurn.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEndTurn;
+                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1215,6 +1256,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @CycleWeapon.started += instance.OnCycleWeapon;
                 @CycleWeapon.performed += instance.OnCycleWeapon;
                 @CycleWeapon.canceled += instance.OnCycleWeapon;
+                @EndTurn.started += instance.OnEndTurn;
+                @EndTurn.performed += instance.OnEndTurn;
+                @EndTurn.canceled += instance.OnEndTurn;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -1380,6 +1427,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnChangeCharacter(InputAction.CallbackContext context);
         void OnCycleWeapon(InputAction.CallbackContext context);
+        void OnEndTurn(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
