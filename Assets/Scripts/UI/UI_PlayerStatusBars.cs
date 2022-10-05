@@ -47,7 +47,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
         //Subscribe to events
         _healthSystem.OnHealthChanged += HealthSystem_OnHealthChanged;
         _staminaSystem.OnStaminaChanged += StaminaSystem_OnStaminaChanged;
-        characterManager.OnWeaponChargeChanged += CharacterManagerOnChargeChanged;
+        characterManager.WeaponController.OnWeaponChargeChanged += CharacterManagerOnChargeChanged;
         
         EventManager.OnAmmoChanged += UpdateAmmo;
         
@@ -62,7 +62,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
         //Unsubscribe from events
         characterManager.HealthSystem.OnHealthChanged -= HealthSystem_OnHealthChanged;
         characterManager.StaminaSystem.OnStaminaChanged -= StaminaSystem_OnStaminaChanged;
-        characterManager.OnWeaponChargeChanged -= CharacterManagerOnChargeChanged;
+        characterManager.WeaponController.OnWeaponChargeChanged -= CharacterManagerOnChargeChanged;
         EventManager.OnAmmoChanged -= UpdateAmmo;
     }
 

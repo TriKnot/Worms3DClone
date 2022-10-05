@@ -20,6 +20,11 @@ public class InputHandler : MonoBehaviour
     public float ZoomCameraInput { get; private set; } = 0f;
     public bool InvertCameraZoom { get; private set; } = false;
     public bool CameraChangePressed { get; private set; } = false;
+    
+    // Declare variables for combat
+    public bool FireIsPressed { get; private set; } = false;
+    public bool AimIsPressed { get; private set; } = false;
+    
 
     
     
@@ -37,6 +42,9 @@ public class InputHandler : MonoBehaviour
         
         _input.Player.Fire.started += OnFire;
         _input.Player.Fire.canceled += OnFire;
+        
+        _input.Player.Aim.started += OnAim;
+        _input.Player.Aim.canceled += OnAim;
         
         _input.Player.Jump.started += OnJump;
         _input.Player.Jump.canceled += OnJump;
@@ -68,6 +76,9 @@ public class InputHandler : MonoBehaviour
         
         _input.Player.Fire.started -= OnFire;
         _input.Player.Fire.canceled -= OnFire;
+        
+        _input.Player.Aim.started -= OnAim;
+        _input.Player.Aim.canceled -= OnAim;
         
         _input.Player.Jump.started -= OnJump;
         _input.Player.Jump.canceled -= OnJump;
@@ -144,5 +155,10 @@ public class InputHandler : MonoBehaviour
     private void OnPause(InputAction.CallbackContext context)
     {
         GameManager.Instance.TogglePause();
+    }
+    
+    private void OnAim(InputAction.CallbackContext context)
+    {
+        AimIsPressed = context.started;
     }
 }

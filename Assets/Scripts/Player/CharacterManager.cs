@@ -13,6 +13,7 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] private Transform weaponHolder;
     [SerializeField] private GameObject statusBarsPrefab;
     private UI_PlayerStatusBars _statusStatusBars;
+    public WeaponController WeaponController { get; private set; }
     public Inventory Inventory { get; private set; }
     [SerializeField] private GameObject[] characterModels;
 
@@ -21,12 +22,7 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] private float _maxStamina = 20;
     public HealthSystem HealthSystem { get; private set; }
     public StaminaSystem StaminaSystem { get; private set; }
-    private InputHandler _inputHandler;
-    private readonly float _maxWeaponCharge = 1;
-    private float _weaponCharge = 0;
-    private bool _isChargingWeapon = false;
-    public delegate void WeaponChargeChanged(float maxCharge, float currentCharge);
-    public event WeaponChargeChanged OnWeaponChargeChanged;
+
     
     public Transform CameraFollow { get; private set; }
 
@@ -41,7 +37,7 @@ public class CharacterManager : MonoBehaviour
         gameObject.GetComponent<MeshRenderer>().material = characterModels[Random.Range(0, characterModels.Length)].GetComponent<MeshRenderer>().sharedMaterial;
         _statusStatusBars = Instantiate(statusBarsPrefab, transform).GetComponent<UI_PlayerStatusBars>();
         CameraFollow = transform.Find("CameraFollowTarget").transform;
-        _inputHandler = GameManager.Instance.GetComponent<InputHandler>();
+        WeaponController = GetComponent<WeaponController>();
         EventManager.OnActiveCharacterChanged += SetActiveCharacter;
     }
 
@@ -55,49 +51,10 @@ public class CharacterManager : MonoBehaviour
     {
         EventManager.OnActiveCharacterChanged -= SetActiveCharacter;
     }
-
+    
     public void FireWeapon(InputAction.CallbackContext context)
     {
-        IWeapon weapon = Inventory.GetActiveWeapon();
-
-        //If weapon is chargeable
-        if (Inventory.GetActiveWeaponObject().TryGetComponent(out IChargeableWeapon chargeableWeapon))
-        {
-            if (!Inventory.GetActiveWeaponObject().TryGetComponent(out IMeleeWeapon meleeWeapon) && Inventory.GetActiveWeapon().GetAmmoCount() <= 0)
-            {
-                return;
-            }
-            if (context.started)
-            {
-                if(weapon.CanShoot())
-                    _isChargingWeapon = true;
-                StartCoroutine(ChargeWeaponUp());
-            }else if (context.canceled && _isChargingWeapon)
-            { 
-                chargeableWeapon.Shoot(_weaponCharge);
-                _isChargingWeapon = false;
-                _weaponCharge = 0;
-                OnWeaponChargeChanged?.Invoke(_maxWeaponCharge, _weaponCharge);
-            }
-            chargeableWeapon.SetChargeAnimation(_isChargingWeapon);
-            return;
-        }
-        //If weapon is not chargeable
-        if(context.started )
-        {
-            if(weapon.CanShoot())
-                weapon.Shoot();
-        }
-    }
-    
-    private IEnumerator ChargeWeaponUp()
-    {
-        while(_isChargingWeapon)
-        {
-            _weaponCharge = Mathf.Min(_weaponCharge + Time.fixedDeltaTime, _maxWeaponCharge);
-            OnWeaponChargeChanged?.Invoke(_maxWeaponCharge, _weaponCharge);
-            yield return new WaitForFixedUpdate();
-        }    
+        WeaponController.FireWeapon(context);
     }
     
     private void SetActiveCharacter()
