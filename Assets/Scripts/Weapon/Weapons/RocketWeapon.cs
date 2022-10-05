@@ -1,8 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
@@ -10,6 +5,7 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     private ProjectilePool _projectilePool;
     [SerializeField] private GameObject firePoint;
     [SerializeField] private GameObject rocketPrefab;
+    private float projectileMass;
 
     [SerializeField] private float shotSpeedMultiplier = 3f;
     private CapsuleCollider _collider;
@@ -19,11 +15,14 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     [SerializeField] private int maxAmmo = 2;
     
     private GameObject _currentRocket;
+    
+    private WeaponController _weaponController;
 
     private void Awake()
     {
         _projectilePool = new ProjectilePool(rocketPrefab);
         _collider = GetComponent<CapsuleCollider>();
+        projectileMass = rocketPrefab.GetComponent<Rigidbody>().mass;
         _ammo = maxAmmo;
         EventManager.OnTurnChanged += OnTurnChanged;
     }
@@ -36,6 +35,7 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     private void OnDestroy()
     {
         EventManager.OnTurnChanged -= OnTurnChanged;
+        _weaponController.OnWeaponChargeChanged -= OnWeaponChargeChanged;
     }
 
     public void Shoot()
@@ -96,7 +96,13 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
 
     public void OnPickup(CharacterManager player)
     {
-        
+        _weaponController = player.GetComponent<WeaponController>();
+        _weaponController.OnWeaponChargeChanged += OnWeaponChargeChanged;
+    }
+
+    private void OnWeaponChargeChanged(float maxCharge, float currentCharge)
+    {
+        _weaponController.AimCurved(-transform.forward * (currentCharge * shotSpeedMultiplier), firePoint.transform.position, projectileMass);
     }
     
     public bool CanShoot()

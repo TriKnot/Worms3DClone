@@ -121,7 +121,10 @@ public class PlayerMovement : MonoBehaviour
         if(!_cameraController.UsingOrbitalCamera)
         {
             _playerLookInput = GetLookInput();
-            PlayerLook();
+            if(_characterManager.IsActiveCharacter)
+            {
+                PlayerLook();
+            }            
             PitchCamera();
         }
         else if(_cameraController.UsingOrbitalCamera && playerMoveInput != Vector3.zero)
@@ -590,7 +593,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3 explosionDirection = _rigidbodyPosition - explosionPosition;
         float explosionDistance = explosionDirection.magnitude;
         explosionDirection.Normalize();
-        //float explosionForceAtDistance = explosionForce / (explosionDistance * explosionDistance);
         explosionDirection *= explosionForce;
         explosionDirection.y = Mathf.Abs(explosionDirection.y);
         explosionDirection.y *= explosionUpwardModifier;

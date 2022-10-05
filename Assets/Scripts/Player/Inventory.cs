@@ -43,6 +43,5 @@ public class Inventory
     }
     
     //TODO add remove weapon
-    //TODO set active weapon to new weapon on pickup
     
 }

@@ -9,6 +9,8 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon, IMeleeWeapon
     private CapsuleCollider _collider;
     private Animator _animator;
     private float _swingCharge = 0f;
+    [SerializeField] private float swingChargeModifier = 1f;
+    [SerializeField] private float swingUpModifier = 1f;
     
     private List<Collider> _hitColliders = new List<Collider>();
     
@@ -31,9 +33,8 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon, IMeleeWeapon
         _swingCharge = charge;
         _animator.SetTrigger("Attack");
         _collider.enabled = true;
-        _swingCharge = 0f;
     }
-    
+
     public void SetChargeAnimation(bool active)
     {
         _animator.SetBool("Charge", active);
@@ -51,13 +52,11 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon, IMeleeWeapon
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent(out CharacterManager player))
+        if(other.TryGetComponent(out PlayerMovement player))
         {   
             if(_hitColliders.Contains(other)) return;
             _hitColliders.Add(other);
-            var direction = Vector3.ClampMagnitude(player.gameObject.transform.position - transform.position, 1f);
-            direction += Vector3.up;
-            player.gameObject.GetComponent<Rigidbody>().AddForce(direction * 10f * _swingCharge, ForceMode.Impulse);
+            player.AddExplosionForce(_swingCharge * swingChargeModifier, other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position), swingUpModifier);
         }
     }
     

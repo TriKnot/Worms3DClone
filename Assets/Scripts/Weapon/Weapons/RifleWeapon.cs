@@ -11,6 +11,9 @@ public class RifleWeapon : MonoBehaviour, IWeapon
     private ProjectilePool _projectilePool;
     [SerializeField] private float shotSpeedMultiplier = 3f;
     private CapsuleCollider _collider;
+    private InputHandler _inputHandler;
+    
+    private WeaponController _weaponController;
 
 
     private int _ammo = 1;
@@ -28,6 +31,17 @@ public class RifleWeapon : MonoBehaviour, IWeapon
     private void OnDestroy()
     {
         EventManager.OnTurnChanged -= OnTurnChanged;
+    }
+
+    private void FixedUpdate()
+    {
+        if(isActiveAndEnabled && _weaponController != null)
+        {
+            if (_inputHandler.AimIsPressed)
+            {
+                _weaponController.AimStraight(firePoint.position, 0.1f);
+            }
+        }
     }
 
     public void Shoot()
@@ -75,7 +89,8 @@ public class RifleWeapon : MonoBehaviour, IWeapon
 
     public void OnPickup(CharacterManager player)
     {
-        
+        _weaponController = player.GetComponent<WeaponController>();
+        _inputHandler = GameManager.Instance.GetComponent<InputHandler>();
     }
 
     public bool CanShoot()
