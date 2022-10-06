@@ -40,7 +40,7 @@ public class RifleWeapon : MonoBehaviour, IWeapon
             if (_inputHandler.AimIsPressed)
             {
                 _weaponController._lineRenderer.enabled = true;
-                _weaponController.AimStraight(firePoint.position, 0.1f);
+                _weaponController.ShowLineAimStraight(firePoint.position, 0.1f);
             }else
             {
                 _weaponController._lineRenderer.enabled = false;

@@ -7,12 +7,15 @@ using UnityEngine.InputSystem;
 public class WeaponController : MonoBehaviour
 {
     private Inventory _inventory;
+    private InputHandler _inputHandler;
     public LineRenderer _lineRenderer {get; private set; }
-    [SerializeField] private LayerMask bulletLayer;
+    private LayerMask bulletLayer;
     
     private readonly float _maxWeaponCharge = 1;
     private float _weaponCharge = 0;
     private bool _isChargingWeapon = false;
+
+    [SerializeField] private Transform _weaponHolder;
     
     public delegate void WeaponChargeChanged(float maxCharge, float currentCharge);
     public event WeaponChargeChanged OnWeaponChargeChanged;
@@ -22,6 +25,15 @@ public class WeaponController : MonoBehaviour
         _inventory = GetComponent<CharacterManager>().Inventory;
         _lineRenderer = GetComponent<LineRenderer>();
         bulletLayer = LayerMask.GetMask("Bullet");
+        _inputHandler = GameManager.Instance.GetComponent<InputHandler>();
+    }
+
+    private void LateUpdate()
+    {
+        if (_inputHandler.AimIsPressed)
+        {
+            Aim(_inputHandler.LookInput.y);
+        }
     }
 
     public void FireWeapon(InputAction.CallbackContext context)
@@ -80,7 +92,7 @@ public class WeaponController : MonoBehaviour
         _lineRenderer.enabled = false;
     }
 
-    public void AimCurved(Vector3 force, Vector3 initialPosition, float projectileMass, float lineWidth)
+    public void ShowLineAimCurved(Vector3 force, Vector3 initialPosition, float projectileMass, float lineWidth)
     {
         var stepCount = 100;
         force *= _weaponCharge;
@@ -99,14 +111,19 @@ public class WeaponController : MonoBehaviour
         }
     }
 
-    public void AimStraight(Vector3 position, float lineWidth)
+    public void ShowLineAimStraight(Vector3 position, float lineWidth)
     {
         _lineRenderer.startWidth = lineWidth;
         _lineRenderer.endWidth = lineWidth;
         _lineRenderer.positionCount = 2;
         _lineRenderer.SetPosition(0, position);
-        Physics.Raycast(position, transform.forward, out RaycastHit hit, Mathf.Infinity, ~bulletLayer);
+        Physics.Raycast(position, _weaponHolder.transform.forward, out RaycastHit hit, Mathf.Infinity, ~bulletLayer);
         _lineRenderer.SetPosition(1, hit.point);
+    }
+    public void Aim(float angle)
+    {
+        var newAngle = _weaponHolder.localRotation.eulerAngles.x - angle * 0.2f;
+        _weaponHolder.localRotation = Quaternion.Euler(newAngle, 0, 0);
     }
 
 }

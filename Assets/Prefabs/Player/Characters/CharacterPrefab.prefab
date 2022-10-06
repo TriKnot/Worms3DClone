@@ -331,7 +331,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025216c20b0e9d343b49ef2489ef415e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterNumber: 0
   weaponHolder: {fileID: 7375017585030168240}
   statusBarsPrefab: {fileID: 8770978904602962273, guid: 3373d6d6ac283774ebcf7758ed3503a1, type: 3}
   characterModels:
@@ -339,8 +338,8 @@ MonoBehaviour:
   - {fileID: 1849736199912346, guid: a12a8e6080b1a90418b5c9b3c09bf7cc, type: 3}
   - {fileID: 1965410809269166, guid: 7d55993bc0180314fa3e70ec01174dee, type: 3}
   - {fileID: 1645872946987862, guid: a77b758e54b86744b9623fd0d3aeb90a, type: 3}
-  _maxHealth: 5
-  _maxStamina: 20
+  maxHealth: 5
+  maxStamina: 20
 --- !u!54 &-7443361570448322333
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -423,6 +422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9b2714aaecd08844b7deadeaa0dada9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _weaponHolder: {fileID: 7375017585030168240}
 --- !u!120 &694021064410737773
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -529,6 +529,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7375017585030168240}
     m_Modifications:
+    - target: {fileID: -5387451370058722317, guid: b2f3d8c0c328ed14d9d94cb54ccbd45e, type: 3}
+      propertyPath: swingUpModifier
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2312259829078826742, guid: b2f3d8c0c328ed14d9d94cb54ccbd45e, type: 3}
       propertyPath: m_RootOrder
       value: 0

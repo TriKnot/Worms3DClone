@@ -50,16 +50,25 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon, IMeleeWeapon
         _collider.enabled = state;
     }
 
+    private Vector3 gizmolocation;
     private void OnTriggerEnter(Collider other)
     {
         if(other.TryGetComponent(out PlayerMovement player))
         {   
             if(_hitColliders.Contains(other)) return;
             _hitColliders.Add(other);
-            player.AddExplosionForce(_swingCharge * swingChargeModifier, other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position), swingUpModifier);
+            var hitoffset = other.transform.position - transform.position;
+            player.AddExplosionForce(_swingCharge * swingChargeModifier, other.transform.position - hitoffset, swingUpModifier);
+            gizmolocation = other.transform.position - hitoffset + Vector3.down * .5f;
         }
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(gizmolocation, 0.5f);
+    }
+
     public void OnPickup(CharacterManager player)
     {
         

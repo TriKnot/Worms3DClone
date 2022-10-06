@@ -121,4 +121,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swingChargeModifier: 5000
-  swingUpModifier: 10
+  swingUpModifier: 25

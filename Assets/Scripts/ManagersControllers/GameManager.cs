@@ -248,14 +248,14 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
-        SetCursorLock(true);
+        SetCursorLock(false);
     }
     
     public void OnQuitToDesktop()
     {
         Application.Quit();
         Time.timeScale = 1;
-        SetCursorLock(true);
+        SetCursorLock(false);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
