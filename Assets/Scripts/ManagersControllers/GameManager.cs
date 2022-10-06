@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
@@ -10,7 +11,7 @@ public class GameManager : MonoBehaviour
     public UIManager UIManager { get; private set; }
     public static Camera MainCamera { get; private set; }
     
-    private Team[] _teams;
+    private List<Team> _teams;
     private int _teamAmount = 2;
     private int _teamSize = 3;
 
@@ -96,7 +97,7 @@ public class GameManager : MonoBehaviour
     
     private void CreateTeams()
     {
-        _teams = new Team[_teamAmount];
+        _teams = new List<Team>();
         for(int i = 0; i < _teamAmount; i++)
         {
             var newTeam = new Team
@@ -105,13 +106,13 @@ public class GameManager : MonoBehaviour
                 TeamColor = teamColors[i],
                 TeamNumber = i
             };
-            _teams[i] = newTeam;
+            _teams.Add(newTeam);
         }
     }
 
     private void SpawnPlayers()
     {
-        for(int i = 0; i < _teams.Length; i++)
+        for(int i = 0; i < _teams.Count; i++)
         {
             for (int j = 0; j < _teamSize; j++)
             {
@@ -201,10 +202,19 @@ public class GameManager : MonoBehaviour
         EventManager.InvokeActiveCharacterChanged();
     }
 
-    private void OnPlayerDied(CharacterManager characterManager)
+    private void OnPlayerDied(CharacterManager deadCharacter)
     {
-        _teams[characterManager.Team.TeamNumber].PlayerCharacters.Remove(characterManager);
-        Destroy(characterManager.gameObject);
+        _teams[deadCharacter.Team.TeamNumber].PlayerCharacters.Remove(deadCharacter);
+        if (_teams[deadCharacter.Team.TeamNumber].PlayerCharacters.Count <= 0)
+        {
+            _teams.Remove(deadCharacter.Team);
+        }
+        if(_teams.Count <= 1)
+        {
+            //Game over
+            EventManager.InvokeGameEnded(deadCharacter.Team);
+        }
+        Destroy(deadCharacter.gameObject);
     }
 
     private void OnTurnChanged()

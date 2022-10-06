@@ -17,6 +17,9 @@ public static class EventManager
     
     public delegate void GamePaused(bool isPaused);
     public static event GamePaused OnGamePaused;
+    
+    public delegate void GameEnded(Team winningTeam);
+    public static event GameEnded OnGameEnded;
 
 
     public static void InvokeActiveCharacterChanged()
@@ -47,5 +50,10 @@ public static class EventManager
     public static void InvokeGamePaused(bool isPaused)
     {
         OnGamePaused?.Invoke(isPaused);
+    }
+    
+    public static void InvokeGameEnded(Team winningTeam)
+    {
+        OnGameEnded?.Invoke(winningTeam);
     }
 }
