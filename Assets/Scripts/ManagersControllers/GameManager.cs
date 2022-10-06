@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
 
     public CharacterManager ActiveCharacter { get; private set; }
     public int CurrentCharacterIndex { get; private set; }
-
     public bool IsPaused { get; private set; }
 
     public int CurrentTeamIndex { get; private set; }
@@ -87,8 +86,6 @@ public class GameManager : MonoBehaviour
         SetCursorLock(!isPaused);
     }
     
-    
-    
     private void SetCursorLock(bool value)
     {
         Cursor.lockState = value ? CursorLockMode.Locked : CursorLockMode.None;
@@ -102,6 +99,7 @@ public class GameManager : MonoBehaviour
         SpawnPlayers();
         ActiveCharacter = _teams[0].PlayerCharacters[0];
         ChangeActiveCharacter();
+        EventManager.InvokeTurnChanged();
     }
     
     private void CreateTeams()
@@ -141,10 +139,9 @@ public class GameManager : MonoBehaviour
                 newCharacter.GetComponent<PlayerInput>().DeactivateInput();
                 CharacterManager characterManager = newCharacter.GetComponent<CharacterManager>();
                 characterManager.Team = _teams[i];
-                characterManager.characterNumber = j;
-                var color = _teams[i].TeamColor;
-                newCharacter.GetComponent<MeshRenderer>().material.SetColor("_Color", color);
+                characterManager.CharacterNumber = j;
                 _teams[i].PlayerCharacters.Add(characterManager);
+                characterManager.Init();
             }
         }
         RemoveAllSpawnLocations();
@@ -210,7 +207,7 @@ public class GameManager : MonoBehaviour
         //Change active player input
         EventManager.InvokeActiveCharacterChanged();
     }
-
+    
     private void OnPlayerDied(CharacterManager deadCharacter)
     {
         _teams[deadCharacter.Team.TeamNumber].PlayerCharacters.Remove(deadCharacter);

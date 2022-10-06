@@ -3,13 +3,14 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class CharacterManager : MonoBehaviour
 {
     [Header("External References/Objects")]
     public Team Team;
-    [HideInInspector] public int characterNumber;
+    public int CharacterNumber { get; set; }
     [SerializeField] private Transform weaponHolder;
     [SerializeField] private GameObject statusBarsPrefab;
     private UI_PlayerStatusBars _statusStatusBars;
@@ -18,8 +19,8 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] private GameObject[] characterModels;
 
     [Header("Character Stats")]
-    [SerializeField] private int _maxHealth = 5;
-    [SerializeField] private float _maxStamina = 20;
+    [SerializeField] private int maxHealth = 5;
+    [SerializeField] private float maxStamina = 20;
     public HealthSystem HealthSystem { get; private set; }
     public StaminaSystem StaminaSystem { get; private set; }
 
@@ -28,23 +29,26 @@ public class CharacterManager : MonoBehaviour
 
     public bool IsActiveCharacter { get; set; }
 
+
     private void Awake()
     {
         Inventory = new Inventory();
-        HealthSystem = new HealthSystem(_maxHealth, this);
-        StaminaSystem = new StaminaSystem(_maxStamina);
-        gameObject.GetComponent<MeshFilter>().mesh = characterModels[Random.Range(0, characterModels.Length)].GetComponent<MeshFilter>().sharedMesh;
-        gameObject.GetComponent<MeshRenderer>().material = characterModels[Random.Range(0, characterModels.Length)].GetComponent<MeshRenderer>().sharedMaterial;
-        _statusStatusBars = Instantiate(statusBarsPrefab, transform).GetComponent<UI_PlayerStatusBars>();
-        CameraFollow = transform.Find("CameraFollowTarget").transform;
+        HealthSystem = new HealthSystem(maxHealth, this);
+        StaminaSystem = new StaminaSystem(maxStamina);
         WeaponController = GetComponent<WeaponController>();
-        EventManager.OnActiveCharacterChanged += SetActiveCharacter;
+        CameraFollow = transform.Find("CameraFollowTarget").transform;
     }
 
-    private void Start()
+    public void Init()
     {
+        gameObject.GetComponent<MeshFilter>().mesh = characterModels[Team.TeamNumber].GetComponent<MeshFilter>().sharedMesh;
+        gameObject.GetComponent<MeshRenderer>().material = characterModels[Team.TeamNumber].GetComponent<MeshRenderer>().sharedMaterial;
         Inventory.AddWeapon(weaponHolder.GetChild(0).gameObject);
+        
+        _statusStatusBars = Instantiate(statusBarsPrefab, transform).GetComponent<UI_PlayerStatusBars>();
         _statusStatusBars.Init(this);
+        
+        EventManager.OnActiveCharacterChanged += SetActiveCharacter;
     }
 
     private void OnDisable()

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
-    private int CurrentTurnIndex { get; set; }
+    public int CurrentTurnIndex { get; private set; }
     
     private float TurnTime { get; set; }
     private float turnTimeMax = 60f;

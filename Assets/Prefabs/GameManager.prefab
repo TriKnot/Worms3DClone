@@ -117,3 +117,5 @@ MonoBehaviour:
   pauseMenuPrefab: {fileID: 6120907365922762553, guid: 82d0751fa479a164f909dafdda83ac6a, type: 3}
   turnTimerPrefab: {fileID: 449022231058372412, guid: ea12f353d9b847241a7d0d91faa371f6, type: 3}
   gameOverOverlayPrefab: {fileID: 3513890373623726485, guid: 7826fb392b657ef4cbad6e4a15fd7733, type: 3}
+  activePlayerText: {fileID: 6095222377004935407, guid: c31f24063d0e1ac4d896bfc655ca9d4c, type: 3}
+  turnNumberText: {fileID: 4995653278115494099, guid: 30ac63f1f17554c478693ff3bfe75ea0, type: 3}
