@@ -207,11 +207,11 @@ public class GameManager : MonoBehaviour
         //Change active player input
         EventManager.InvokeActiveCharacterChanged();
     }
-    
     private void OnPlayerDied(CharacterManager deadCharacter)
     {
-        _teams[deadCharacter.Team.TeamNumber].PlayerCharacters.Remove(deadCharacter);
-        if (_teams[deadCharacter.Team.TeamNumber].PlayerCharacters.Count <= 0)
+        var teamIndex = _teams.IndexOf(deadCharacter.Team);
+        _teams[teamIndex].PlayerCharacters.Remove(deadCharacter);
+        if (_teams[teamIndex].PlayerCharacters.Count <= 0)
         {
             _teams.Remove(deadCharacter.Team);
         }
