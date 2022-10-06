@@ -149,6 +149,8 @@ public class InputHandler : MonoBehaviour
     
     private void OnEndTurn(InputAction.CallbackContext context)
     {
+        print("End Turn");
+        print(context.started);
         GameManager.Instance.TurnManager.EndTurn();
     }
 

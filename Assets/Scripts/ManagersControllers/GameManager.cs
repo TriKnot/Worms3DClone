@@ -183,13 +183,13 @@ public class GameManager : MonoBehaviour
     private void ChangeActiveTeam()
     {
         CurrentTeamIndex ++;
-        CurrentTeamIndex %= _teamAmount;
+        CurrentTeamIndex %= _teams.Count;
     }
     
     public void ChangeActiveCharacter()
     {
         //Change active player
-        //Setold active player to inactive
+        //Set old active player to inactive
         ActiveCharacter.IsActiveCharacter = false;
         
         //Find new active player and set active
@@ -219,6 +219,10 @@ public class GameManager : MonoBehaviour
         {
             //Game over
             EventManager.InvokeGameEnded(deadCharacter.Team);
+        }
+        if(deadCharacter == ActiveCharacter)
+        {
+            EventManager.InvokeTurnChanged();
         }
         Destroy(deadCharacter.gameObject);
     }
@@ -261,7 +265,9 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         SetCursorLock(false);
+        CurrentTeamIndex = 0;
     }
+
     
 }
 
