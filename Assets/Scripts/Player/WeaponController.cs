@@ -6,9 +6,9 @@ using UnityEngine.InputSystem;
 
 public class WeaponController : MonoBehaviour
 {
-    private InputHandler _inputHandler;
     private Inventory _inventory;
-    private LineRenderer _lineRenderer;
+    public LineRenderer _lineRenderer {get; private set; }
+    [SerializeField] private LayerMask bulletLayer;
     
     private readonly float _maxWeaponCharge = 1;
     private float _weaponCharge = 0;
@@ -19,14 +19,9 @@ public class WeaponController : MonoBehaviour
 
     private void Awake()
     {
-        _inputHandler = GameManager.Instance.GetComponent<InputHandler>();
         _inventory = GetComponent<CharacterManager>().Inventory;
         _lineRenderer = GetComponent<LineRenderer>();
-    }
-
-    private void LateUpdate()
-    {
-        _lineRenderer.enabled = false;
+        bulletLayer = LayerMask.GetMask("Bullet");
     }
 
     public void FireWeapon(InputAction.CallbackContext context)
@@ -66,17 +61,27 @@ public class WeaponController : MonoBehaviour
     
     private IEnumerator ChargeWeaponUp()
     {
+        var chargeDirection = 1;
         while(_isChargingWeapon)
         {
-            _weaponCharge = Mathf.Min(_weaponCharge + Time.fixedDeltaTime, _maxWeaponCharge);
+            _lineRenderer.enabled = true;
+            if(_weaponCharge >= _maxWeaponCharge)
+            {
+                chargeDirection = -1;
+            }
+            else if(_weaponCharge <= 0)
+            {
+                chargeDirection = 1;
+            }
+            _weaponCharge += Time.deltaTime * chargeDirection;
             OnWeaponChargeChanged?.Invoke(_maxWeaponCharge, _weaponCharge);
             yield return new WaitForFixedUpdate();
         }    
+        _lineRenderer.enabled = false;
     }
 
-    public void AimCurved(Vector3 force, Vector3 initialPosition, float projectileMass)
+    public void AimCurved(Vector3 force, Vector3 initialPosition, float projectileMass, float lineWidth)
     {
-        _lineRenderer.enabled = true;
         var stepCount = 100;
         force *= _weaponCharge;
         var vel = (force / projectileMass);
@@ -96,12 +101,11 @@ public class WeaponController : MonoBehaviour
 
     public void AimStraight(Vector3 position, float lineWidth)
     {
-        _lineRenderer.enabled = true;
         _lineRenderer.startWidth = lineWidth;
         _lineRenderer.endWidth = lineWidth;
         _lineRenderer.positionCount = 2;
         _lineRenderer.SetPosition(0, position);
-        Physics.Raycast(position, transform.forward, out RaycastHit hit);
+        Physics.Raycast(position, transform.forward, out RaycastHit hit, Mathf.Infinity, ~bulletLayer);
         _lineRenderer.SetPosition(1, hit.point);
     }
 

@@ -9,11 +9,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5481131208548253871, guid: 5e2a1164dc632754fb8914ce621c95c7, type: 3}
       propertyPath: m_Name
-      value: RifleBulletPrefab
+      value: RifleProjectilePrefab
       objectReference: {fileID: 0}
     - target: {fileID: 5481131208548253871, guid: 5e2a1164dc632754fb8914ce621c95c7, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5546156403083984208, guid: 5e2a1164dc632754fb8914ce621c95c7, type: 3}
       propertyPath: m_RootOrder

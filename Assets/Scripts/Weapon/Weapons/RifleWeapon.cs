@@ -33,13 +33,17 @@ public class RifleWeapon : MonoBehaviour, IWeapon
         EventManager.OnTurnChanged -= OnTurnChanged;
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         if(isActiveAndEnabled && _weaponController != null)
         {
             if (_inputHandler.AimIsPressed)
             {
+                _weaponController._lineRenderer.enabled = true;
                 _weaponController.AimStraight(firePoint.position, 0.1f);
+            }else
+            {
+                _weaponController._lineRenderer.enabled = false;
             }
         }
     }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1863878657008217078}
   - component: {fileID: -881109405264771846}
   - component: {fileID: -3306969781626295404}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: RocketProjectilePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,9 +141,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1016909272118449964}
     m_Modifications:
+    - target: {fileID: 1231786695147784, guid: b5df6ae31ff28024ca06ef8a593f3af3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1622348778083768, guid: b5df6ae31ff28024ca06ef8a593f3af3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1764654978243476, guid: b5df6ae31ff28024ca06ef8a593f3af3, type: 3}
       propertyPath: m_Name
       value: RocketFire
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764654978243476, guid: b5df6ae31ff28024ca06ef8a593f3af3, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4232694689350172, guid: b5df6ae31ff28024ca06ef8a593f3af3, type: 3}
       propertyPath: m_LocalScale.x

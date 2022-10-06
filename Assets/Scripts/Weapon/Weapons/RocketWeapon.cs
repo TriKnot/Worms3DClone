@@ -35,7 +35,6 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     private void OnDestroy()
     {
         EventManager.OnTurnChanged -= OnTurnChanged;
-        _weaponController.OnWeaponChargeChanged -= OnWeaponChargeChanged;
     }
 
     public void Shoot()
@@ -102,7 +101,7 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
 
     private void OnWeaponChargeChanged(float maxCharge, float currentCharge)
     {
-        _weaponController.AimCurved(-transform.forward * (currentCharge * shotSpeedMultiplier), firePoint.transform.position, projectileMass);
+        _weaponController.AimCurved(-transform.forward * (currentCharge * shotSpeedMultiplier), firePoint.transform.position, projectileMass, 0.7f);
     }
     
     public bool CanShoot()
