@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -49,6 +50,10 @@ public class GameManager : MonoBehaviour
         EventManager.OnPlayerDied += OnPlayerDied;
         EventManager.OnTurnChanged += OnTurnChanged;
         EventManager.OnGamePaused += OnGamePaused;
+        EventManager.OnRestartGame += OnRestartGame;
+        EventManager.OnBackToMainMenu += OnBackToMainMenu;
+        EventManager.OnQuitToDesktop += OnQuitToDesktop;
+        EventManager.OnGameEnded += OnGameEnded;
         
     }
 
@@ -69,6 +74,10 @@ public class GameManager : MonoBehaviour
         EventManager.OnPlayerDied -= OnPlayerDied;
         EventManager.OnTurnChanged -= OnTurnChanged;
         EventManager.OnGamePaused -= OnGamePaused;
+        EventManager.OnRestartGame -= OnRestartGame;
+        EventManager.OnBackToMainMenu -= OnBackToMainMenu;
+        EventManager.OnQuitToDesktop -= OnQuitToDesktop;
+        EventManager.OnGameEnded -= OnGameEnded;
     }
     
     private void OnGamePaused(bool isPaused)
@@ -226,6 +235,35 @@ public class GameManager : MonoBehaviour
     public void TogglePause()
     {
         EventManager.InvokeGamePaused(!IsPaused);
+    }
+    
+    public void OnRestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1;
+    }
+    
+    public void OnBackToMainMenu()
+    {
+        SceneManager.LoadScene(0);
+        Time.timeScale = 1;
+        SetCursorLock(true);
+    }
+    
+    public void OnQuitToDesktop()
+    {
+        Application.Quit();
+        Time.timeScale = 1;
+        SetCursorLock(true);
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+    
+    private void OnGameEnded(Team winningTeam)
+    {
+        Time.timeScale = 0;
+        SetCursorLock(false);
     }
     
 }

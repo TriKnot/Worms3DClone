@@ -41,8 +41,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void RestartGame()
     {
-        Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        EventManager.InvokeRestartGame();
     }
 
     public void ToggleQuitGameConfirmmenu(bool active)
@@ -52,16 +51,12 @@ public class PauseMenuController : MonoBehaviour
 
     public void ConfirmQuitToMainMenu()
     {
-        SceneManager.LoadScene(0);
-        Time.timeScale = 1;
+        EventManager.InvokeBackToMainMenu();
     }
     
     public void ConfirmQuitToDesktop()
     {
-        Application.Quit();
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
+        EventManager.InvokeQuitToDesktop();
     }
     
 }

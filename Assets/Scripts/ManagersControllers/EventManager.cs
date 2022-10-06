@@ -20,6 +20,15 @@ public static class EventManager
     
     public delegate void GameEnded(Team winningTeam);
     public static event GameEnded OnGameEnded;
+    
+    public delegate void RestartGame();
+    public static event RestartGame OnRestartGame;
+
+    public delegate void BackToMainMenu();
+    public static event BackToMainMenu OnBackToMainMenu;
+    
+    public delegate void QuitToDesktop();
+    public static event QuitToDesktop OnQuitToDesktop;
 
 
     public static void InvokeActiveCharacterChanged()
@@ -55,5 +64,20 @@ public static class EventManager
     public static void InvokeGameEnded(Team winningTeam)
     {
         OnGameEnded?.Invoke(winningTeam);
+    }
+    
+    public static void InvokeRestartGame()
+    {
+        OnRestartGame?.Invoke();
+    }
+    
+    public static void InvokeBackToMainMenu()
+    {
+        OnBackToMainMenu?.Invoke();
+    }
+    
+    public static void InvokeQuitToDesktop()
+    {
+        OnQuitToDesktop?.Invoke();
     }
 }

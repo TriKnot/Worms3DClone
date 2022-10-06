@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject canvasPrefab;
     [SerializeField] private GameObject pauseMenuPrefab;
     [SerializeField] private GameObject turnTimerPrefab;
+    [SerializeField] private GameObject gameOverOverlayPrefab;
     
     private GameObject _canvas;
     private GameObject _pauseMenu;
@@ -26,6 +27,9 @@ public class UIManager : MonoBehaviour
         _pauseMenu = Instantiate(pauseMenuPrefab, _canvas.transform);
         _pauseMenuController = _pauseMenu.GetComponent<PauseMenuController>();
         _pauseMenu.SetActive(false);
+        
+        //Instantiate the GameOverOverlay
+        Instantiate(gameOverOverlayPrefab, _canvas.transform);
 
 
         //Subscribe to events

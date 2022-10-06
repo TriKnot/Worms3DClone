@@ -68,7 +68,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a628d460724853141a80d2ca6a99ad42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnTimeMax: 60
 --- !u!114 &587017176534038321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,3 +116,4 @@ MonoBehaviour:
   canvasPrefab: {fileID: 8574948210569279514, guid: 2944e6d18a71e21429841ddfc9e2426b, type: 3}
   pauseMenuPrefab: {fileID: 6120907365922762553, guid: 82d0751fa479a164f909dafdda83ac6a, type: 3}
   turnTimerPrefab: {fileID: 449022231058372412, guid: ea12f353d9b847241a7d0d91faa371f6, type: 3}
+  gameOverOverlayPrefab: {fileID: 3513890373623726485, guid: 7826fb392b657ef4cbad6e4a15fd7733, type: 3}
