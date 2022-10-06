@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 6811754511017444106}
   - component: {fileID: 987625086072127475}
   - component: {fileID: 2942681234892107269}
+  - component: {fileID: -7488973895581638839}
+  - component: {fileID: 892189633}
   m_Layer: 4
   m_Name: Water
   m_TagString: Untagged
@@ -136,12 +138,12 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   colorGradientTexture: {fileID: 0}
   shallowColor: {r: 0, g: 0.6313726, b: 1, a: 1}
-  deepColor: {r: 0, g: 0.4273315, b: 0.6784314, a: 1}
+  deepColor: {r: 0, g: 0.42732418, b: 0.6784314, a: 1}
   colorDepth: 2.59
-  horizonColor: {r: 0, g: 0.22733149, b: 0.8, a: 1}
+  horizonColor: {r: 0, g: 0.22732416, b: 0.8, a: 1}
   horizonDistance: 20
   shoreFade: 0
-  shoreColor: {r: 0, g: 0.98039216, b: 0.3018413, a: 0}
+  shoreColor: {r: 0, g: 0.98039216, b: 0.30183396, a: 0}
   shoreStrength: 0
   shoreBlend: 0
   shoreDepth: 0
@@ -220,3 +222,28 @@ MonoBehaviour:
   meshRenderer: {fileID: 987625086072127475}
   meshFilter: {fileID: 6811754511017444106}
   material: {fileID: 2100000, guid: ea66d3ba3c5ac7d498707e8c9e54524f, type: 2}
+--- !u!114 &-7488973895581638839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551606365636905775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f29003ea828f8f4182074797280514d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &892189633
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551606365636905775}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 0.1, z: 10}
+  m_Center: {x: 0, y: -0.05, z: 0}
