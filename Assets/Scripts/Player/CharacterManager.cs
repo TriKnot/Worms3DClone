@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -49,11 +44,13 @@ public class CharacterManager : MonoBehaviour
         _statusStatusBars.Init(this);
         
         EventManager.OnActiveCharacterChanged += SetActiveCharacter;
+        EventManager.OnTurnChanged += OnTurnChanged;
     }
 
     private void OnDisable()
     {
         EventManager.OnActiveCharacterChanged -= SetActiveCharacter;
+        EventManager.OnTurnChanged -= OnTurnChanged;
     }
     
     public void FireWeapon(InputAction.CallbackContext context)
@@ -85,5 +82,10 @@ public class CharacterManager : MonoBehaviour
         weaponTransform.localRotation = weaponTransform.rotation;
         weapon.SetCollider(false);
         weapon.OnPickup(this);
+    }
+
+    private void OnTurnChanged()
+    {
+        StaminaSystem.IncreaseStamina(StaminaSystem.MaxStamina);
     }
 }
