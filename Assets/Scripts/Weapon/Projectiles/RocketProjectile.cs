@@ -49,7 +49,8 @@ public class RocketProjectile : MonoBehaviour
     private void OnDisable()
     {
         _hasExploded = false;
-        _rocketWeapon.ToggleVisibleRocket(true);
+        if(_rocketWeapon != null)
+            _rocketWeapon.ToggleVisibleRocket(true);
     }
     
 

@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
     public int CurrentTeamIndex { get; private set; }
 
 
+    [SerializeField] private GameObject[] weaponsPrefabs;
+
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -107,12 +110,12 @@ public class GameManager : MonoBehaviour
         _teams = new List<Team>();
         for(int i = 0; i < _teamAmount; i++)
         {
-            var newTeam = new Team
-            {
-                TeamName = "Player " + (i+1),
-                TeamColor = teamColors[i],
-                TeamNumber = i
-            };
+            var newTeam = new Team("Player " + (i + 1), i, teamColors[i]);
+            // {
+            //     TeamName = "Player " + (i+1),
+            //     TeamColor = teamColors[i],
+            //     TeamNumber = i
+            // };
             _teams.Add(newTeam);
         }
     }
@@ -140,11 +143,11 @@ public class GameManager : MonoBehaviour
                 CharacterManager characterManager = newCharacter.GetComponent<CharacterManager>();
                 characterManager.Team = _teams[i];
                 characterManager.CharacterNumber = j;
-                _teams[i].PlayerCharacters.Add(characterManager);
+                _teams[i].AddCharacter(characterManager);
                 characterManager.Init();
             }
         }
-        RemoveAllSpawnLocations();
+        MoveAllSpawnLocations();
     }
 
     private void FindAllSpawnBounds()
@@ -152,9 +155,9 @@ public class GameManager : MonoBehaviour
         _spawnColliderArray = spawnBounds.GetComponentsInChildren<Collider>();
     }
     
-    private void RemoveAllSpawnLocations()
+    private void MoveAllSpawnLocations()
     {
-        Destroy(spawnBounds);
+        spawnBounds.transform.position += new Vector3(0, 100, 0);
     }
 
     private Vector3 RandomSpawnLocation()
@@ -224,6 +227,7 @@ public class GameManager : MonoBehaviour
         {
             EventManager.InvokeTurnChanged();
         }
+        print("Player" + deadCharacter.Team + " died");
         Destroy(deadCharacter.gameObject);
     }
 
@@ -231,7 +235,10 @@ public class GameManager : MonoBehaviour
     {
         ChangeActiveTeam();
         ChangeActiveCharacter();
+        DropNewWeapons();
     }
+    
+    //TODO Check bug with playername changing sometimes when one team dies
 
     public void TogglePause()
     {
@@ -266,6 +273,15 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         SetCursorLock(false);
         CurrentTeamIndex = 0;
+    }
+
+    private void DropNewWeapons()
+    {
+        for (int i = 0; i < TurnManager.CurrentTurnIndex; i++)
+        {
+            var spawnLocation = RandomSpawnLocation();
+            Instantiate(weaponsPrefabs[Random.Range(0, weaponsPrefabs.Length)], spawnLocation, Quaternion.identity);
+        }
     }
 
     

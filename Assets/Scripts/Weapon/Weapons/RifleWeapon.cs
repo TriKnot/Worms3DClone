@@ -14,16 +14,18 @@ public class RifleWeapon : MonoBehaviour, IWeapon
     private InputHandler _inputHandler;
     
     private WeaponController _weaponController;
-
+    [SerializeField] private Material lineMaterial;
 
     private int _ammo = 1;
     [SerializeField] private int maxAmmo = 5;
+    private Rigidbody _rigidbody;
 
 
     private void Awake()
     {
         _projectilePool = new ProjectilePool(bulletPrefab);
         _collider = GetComponent<CapsuleCollider>();
+        _rigidbody = GetComponent<Rigidbody>();
         EventManager.OnTurnChanged += OnTurnChanged;
         _ammo = maxAmmo;
     }
@@ -40,7 +42,7 @@ public class RifleWeapon : MonoBehaviour, IWeapon
             if (_inputHandler.AimIsPressed)
             {
                 _weaponController._lineRenderer.enabled = true;
-                _weaponController.ShowLineAimStraight(firePoint.position, 0.1f);
+                _weaponController.ShowLineAimStraight(firePoint.position, 0.1f, lineMaterial);
             }else
             {
                 _weaponController._lineRenderer.enabled = false;
@@ -61,7 +63,6 @@ public class RifleWeapon : MonoBehaviour, IWeapon
             bulletRB.useGravity = false;
             bulletRB.AddForce(transform.forward * shotSpeedMultiplier, ForceMode.Impulse);
             _ammo--;
-            EventManager.InvokeAmmoChanged(_ammo);
         }    
     }
 
@@ -95,6 +96,7 @@ public class RifleWeapon : MonoBehaviour, IWeapon
     {
         _weaponController = player.GetComponent<WeaponController>();
         _inputHandler = GameManager.Instance.GetComponent<InputHandler>();
+        Destroy(_rigidbody);
     }
 
     public bool CanShoot()

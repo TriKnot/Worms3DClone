@@ -8,6 +8,10 @@ public class Inventory
 {
     private List<GameObject> inventory;
     private int _activeWeaponIndex;
+    
+    public delegate void AmmoChanged(int ammo);
+    public event AmmoChanged OnAmmoChanged;
+
 
     public Inventory()
     {
@@ -17,12 +21,12 @@ public class Inventory
 
     public void ChangeWeapon()
     {
-        GetActiveWeapon().GetWeaponObject().SetActive(false);
+        GetActiveWeaponObject().SetActive(false); 
         _activeWeaponIndex++;
         _activeWeaponIndex %= inventory.Count;
         var newActiveWeapon = GetActiveWeapon();
         newActiveWeapon.GetWeaponObject().SetActive(true);
-        EventManager.InvokeAmmoChanged(newActiveWeapon.GetAmmoCount());
+        UpdateAmmo();
     }
 
     public IWeapon GetActiveWeapon()
@@ -42,6 +46,33 @@ public class Inventory
         ChangeWeapon();
     }
     
-    //TODO add remove weapon
+    public void RemoveWeapon(IWeapon weapon)
+    {
+        if (inventory.Count == 0) return;
+        var weaponObject = weapon.GetWeaponObject();
+        if (inventory.Contains(weaponObject))
+        {
+            if (inventory.Count == 1)
+            {
+                inventory.Remove(weaponObject);
+                _activeWeaponIndex = 0;
+                return;
+            }
+            if (inventory.IndexOf(weaponObject) == _activeWeaponIndex)
+            {
+                ChangeWeapon();
+                inventory.Remove(weaponObject);
+            }
+            else
+            {
+                inventory.Remove(weaponObject);
+            }
+        }
+    }
     
+        
+    public void UpdateAmmo()
+    {
+        OnAmmoChanged?.Invoke(GetActiveWeapon().GetAmmoCount());
+    }
 }

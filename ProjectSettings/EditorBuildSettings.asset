@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PirateShip.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/PirateShip2ndFloor.unity
+    guid: 3ec286dbe9f9487489c5f5276b8c32c5
   m_configObjects: {}

@@ -24,11 +24,42 @@ public static class SettingsManager
     public static int MinTurnTimerValue { get; } = 30;
     public static int MaxTurnTimerValue { get; } = 300;
     public static int TurnTimerValue { get; set; }
+    private static bool invertMouseY = false;
+
+    public static bool InvertMouseY
+    {
+        get
+        {
+            return invertMouseY;
+        }
+        set
+        {
+            invertMouseY = value;
+            OnSettingsChanged?.Invoke();
+        }
+    }
     
+    private static float _mouseSensitivity = 1f;
+
+    public static float MouseSensitivity
+    {
+        get
+        {
+            return _mouseSensitivity;
+        }
+        set
+        {
+            _mouseSensitivity = Mathf.Clamp(value, 0.1f, 1f);
+            OnSettingsChanged?.Invoke();
+        }
+    }
 
     //Controls Settings
 
     //Other Settings
-
+    
+    
+    public delegate void SettingsChanged();
+    public static event SettingsChanged OnSettingsChanged;
 
 }

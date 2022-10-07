@@ -8,9 +8,6 @@ public static class EventManager
 
     public delegate void TurnChanged();
     public static event TurnChanged OnTurnChanged;
-
-    public delegate void AmmoChanged(int ammoLeft);
-    public static event AmmoChanged OnAmmoChanged;
     
     public delegate void PlayerDied(CharacterManager characterManager);
     public static event PlayerDied OnPlayerDied;
@@ -29,6 +26,9 @@ public static class EventManager
     
     public delegate void QuitToDesktop();
     public static event QuitToDesktop OnQuitToDesktop;
+    
+    public delegate void PlayerHasFiredAShot();
+    public static event PlayerHasFiredAShot OnPlayerHasFiredAShot;
 
 
     public static void InvokeActiveCharacterChanged()
@@ -46,11 +46,6 @@ public static class EventManager
         OnTurnChanged?.Invoke();
     }
 
-    public static void InvokeAmmoChanged(int ammoLeft)
-    {
-        OnAmmoChanged?.Invoke(ammoLeft);
-    }
-    
     public static void InvokePlayerDied(CharacterManager characterManager)
     {
         OnPlayerDied?.Invoke(characterManager);
@@ -79,5 +74,10 @@ public static class EventManager
     public static void InvokeQuitToDesktop()
     {
         OnQuitToDesktop?.Invoke();
+    }
+    
+    public static void InvokePlayerHasFiredAShot()
+    {
+        OnPlayerHasFiredAShot?.Invoke();
     }
 }

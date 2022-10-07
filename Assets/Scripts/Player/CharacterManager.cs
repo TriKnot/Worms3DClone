@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,12 +19,8 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] private float maxStamina = 20;
     public HealthSystem HealthSystem { get; private set; }
     public StaminaSystem StaminaSystem { get; private set; }
-
-    
     public Transform CameraFollow { get; private set; }
-
     public bool IsActiveCharacter { get; set; }
-
 
     private void Awake()
     {
@@ -71,13 +68,14 @@ public class CharacterManager : MonoBehaviour
         EventManager.InvokePlayerDied(this);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
         if(GameManager.Instance.ActiveCharacter != this) return;
-        if (!other.gameObject.TryGetComponent(out IWeapon weapon)) return;
-        Inventory.AddWeapon(other.gameObject);
+        if (!collision.gameObject.TryGetComponent(out IWeapon weapon)) return;
+        Inventory.AddWeapon(collision.gameObject);
         var weaponTransform = weapon.GetWeaponObject().transform;
         weaponTransform.SetParent(weaponHolder);
+        weaponTransform.localScale = Vector3.one * 0.5f;
         weaponTransform.localPosition = new Vector3(0,0,0);
         weaponTransform.localRotation = weaponTransform.rotation;
         weapon.SetCollider(false);
@@ -88,4 +86,5 @@ public class CharacterManager : MonoBehaviour
     {
         StaminaSystem.IncreaseStamina(StaminaSystem.MaxStamina);
     }
+
 }

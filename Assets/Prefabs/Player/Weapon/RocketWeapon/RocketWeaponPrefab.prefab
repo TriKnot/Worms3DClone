@@ -127,15 +127,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 4e5ce0b6f97fdbc40b7bc818b06b80ba, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 4e5ce0b6f97fdbc40b7bc818b06b80ba, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 4e5ce0b6f97fdbc40b7bc818b06b80ba, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 4e5ce0b6f97fdbc40b7bc818b06b80ba, type: 3}
       propertyPath: m_LocalPosition.x
@@ -184,6 +184,22 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 100002, guid: 4e5ce0b6f97fdbc40b7bc818b06b80ba, type: 3}
   m_PrefabInstance: {fileID: 956005868876904647}
   m_PrefabAsset: {fileID: 0}
+--- !u!54 &4345500958437572678
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956005868876938853}
+  serializedVersion: 2
+  m_Mass: 0.2
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 2
+  m_Constraints: 112
+  m_CollisionDetection: 2
 --- !u!136 &1621469686
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -192,7 +208,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956005868876938853}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.12
   m_Height: 1.6
@@ -215,6 +231,7 @@ MonoBehaviour:
   shotSpeedMultiplier: 30
   _shootEffect: {fileID: 769699670944283121}
   maxAmmo: 2
+  lineMaterial: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1 &956005868876938855 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 4e5ce0b6f97fdbc40b7bc818b06b80ba, type: 3}

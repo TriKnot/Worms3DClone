@@ -17,12 +17,17 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     private GameObject _currentRocket;
     
     private WeaponController _weaponController;
+    
+    [SerializeField] private Material lineMaterial;
+    private Rigidbody _rigidbody;
+    private bool pickedUp = false;
 
     private void Awake()
     {
         _projectilePool = new ProjectilePool(rocketPrefab);
         _collider = GetComponent<CapsuleCollider>();
         projectileMass = rocketPrefab.GetComponent<Rigidbody>().mass;
+        _rigidbody = GetComponent<Rigidbody>();
         _ammo = maxAmmo;
         EventManager.OnTurnChanged += OnTurnChanged;
     }
@@ -35,6 +40,11 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     private void OnDestroy()
     {
         EventManager.OnTurnChanged -= OnTurnChanged;
+        if(pickedUp)
+        {
+            _weaponController.OnWeaponChargeChanged -= OnWeaponChargeChanged;
+            pickedUp = false;
+        }    
     }
 
     public void Shoot()
@@ -90,18 +100,22 @@ public class RocketWeapon : MonoBehaviour, IWeapon, IChargeableWeapon
     
     public void OnTurnChanged()
     {
-        _ammo = maxAmmo;
+        //Uncomment for testing
+        //_ammo = maxAmmo;
     }
 
     public void OnPickup(CharacterManager player)
     {
+        pickedUp = true;
         _weaponController = player.GetComponent<WeaponController>();
         _weaponController.OnWeaponChargeChanged += OnWeaponChargeChanged;
+        Destroy(_rigidbody);
+        transform.localRotation = Quaternion.Euler(0,180 ,0);
     }
 
     private void OnWeaponChargeChanged(float maxCharge, float currentCharge)
     {
-        _weaponController.ShowLineAimCurved(-transform.forward * (currentCharge * shotSpeedMultiplier), firePoint.transform.position, projectileMass, 0.7f);
+        _weaponController.ShowLineAimCurved(-transform.forward * (currentCharge * shotSpeedMultiplier * 1.15f), firePoint.transform.position, projectileMass, 0.7f, lineMaterial);
     }
     
     public bool CanShoot()

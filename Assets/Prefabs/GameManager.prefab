@@ -56,6 +56,9 @@ MonoBehaviour:
   - {r: 0.033431053, g: 0, b: 1, a: 1}
   - {r: 0.23363125, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.99701774, b: 0, a: 1}
+  weaponsPrefabs:
+  - {fileID: 7075029620868488087, guid: a5668f2bc17e2c34c8674fd601a97a58, type: 3}
+  - {fileID: 956005868876938853, guid: dc55909bafd09ed46b39c05e3166a82b, type: 3}
 --- !u!114 &587017176534038326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,7 +118,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvasPrefab: {fileID: 8574948210569279514, guid: 2944e6d18a71e21429841ddfc9e2426b, type: 3}
   pauseMenuPrefab: {fileID: 6120907365922762553, guid: 82d0751fa479a164f909dafdda83ac6a, type: 3}
-  turnTimerPrefab: {fileID: 449022231058372412, guid: ea12f353d9b847241a7d0d91faa371f6, type: 3}
+  smallTurnTimerPrefab: {fileID: 449022231058372412, guid: ea12f353d9b847241a7d0d91faa371f6, type: 3}
+  largeTurnTimerPrefab: {fileID: 7003561666726890588, guid: 03b9c93cf118a0141b68c2c898b4a279, type: 3}
   gameOverOverlayPrefab: {fileID: 3513890373623726485, guid: 7826fb392b657ef4cbad6e4a15fd7733, type: 3}
   activePlayerText: {fileID: 6095222377004935407, guid: c31f24063d0e1ac4d896bfc655ca9d4c, type: 3}
   turnNumberText: {fileID: 4995653278115494099, guid: 30ac63f1f17554c478693ff3bfe75ea0, type: 3}

@@ -15,6 +15,7 @@ public class InputHandler : MonoBehaviour
     public bool MoveIsPressed { get; private set; } = false;
     public Vector2 LookInput { get; private set; } = Vector2.zero;
     public bool InvertMouseY { get; private set; } = true;
+    public float LookSensitivity { get; private set; } = 1f;
     public bool RunIsPressed { get; private set; } = false;
     public bool JumpIsPressed { get; private set; } = false;
     public float ZoomCameraInput { get; private set; } = 0f;
@@ -63,6 +64,8 @@ public class InputHandler : MonoBehaviour
         
         _input.Player.Pause.started += OnPause;
         
+        SettingsManager.OnSettingsChanged += OnSettingsChanged;
+        OnSettingsChanged();
     }
     
     private void OnDisable()
@@ -97,6 +100,7 @@ public class InputHandler : MonoBehaviour
         
         _input.Player.Pause.started -= OnPause;
         
+        SettingsManager.OnSettingsChanged -= OnSettingsChanged;
         _input.Player.Disable();
     }
 
@@ -160,5 +164,11 @@ public class InputHandler : MonoBehaviour
     private void OnAim(InputAction.CallbackContext context)
     {
         AimIsPressed = context.started;
+    }
+    
+    private void OnSettingsChanged()
+    {
+        InvertMouseY = SettingsManager.InvertMouseY;
+        LookSensitivity = SettingsManager.MouseSensitivity;
     }
 }

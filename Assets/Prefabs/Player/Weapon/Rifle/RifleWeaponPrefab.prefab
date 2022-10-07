@@ -44,27 +44,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1934526043, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.7
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 1934526043, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.7
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 1934526043, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.7
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 1934526043, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1.28
       objectReference: {fileID: 0}
     - target: {fileID: 1934526043, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 49.03
       objectReference: {fileID: 0}
     - target: {fileID: 1934526043, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 3.93
       objectReference: {fileID: 0}
     - target: {fileID: 1934526043, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -94,6 +94,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 96028951513678864, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 28f0b13c7e9707746b5e0b3336181560, type: 2}
     - target: {fileID: 6693054683949350502, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
       propertyPath: m_Name
       value: RifleWeaponPrefab
@@ -114,6 +118,22 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6693054683949350502, guid: 59679f1f02e172b4f883dbd1b69994b4, type: 3}
   m_PrefabInstance: {fileID: 4525286611279881713}
   m_PrefabAsset: {fileID: 0}
+--- !u!54 &-4772665715307134402
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7075029620868488087}
+  serializedVersion: 2
+  m_Mass: 0.2
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 2
+  m_Constraints: 112
+  m_CollisionDetection: 2
 --- !u!136 &-5193079946820679474
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -122,7 +142,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7075029620868488087}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.29
   m_Height: 4.8
@@ -143,4 +163,5 @@ MonoBehaviour:
   firePoint: {fileID: 1239832520068565693}
   bulletPrefab: {fileID: 841240729268915206, guid: 8d4b005ad754467419165d7c1a49b970, type: 3}
   shotSpeedMultiplier: 0.3
+  lineMaterial: {fileID: 2100000, guid: 768c2611101710842a9ee7057c13d79f, type: 2}
   maxAmmo: 5

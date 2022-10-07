@@ -59,14 +59,7 @@ public class BatWeapon : MonoBehaviour, IWeapon, IChargeableWeapon, IMeleeWeapon
             _hitColliders.Add(other);
             var hitoffset = other.transform.position - transform.position;
             player.AddExplosionForce(_swingCharge * swingChargeModifier, other.transform.position - hitoffset, swingUpModifier);
-            gizmolocation = other.transform.position - hitoffset + Vector3.down * .5f;
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(gizmolocation, 0.5f);
     }
 
     public void OnPickup(CharacterManager player)

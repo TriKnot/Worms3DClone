@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour
@@ -12,8 +14,14 @@ public class TurnManager : MonoBehaviour
         CurrentTurnIndex = 1;
         turnTimeMax = SettingsManager.TurnTimerValue;
         TurnTime = turnTimeMax;
+        EventManager.OnPlayerHasFiredAShot += StartTurnEndCountdown;
     }
-    
+
+    private void OnDisable()
+    {
+        EventManager.OnPlayerHasFiredAShot -= StartTurnEndCountdown;
+    }
+
     private void Update()
     {
         if (!GameManager.Instance.IsPaused)
@@ -42,6 +50,11 @@ public class TurnManager : MonoBehaviour
     private void UpdateTurnTimeOnGUI()
     {
         GameManager.Instance.UIManager.TurnTimerOnGUI(TurnTime);
+    }
+    
+    private void StartTurnEndCountdown()
+    {
+        TurnTime = TurnTime > 10 ? 10 : TurnTime;
     }
 
     

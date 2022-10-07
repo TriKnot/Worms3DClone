@@ -33,6 +33,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
     private CharacterManager characterManager;
     private HealthSystem _healthSystem;
     private StaminaSystem _staminaSystem;
+    private Inventory _inventory;
 
 
 
@@ -48,8 +49,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
         _healthSystem.OnHealthChanged += HealthSystem_OnHealthChanged;
         _staminaSystem.OnStaminaChanged += StaminaSystem_OnStaminaChanged;
         characterManager.WeaponController.OnWeaponChargeChanged += CharacterManagerOnChargeChanged;
-        
-        EventManager.OnAmmoChanged += UpdateAmmo;
+        characterManager.Inventory.OnAmmoChanged += UpdateAmmo;
         
         foreach (Transform child in ammoPane)
         {
@@ -63,7 +63,7 @@ public class UI_PlayerStatusBars : MonoBehaviour
         characterManager.HealthSystem.OnHealthChanged -= HealthSystem_OnHealthChanged;
         characterManager.StaminaSystem.OnStaminaChanged -= StaminaSystem_OnStaminaChanged;
         characterManager.WeaponController.OnWeaponChargeChanged -= CharacterManagerOnChargeChanged;
-        EventManager.OnAmmoChanged -= UpdateAmmo;
+        characterManager.Inventory.OnAmmoChanged += UpdateAmmo;
     }
 
     private void LateUpdate()
@@ -74,9 +74,6 @@ public class UI_PlayerStatusBars : MonoBehaviour
         AnimateChargeBar();
     }
 
-    /// <summary>
-    /// Rotate canvas towards the Camera
-    /// </summary>
     private void RotateCanvas()
     {
         _barCanvasTransform.rotation = Quaternion.LookRotation(_barCanvasTransform.position - _mainCameraTransform.position);

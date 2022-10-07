@@ -39,13 +39,13 @@ public class WeaponController : MonoBehaviour
     public void FireWeapon(InputAction.CallbackContext context)
     {
         IWeapon weapon = _inventory.GetActiveWeapon();
-
         //If weapon is chargeable
         if (_inventory.GetActiveWeaponObject().TryGetComponent(out IChargeableWeapon chargeableWeapon))
         {
             if (!_inventory.GetActiveWeaponObject().TryGetComponent(out IMeleeWeapon meleeWeapon) 
                 && _inventory.GetActiveWeapon().GetAmmoCount() <= 0)
             {
+                _inventory.UpdateAmmo();
                 return;
             }
             if (context.started)
@@ -56,19 +56,30 @@ public class WeaponController : MonoBehaviour
             }else if (context.canceled && _isChargingWeapon)
             { 
                 chargeableWeapon.Shoot(_weaponCharge);
+                EventManager.InvokePlayerHasFiredAShot();
                 _isChargingWeapon = false;
                 _weaponCharge = 0;
                 OnWeaponChargeChanged?.Invoke(_maxWeaponCharge, _weaponCharge);
             }
             chargeableWeapon.SetChargeAnimation(_isChargingWeapon);
-            return;
         }
         //If weapon is not chargeable
-        if(context.started )
+        else if(context.started)
         {
             if(weapon.CanShoot())
+            {
                 weapon.Shoot();
+                EventManager.InvokePlayerHasFiredAShot();
+            }
         }
+        
+        if(weapon.GetAmmoCount() <= 0 && !_inventory.GetActiveWeaponObject().TryGetComponent(out IMeleeWeapon m))
+        {
+            _inventory.RemoveWeapon(weapon);
+            Destroy(weapon.GetWeaponObject());
+            _lineRenderer.enabled = false;
+        }
+        _inventory.UpdateAmmo();
     }
     
     private IEnumerator ChargeWeaponUp()
@@ -92,7 +103,7 @@ public class WeaponController : MonoBehaviour
         _lineRenderer.enabled = false;
     }
 
-    public void ShowLineAimCurved(Vector3 force, Vector3 initialPosition, float projectileMass, float lineWidth)
+    public void ShowLineAimCurved(Vector3 force, Vector3 initialPosition, float projectileMass, float lineWidth, Material material)
     {
         var stepCount = 100;
         force *= _weaponCharge;
@@ -101,6 +112,10 @@ public class WeaponController : MonoBehaviour
         float stepTime = flightDuration / stepCount;
         
         _lineRenderer.positionCount = stepCount;
+        _lineRenderer.startWidth = lineWidth;
+        _lineRenderer.endWidth = lineWidth;
+        _lineRenderer.material = material;
+        
         
         for(int i = 0; i < stepCount; i++)
         {
@@ -111,10 +126,11 @@ public class WeaponController : MonoBehaviour
         }
     }
 
-    public void ShowLineAimStraight(Vector3 position, float lineWidth)
+    public void ShowLineAimStraight(Vector3 position, float lineWidth, Material material)
     {
         _lineRenderer.startWidth = lineWidth;
         _lineRenderer.endWidth = lineWidth;
+        _lineRenderer.material = material;
         _lineRenderer.positionCount = 2;
         _lineRenderer.SetPosition(0, position);
         Physics.Raycast(position, _weaponHolder.transform.forward, out RaycastHit hit, Mathf.Infinity, ~bulletLayer);

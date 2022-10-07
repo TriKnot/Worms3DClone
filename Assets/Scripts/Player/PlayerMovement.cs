@@ -103,6 +103,13 @@ public class PlayerMovement : MonoBehaviour
         
         _numberOfStepsDetectRays = Mathf.RoundToInt(((maxStepHeight * 100.0f) * 0.5f) + 1.0f);
         _rayIncrementAmount = maxStepHeight / _numberOfStepsDetectRays;
+        
+        EventManager.OnPlayerHasFiredAShot += OnPlayerHasFiredAShot;
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.OnPlayerHasFiredAShot -= OnPlayerHasFiredAShot;
     }
 
 
@@ -116,7 +123,6 @@ public class PlayerMovement : MonoBehaviour
             playerMoveInput = GetMoveInput();
             
         }
-        
         
         if(!_cameraController.UsingOrbitalCamera)
         {
@@ -170,7 +176,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 GetLookInput()
     {
         _previousLookInput = _playerLookInput;
-        _playerLookInput = new Vector3(_input.LookInput.x, (_input.InvertMouseY ? -_input.LookInput.y : _input.LookInput.y), 0f);
+        _playerLookInput = new Vector3(_input.LookInput.x, (_input.InvertMouseY ? -_input.LookInput.y : _input.LookInput.y), 0f) * _input.LookSensitivity;
         return Vector3.Lerp(_previousLookInput, _playerLookInput * Time.deltaTime, playerLookInputLerpTime);
     }
 
@@ -607,7 +613,11 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position + Vector3.up * transformCenterYOffset, _collider.radius * groundCheckRadiusMultiplier);
         }
     }
-    
-    
+
+    private void OnPlayerHasFiredAShot()
+    {
+        _characterManager.StaminaSystem.DecreaseStamina(_characterManager.StaminaSystem.Stamina);
+    }
+  
 
 }

@@ -7,7 +7,8 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
-    
+
+    [SerializeField] private GameObject mainMenuButtons;
     [SerializeField] private GameObject optionsMenu;
     [SerializeField] private GameObject newGameMenu;
 
@@ -31,6 +32,7 @@ public class MainMenuController : MonoBehaviour
     
     public void NewGame()
     {
+        mainMenuButtons.SetActive(false);
         newGameMenu.SetActive(true);
         SetupNewGameOptions();
     }
@@ -103,6 +105,7 @@ public class MainMenuController : MonoBehaviour
     {
         optionsMenu.SetActive(false);
         newGameMenu.SetActive(false);
+        mainMenuButtons.SetActive(true);
     }
     
     public void ToggleStamina()
